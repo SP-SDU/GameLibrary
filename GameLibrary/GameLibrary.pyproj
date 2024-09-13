@@ -55,6 +55,7 @@
     <Folder Include="GameLibrary\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".env" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />
     <Content Include="app\views\about.html" />
