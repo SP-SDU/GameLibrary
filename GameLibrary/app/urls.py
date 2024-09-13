@@ -13,10 +13,9 @@ urlpatterns = [
          (
              template_name='login.html',
              authentication_form=forms.TailwindAuthenticationForm,
-             extra_context=
-             {
+             extra_context={
                  'title': 'Log in',
-                 'year' : datetime.now().year,
+                 'year': datetime.now().year,
              }
          ),
          name='login'),
