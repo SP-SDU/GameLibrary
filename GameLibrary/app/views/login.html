@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h2>{{ title }}</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+    <div>
+        <section id="loginForm">
+            <form action="." method="post" class="form-horizontal" hx-post="." hx-target="#loginForm" hx-swap="innerHTML">
+                {% csrf_token %}
+                <h4 class="text-xl font-semibold mb-4">Use a local account to log in.</h4>
+                <hr class="my-4" />
+                <div class="mb-4">
+                    <label for="id_username" class="block text-gray-700 font-medium mb-2">User name</label>
+                    <div>
+                        {{ form.username }}
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="id_password" class="block text-gray-700 font-medium mb-2">Password</label>
+                    <div>
+                        {{ form.password }}
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <input type="hidden" name="next" value="/" />
+                    <button type="submit" class="btn btn-primary">Log in</button>
+                </div>
+                {% if form.errors %}
+                <p class="text-red-600 mt-4">Please enter a correct user name and password.</p>
+                {% endif %}
+            </form>
+        </section>
+    </div>
+    <div>
+        <section id="socialLoginForm"></section>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+{% load static %}
+<script src="https://unpkg.com/htmx.org@2.0.2"></script>
+{% endblock %}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - My Django Application</title>
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.27.0/dist/full.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+    <!-- Navbar -->
+    <nav class="navbar bg-base-200 fixed top-0 left-0 right-0 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="/" class="btn btn-ghost normal-case text-xl">Application name</a>
+            <div class="flex space-x-4">
+                <a class="btn btn-ghost" href="{% url 'home' %}">Home</a>
+                <a class="btn btn-ghost" href="{% url 'about' %}">About</a>
+                <a class="btn btn-ghost" href="{% url 'contact' %}">Contact</a>
+            </div>
+            {% include 'loginpartial.html' %}
+        </div>
+    </nav>
+
+    <!-- Main content -->
+    <div class="container mx-auto mt-20">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer footer-center p-4 bg-base-300 text-base-content mt-10">
+        <div>
+            <p>&copy; {{ year }} - My Django Application</p>
+        </div>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
