@@ -11,7 +11,6 @@ ENV_PATH = os.path.join(SCRIPT_PATH, VENV_DIR)
 VENV_BIN_PATH = os.path.join(ENV_PATH, "Scripts" if os.name == 'nt' else "bin")
 PYTHON_PATH = os.path.join(VENV_BIN_PATH, "python")
 PIP_PATH = os.path.join(VENV_BIN_PATH, "pip")
-PIPREQS_PATH = os.path.join(VENV_BIN_PATH, "pipreqs")
 MANAGE_PATH = os.path.join(SCRIPT_PATH, "manage.py")
 REQUIREMENTS_PATH = os.path.join(SCRIPT_PATH, "requirements.txt")
 
@@ -20,13 +19,6 @@ def create_virtualenv(env_path: str) -> None:
     """Create a virtual environment if it does not exist."""
     if not os.path.isdir(env_path):
         subprocess.run([sys.executable, "-m", "venv", env_path], check=True)
-
-
-def update_requirements(script_path: str, pip_path: str, pipreqs_path: str) -> None:  # noqa
-    """Update requirements.txt using pipreqs if necessary."""
-    if not os.path.isfile(pipreqs_path):
-        subprocess.run([pip_path, "install", "pipreqs"], check=True)
-    subprocess.run([pipreqs_path, script_path, "--force", "--ignore", VENV_DIR], check=True)  # noqa
 
 
 def install_requirements(pip_path: str, requirements_path: str) -> None:
@@ -59,8 +51,7 @@ if __name__ == "__main__":
     # Create virtual environment
     create_virtualenv(ENV_PATH)
 
-    # Update requirements and install them
-    update_requirements(SCRIPT_PATH, PIP_PATH, PIPREQS_PATH)
+    # install requirements
     install_requirements(PIP_PATH, REQUIREMENTS_PATH)
 
     # Migrate database and run server
