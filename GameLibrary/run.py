@@ -4,34 +4,50 @@ import os
 import webbrowser
 import threading
 
+# Define constants
+SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
+VENV_DIR = "env"
+ENV_PATH = os.path.join(SCRIPT_PATH, VENV_DIR)
+VENV_BIN_PATH = os.path.join(ENV_PATH, "Scripts" if os.name == 'nt' else "bin")
+PYTHON_PATH = os.path.join(VENV_BIN_PATH, "python")
+PIP_PATH = os.path.join(VENV_BIN_PATH, "pip")
+PIPREQS_PATH = os.path.join(VENV_BIN_PATH, "pipreqs")
+MANAGE_PATH = os.path.join(SCRIPT_PATH, "manage.py")
+REQUIREMENTS_PATH = os.path.join(SCRIPT_PATH, "requirements.txt")
 
-def install_requirements(script_dir: str) -> None:
-    """Install packages from requirements.txt."""
-    try:
-        requirements_path = os.path.join(script_dir, "requirements.txt")  # noqa
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", requirements_path])  # noqa
-    except (FileNotFoundError, subprocess.CalledProcessError) as e:  # noqa
-        sys.exit(f"Failed to install packages or requirements.txt not found. Error: {e}")  # noqa
+
+def create_virtualenv(env_path: str) -> None:
+    """Create a virtual environment if it does not exist."""
+    if not os.path.isdir(env_path):
+        subprocess.run([sys.executable, "-m", "venv", env_path], check=True)
 
 
-def migrate_database(script_dir: str) -> None:
+def update_requirements(script_path: str, pip_path: str, pipreqs_path: str) -> None:  # noqa
+    """Update requirements.txt using pipreqs if necessary."""
+    if not os.path.isfile(pipreqs_path):
+        subprocess.run([pip_path, "install", "pipreqs"], check=True)
+    subprocess.run([pipreqs_path, script_path, "--force", "--ignore", VENV_DIR], check=True)  # noqa
+
+
+def install_requirements(pip_path: str, requirements_path: str) -> None:
+    """Install packages from requirements.txt if file exists."""
+    if os.path.isfile(requirements_path):
+        subprocess.run([pip_path, "install", "-r", requirements_path], check=True)  # noqa
+
+
+def migrate_database(python_path: str, manage_path: str) -> None:
     """Apply Django database migrations."""
-    try:
-        os.chdir(os.path.join(script_dir))
-        subprocess.check_call([sys.executable, "manage.py", "migrate"])
-    except subprocess.CalledProcessError as e:
-        sys.exit(f"Failed to apply database migrations. Error: {e}")
+    if os.path.isfile(manage_path):
+        subprocess.run([python_path, manage_path, "migrate"], check=True)
 
 
-def run_django_server(script_dir: str) -> None:
+def run_django_server(python_path: str, manage_path: str) -> None:
     """Run the Django development server."""
-    try:
-        os.chdir(os.path.join(script_dir))
-        subprocess.check_call([sys.executable, "manage.py", "runserver"])
-    except subprocess.CalledProcessError as e:
-        sys.exit(f"Failed to start Django server. Error: {e}")
-    except KeyboardInterrupt:
-        pass
+    if os.path.isfile(manage_path):
+        try:
+            subprocess.run([python_path, manage_path, "runserver"], check=True)
+        except KeyboardInterrupt:
+            pass
 
 
 def open_browser() -> None:
@@ -40,8 +56,14 @@ def open_browser() -> None:
 
 
 if __name__ == "__main__":
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    install_requirements(script_dir)
-    migrate_database(script_dir)
-    threading.Thread(target=open_browser).start()
-    run_django_server(script_dir)
+    # Create virtual environment
+    create_virtualenv(ENV_PATH)
+
+    # Update requirements and install them
+    update_requirements(SCRIPT_PATH, PIP_PATH, PIPREQS_PATH)
+    install_requirements(PIP_PATH, REQUIREMENTS_PATH)
+
+    # Migrate database and run server
+    migrate_database(PYTHON_PATH, MANAGE_PATH)
+    threading.Thread(target=open_browser, daemon=True).start()
+    run_django_server(PYTHON_PATH, MANAGE_PATH)
