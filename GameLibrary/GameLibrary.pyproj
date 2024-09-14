@@ -3,15 +3,16 @@
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>GameLibrary</Name>
-    <RootNamespace>GameLibrary</RootNamespace>
-    <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
+    <RootNamespace>config</RootNamespace>
     <TestFramework>Pytest</TestFramework>
+    <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>9cc8dfde-e4d7-4638-a55a-9e590a1ab4f4</ProjectGuid>
-    <ProjectHome>.</ProjectHome>
+    <ProjectGuid>{9e3abb60-545c-4d93-bed7-643d06262bf9}</ProjectGuid>
+    <ProjectHome>
+    </ProjectHome>
     <ProjectTypeGuids>{5F0BE9CA-D677-4A4D-8806-6076C0FAAD37};{349c5851-65df-11da-9384-00065b846f21};{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
     <StartupFile>manage.py</StartupFile>
     <SearchPath>
@@ -19,7 +20,7 @@
     <WorkingDirectory>.</WorkingDirectory>
     <WebBrowserUrl>http://localhost</WebBrowserUrl>
     <LaunchProvider>Django launcher</LaunchProvider>
-    <DjangoSettingsModule>GameLibrary.settings</DjangoSettingsModule>
+    <DjangoSettingsModule>config.settings</DjangoSettingsModule>
     <OutputPath>.</OutputPath>
     <SuppressCollectPythonCloudServiceFiles>true</SuppressCollectPythonCloudServiceFiles>
   </PropertyGroup>
@@ -32,38 +33,52 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="app\admin.py" />
+    <Compile Include="app\apps.py" />
+    <Compile Include="app\controllers.py" />
     <Compile Include="app\forms.py" />
+    <Compile Include="app\migrations\__init__.py" />
     <Compile Include="app\models.py" />
     <Compile Include="app\tests.py" />
-    <Compile Include="app\urls.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="app\controllers.py" />
+    <Compile Include="app\urls.py" />
     <Compile Include="app\__init__.py" />
-    <Compile Include="app\migrations\__init__.py" />
+    <Compile Include="config\asgi.py" />
+    <Compile Include="config\settings.py" />
+    <Compile Include="config\urls.py" />
+    <Compile Include="config\wsgi.py" />
+    <Compile Include="config\__init__.py" />
     <Compile Include="manage.py" />
-    <Compile Include="GameLibrary\__init__.py" />
-    <Compile Include="GameLibrary\settings.py" />
-    <Compile Include="GameLibrary\urls.py" />
-    <Compile Include="GameLibrary\wsgi.py" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="app\" />
-    <Folder Include="app\migrations\" />
-    <Folder Include="app\static\" />
-    <Folder Include="app\views\" />
-    <Folder Include="GameLibrary\" />
+    <Compile Include="run.py" />
+    <Compile Include="update_reqs.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".env" />
-    <Content Include="requirements.txt" />
-    <Content Include="db.sqlite3" />
+    <Content Include=".env.example" />
     <Content Include="app\views\about.html" />
     <Content Include="app\views\contact.html" />
     <Content Include="app\views\index.html" />
     <Content Include="app\views\layout.html" />
     <Content Include="app\views\login.html" />
     <Content Include="app\views\loginpartial.html" />
+    <Content Include="app\__pycache__\controllers.cpython-312.pyc" />
+    <Content Include="app\__pycache__\forms.cpython-312.pyc" />
+    <Content Include="app\__pycache__\urls.cpython-312.pyc" />
+    <Content Include="app\__pycache__\__init__.cpython-312.pyc" />
+    <Content Include="config\__pycache__\settings.cpython-312.pyc" />
+    <Content Include="config\__pycache__\urls.cpython-312.pyc" />
+    <Content Include="config\__pycache__\wsgi.cpython-312.pyc" />
+    <Content Include="config\__pycache__\__init__.cpython-312.pyc" />
+    <Content Include="db.sqlite3" />
+    <Content Include="requirements.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="app\" />
+    <Folder Include="app\migrations\" />
+    <Folder Include="app\static\" />
+    <Folder Include="app\views\" />
+    <Folder Include="app\__pycache__\" />
+    <Folder Include="config\" />
+    <Folder Include="config\__pycache__\" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env\">
