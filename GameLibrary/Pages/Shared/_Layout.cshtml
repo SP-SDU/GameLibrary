@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - GameLibrary</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem;">
+            <a asp-area="" asp-page="/Index">GameLibrary</a> <!-- Should probably be a logo -->
+
+            <!-- Center Menu -->
+            <div style="flex-grow: 1; text-align: center;">
+                <a asp-area="" asp-page="/Index" style="margin-right: 1rem;">Home</a>
+                <a asp-area="" asp-page="/Privacy">Privacy</a>
+            </div>
+
+            <partial name="_LoginPartial" />
+        </nav>
+    </header>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <footer>
+        &copy; 2024 - GameLibrary - <a asp-area="" asp-page="/Privacy">Privacy</a>
+    </footer>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
