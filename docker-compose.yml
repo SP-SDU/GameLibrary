@@ -15,19 +15,6 @@ services:
       - gamelibrary_usersecrets:/home/app/.microsoft/usersecrets:ro
       - gamelibrary_https:/home/app/.aspnet/https:ro
 
-  gamelibrary.db:
-    image: postgres:latest
-    container_name: gamelibrary.db
-    environment:
-      POSTGRES_DB: gamelibrary
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    volumes:
-      - gamelibrary_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
 volumes:
-  gamelibrary_data:
   gamelibrary_usersecrets:
   gamelibrary_https:
