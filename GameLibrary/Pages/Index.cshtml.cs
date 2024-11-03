@@ -1,4 +1,4 @@
-// Copyright 2024 PET Group
+// Copyright 2024 Web.Tech. Group17
 //
 // Licensed under the Apache License, Version 2.0 (the "License"):
 // you may not use this file except in compliance with the License.
@@ -12,20 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GameLibrary.Pages
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace GameLibrary.Pages;
+
+public class IndexModel : PageModel
 {
-    public class IndexModel : PageModel
+    private readonly ILogger<IndexModel> _logger;
+
+    public IndexModel(ILogger<IndexModel> logger)
     {
-        private readonly ILogger<IndexModel> _logger;
+        _logger = logger;
+    }
 
-        public IndexModel(ILogger<IndexModel> logger)
-        {
-            _logger = logger;
-        }
+    public void OnGet()
+    {
 
-        public void OnGet()
-        {
-
-        }
     }
 }

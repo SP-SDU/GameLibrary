@@ -4,28 +4,46 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - GameLibrary</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body>
+<body class="bg-dark text-light">
     <header>
-        <nav style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem;">
-            <a asp-area="" asp-page="/Index">GameLibrary</a> <!-- Should probably be a logo -->
-
-            <!-- Center Menu -->
-            <div style="flex-grow: 1; text-align: center;">
-                <a asp-area="" asp-page="/Index" style="margin-right: 1rem;">Home</a>
-                <a asp-area="" asp-page="/Privacy">Privacy</a>
+        <nav class="navbar navbar-expand-sm navbar-dark bg-dark border-bottom border-secondary shadow-sm mb-3">
+            <div class="container">
+                <a class="navbar-brand text-center text-break text-light" asp-area="" asp-page="/Index">GameLibrary</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-page="/Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-page="/Privacy">Privacy</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </nav>
     </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
 
-    <main>
-        @RenderBody()
-    </main>
-
-    <footer>
-        &copy; 2024 - GameLibrary - <a asp-area="" asp-page="/Privacy">Privacy</a>
+    <footer class="footer border-top border-secondary mt-auto position-fixed bottom-0 w-100 bg-dark text-light">
+        <div class="container py-2">
+            &copy; 2024 - GameLibrary - <a class="text-light" asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
     </footer>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/htmx/htmx.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
