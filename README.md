@@ -15,30 +15,6 @@
 1. Download the latest release from [releases](https://github.com/SP-SDU/GameLibrary/releases/).
 2. Follow the installation guide provided with the release.
 
-## Running with Docker 🐳
-
-1. Create a `.env` file in the project root with:
-
-   - **Windows**:
-     ```dotenv
-     SECRETS_PATH=${APPDATA}/Microsoft
-     HTTPS_PATH=${APPDATA}/ASP.NET
-     ```
-
-   - **Linux/macOS**:
-     ```dotenv
-     SECRETS_PATH=${HOME}/.microsoft
-     HTTPS_PATH=${HOME}/.aspnet
-     ```
-
-2. Run:
-
-   ```bash
-   docker-compose up
-   ```
-
-This sets paths for user secrets and HTTPS certificates which ASP.NET requires.
-
 ## Contributing 🤝
 
 1. **Clone** Open [GitHub Desktop](https://desktop.github.com/), go to `File > Clone Repository`, and enter:
