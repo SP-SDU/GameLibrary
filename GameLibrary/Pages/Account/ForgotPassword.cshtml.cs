@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace GameLibrary.Areas.Identity.Pages.Account
+namespace GameLibrary.Pages.Account
 {
     public class ForgotPasswordModel : PageModel
     {
@@ -67,7 +67,7 @@ namespace GameLibrary.Areas.Identity.Pages.Account
                 var callbackUrl = Url.Page(
                     "/Account/ResetPassword",
                     pageHandler: null,
-                    values: new { area = "Identity", code },
+                    values: new { area = "", code },
                     protocol: Request.Scheme);
 
                 await _emailSender.SendEmailAsync(

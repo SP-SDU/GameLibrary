@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
-namespace GameLibrary.Areas.Identity.Pages.Account
+namespace GameLibrary.Pages.Account
 {
     public class LoginWith2faModel : PageModel
     {

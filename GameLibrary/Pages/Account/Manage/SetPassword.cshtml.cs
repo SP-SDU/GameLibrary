@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace GameLibrary.Areas.Identity.Pages.Account.Manage
+namespace GameLibrary.Pages.Account.Manage
 {
     public class SetPasswordModel : PageModel
     {
