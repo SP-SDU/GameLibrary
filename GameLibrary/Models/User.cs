@@ -16,18 +16,10 @@ using Microsoft.AspNetCore.Identity;
 
 namespace GameLibrary.Models;
 
-public class User : IdentityUser
+public class User : IdentityUser<Guid>
 {
     string FirstName { get; set; }
     string LastName { get; set; }
     string Address { get; set; }
-    string City { get; set; }
-    string State { get; set; }
-    string ZipCode { get; set; }
-    string Country { get; set; }
-    string PhoneNumber { get; set; }
     string ProfilePicture { get; set; }
-    string FavoriteGame { get; set; }
-    string FavoriteGenre { get; set; }
-    string FavoritePlatform { get; set; }
 }

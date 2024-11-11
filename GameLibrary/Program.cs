@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using GameLibrary.Data;
-using Microsoft.AspNetCore.Identity;
+using GameLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameLibrary;
@@ -29,8 +29,9 @@ public class Program
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlite(connectionString));
 
-        builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+        builder.Services.AddDefaultIdentity<User>(options =>
             builder.Configuration.GetSection("Identity").Bind(options))
+            .AddRoles<Role>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
         builder.Services.AddRazorPages();
