@@ -18,5 +18,5 @@ namespace GameLibrary.Models;
 
 public class Role : IdentityRole<Guid>
 {
-    string Description { get; set; }
+    public string? Description { get; set; }
 }

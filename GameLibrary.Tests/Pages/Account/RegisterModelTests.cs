@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace GameLibrary.Models;
-
-public class User : IdentityUser<Guid>
+namespace GameLibrary.Tests.Pages.Account
 {
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
-    public string? Address { get; set; }
-    public string? ProfilePicture { get; set; }
+    internal class RegisterModelTests
+    {
+    }
 }
