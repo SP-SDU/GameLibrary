@@ -1,10 +1,165 @@
 ﻿@page
-@model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "GAMELIB";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!DOCTYPE html>     <!--Declares this is an HTML5 document.-->       
+<html lang="en">    <!--Sets the language of the page to English.-->        
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>@ViewData["Title"]</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            padding: 0; /* Removes default spacing around the body. */
+            font-family: Arial, sans-serif; /* Sets the font */
+            background-color: #000235;
+        }
+
+        .container {   /* Creates a centered content area */
+            width: 90%; /* Sets the width to 90% of the viewport. */
+            max-width: 1200px;  /* Limits the maximum width to 1200 pixels. */
+            margin: 0 auto; /* Centers the container horizontally. */
+            padding: 20px; /*  Adds padding inside the container. */
+        }
+
+        .navbar {  /* Styles for the navigation bar at the top.*/
+            display: flex; 
+            justify-content: space-between; /* Spaces items across the bar.*/
+            align-items: center; /* Vertically centers items.*/
+            padding: 20px 0; /* Adds vertical padding */
+        }
+
+        .navbar a {                      /* Styles for each link in the navigation bar.*/
+            color: #FFD700;              /* Sets link color */
+            text-decoration: none; /* Removes underline from links.*/
+            margin: 0 10px; 
+            font-weight: bold; /* Makes the links bold.*/
+        }
+
+        .navbar a:hover {
+            color: #FFA500;
+        }
+
+        .hero-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 40px 0;
+        }
+
+        .hero-text {
+            max-width: 50%;
+        }
+
+        .hero-text h1 {
+            font-size: 2.5em;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        .hero-text p {
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            margin-top: 20px;
+            font-size: 30PX;
+            display: inline-block;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 30px 45px;
+            color:  #FBFF00;
+            border: var(--clr-neon) 0.125em solid;
+            text-shadow: 0 0 0.125em  #FBFF00, 0 0 0.45em currentColor;
+            box-shadow: inset 0 0 0.5em 0 var(--clr-neon), 0 0 0.5em 0 var(--clr-neon);
+            border-radius: 35px;
+            position: relative;
+        }
+        .cta-button:hover {
+            background-color: #FF8C00;
+        }
+
+        .neon-button:focus {
+            color: var(--clr-bg);
+            text-shadow: none;
+            opacity: 1;
+        }
+
+        .image-section img {
+            max-width: 500px;
+        }
+
+        .about-section {
+            margin-top: 50px;
+        }
+
+        .about-section h2 {
+            font-size: 1.8em;
+            color: #FFD700;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding: 20px 0;
+            text-align: center;
+            border-top: 1px solid #333;
+        }
+
+        .footer p {
+            color: #888;
+            margin: 5px 0;
+        }
+
+
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Navbar -->
+        <div class="navbar">
+            <h2 style="color: #FFD700;">GAMELIB</h2>
+            <div>
+                <a href="#">Home</a>
+                <a href="#">My Page</a>
+                <a href="#">About</a>
+                <a href="#">Join us</a>
+            </div>
+        </div>
+
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-text">
+                <h1>Discover Our Library<br> Review And Collect<br> Your Game</h1>
+                <p>Create a free account or log in if you already have one.</p>
+                <a href="#" class="cta-button">Create a free account</a>
+            </div>
+            <div class="image-section">
+                <img src="~/images/Gamer.jpg" alt="Gaming setup">
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <div class="about-section">
+            <h2>What Is GAMELIB?</h2>
+            <p>GAMELIB is a site to track your game collection. Review the games you've played and add those upcoming to
+                your page.</p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>© GAMELIB 2024 • v1.0 • Powered by Group 17</p>
+        </div>
+    </div>
+
+</body>
+
+</html>
