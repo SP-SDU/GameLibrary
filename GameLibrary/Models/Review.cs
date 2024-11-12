@@ -19,10 +19,10 @@ namespace GameLibrary.Models
         public int Id { get; set; }
         public int GameId { get; set; }
         public Guid UserId { get; set; }
-        public required string Content { get; set; }
+        public string? Content { get; set; }
         public int Rating { get; set; }
 
         public Game? Game { get; set; }
-        public required User User { get; set; }
+        public User? User { get; set; }
     }
 }

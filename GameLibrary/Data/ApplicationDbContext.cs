@@ -13,11 +13,12 @@
 // limitations under the License.
 
 using GameLibrary.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameLibrary.Data;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
@@ -25,4 +26,5 @@ public class ApplicationDbContext : DbContext
     }
 
     public DbSet<Game> Games { get; set; } = default!;
+    public DbSet<Review> Reviews { get; set; } = default!;
 }

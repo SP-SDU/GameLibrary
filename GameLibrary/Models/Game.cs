@@ -23,5 +23,5 @@ public class Game
     public string? ReleaseDate { get; set; }
     public string? Description { get; set; }
 
-    public required ICollection<Review> Reviews { get; set; }
+    public ICollection<Review>? Reviews { get; set; }
 }
