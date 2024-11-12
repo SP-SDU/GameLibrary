@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,7 +21,7 @@ namespace GameLibrary.Pages.Game
         }
 
         [BindProperty]
-        public Game Game { get; set; } = default!;
+        public GameLibrary.Models.Game Game { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -30,7 +30,7 @@ namespace GameLibrary.Pages.Game
                 return NotFound();
             }
 
-            var game =  await _context.Games.FirstOrDefaultAsync(m => m.Id == id);
+            var game = await _context.Game.FirstOrDefaultAsync(m => m.Id == id);
             if (game == null)
             {
                 return NotFound();
@@ -71,7 +71,7 @@ namespace GameLibrary.Pages.Game
 
         private bool GameExists(int id)
         {
-            return _context.Games.Any(e => e.Id == id);
+            return _context.Game.Any(e => e.Id == id);
         }
     }
 }

@@ -18,6 +18,12 @@
                 <input asp-for="Game.Title" class="form-control" />
                 <span asp-validation-for="Game.Title" class="text-danger"></span>
             </div>
+			<div class="form-group">
+				<label asp-for="Game.ImageUrl" class="control-label"></label>
+				<input asp-for="Game.ImageUrl" class="form-control" />
+				<img src="@Model.Game.ImageUrl" class="img-thumbnail" />
+				<span asp-validation-for="Game.ImageUrl" class="text-danger"></span>
+			</div>
             <div class="form-group">
                 <label asp-for="Game.Genre" class="control-label"></label>
                 <input asp-for="Game.Genre" class="form-control" />

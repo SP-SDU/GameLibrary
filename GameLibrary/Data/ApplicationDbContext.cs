@@ -22,4 +22,6 @@ public class ApplicationDbContext : DbContext
         : base(options)
     {
     }
+
+    public DbSet<GameLibrary.Models.Game> Game { get; set; } = default!;
 }
