@@ -26,7 +26,7 @@ namespace GameLibrary.Pages.Game
         }
 
         [BindProperty]
-        public Game Game { get; set; } = default!;
+        public GameLibrary.Models.Game Game { get; set; } = default!;
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
@@ -36,7 +36,7 @@ namespace GameLibrary.Pages.Game
                 return Page();
             }
 
-            _context.Games.Add(Game);
+            _context.Game.Add(Game);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
