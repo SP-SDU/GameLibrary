@@ -37,14 +37,6 @@ public class Program
 
         builder.Services.AddRazorPages();
 
-        builder.Services.AddAuthorization(options =>
-        {
-            builder.Configuration.GetSection("Authorization:Policies")
-                .Get<Dictionary<string, string[]>>()?
-                .ToList()
-                .ForEach(policy => options.AddPolicy(policy.Key, policyBuilder => policyBuilder.RequireRole(policy.Value)));
-        });
-
         var app = builder.Build();
 
         using (var scope = app.Services.CreateScope())

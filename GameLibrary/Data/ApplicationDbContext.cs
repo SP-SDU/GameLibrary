@@ -60,7 +60,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
 
             entity.Property(e => e.Comment).IsRequired().HasMaxLength(1000);
             entity.Property(e => e.Rating).IsRequired();
-            entity.HasCheckConstraint("CK_Review_Rating", "Rating >= 1 AND Rating <= 5");
+            entity.ToTable(t => t.HasCheckConstraint("CK_Review_Rating", "Rating >= 1 AND Rating <= 5"));
         });
 
         // UserFavorite configurations

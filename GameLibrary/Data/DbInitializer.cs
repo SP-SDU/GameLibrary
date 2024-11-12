@@ -16,102 +16,95 @@ using GameLibrary.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace GameLibrary.Data
+namespace GameLibrary.Data;
+
+public static class DbInitializer
 {
-    public static class DbInitializer
+    /// <summary> Seeding the database. </summary>
+    public static void Initialize(ApplicationDbContext context, UserManager<User> userManager, RoleManager<Role> roleManager)
     {
-        public static void Initialize(ApplicationDbContext context, UserManager<User> userManager, RoleManager<Role> roleManager)
+        // Apply any pending migrations
+        if (context.Database.GetPendingMigrations().Any())
         {
-            // Apply any pending migrations
-            if (context.Database.GetPendingMigrations().Any())
-            {
-                context.Database.Migrate();
-            }
-
-            // Check if we already have games
-            if (context.Games.Any())
-            {
-                return; // DB has been seeded
-            }
-
-            // Ensure roles are created
-            var roles = new[] { "Administrator", "User" };
-            foreach (var role in roles)
-            {
-                if (!roleManager.RoleExistsAsync(role).Result)
-                {
-                    roleManager.CreateAsync(new Role { Name = role }).Wait();
-                }
-            }
-
-            // Add test user with proper password hashing
-            var user = new User
-            {
-                UserName = "testuser",
-                Email = "test@example.com",
-                CreatedAt = DateTime.UtcNow
-            };
-
-            if (userManager.FindByNameAsync(user.UserName).Result == null)
-            {
-                var result = userManager.CreateAsync(user, "password123").Result;
-                if (result.Succeeded)
-                {
-                    userManager.AddToRoleAsync(user, "User").Wait();
-                }
-            }
-
-            context.SaveChanges(); // Save to get the user ID
-
-            // Add test games
-            var games = new Game[]
-            {
-                new Game
-                {
-                    Title = "The Legend of Zelda: Breath of the Wild",
-                    Description = "Step into a world of discovery, exploration, and adventure in The Legend of Zelda: Breath of the Wild. Travel across vast fields, through forests, and to mountain peaks as you discover what has become of the kingdom of Hyrule in this stunning Open-Air Adventure.",
-                    Genre = "Action-Adventure",
-                    ReleaseDate = new DateTime(2017, 3, 3),
-                    Developer = "Nintendo EPD",
-                    Publisher = "Nintendo"
-                }
-                // Add more games as needed
-            };
-
-            context.Games.AddRange(games);
-            context.SaveChanges();
-
-            // Add test reviews with validation
-            var reviews = new Review[]
-            {
-                new Review
-                {
-                    GameId = games[0].Id,
-                    UserId = user.Id, // Use the inherited Id property from IdentityUser<Guid>
-                    Rating = 5,
-                    Comment = "One of the best games I've ever played! The open world is breathtaking and there's so much to discover.",
-                    CreatedAt = DateTime.UtcNow.AddDays(-5)
-                },
-                new Review
-                {
-                    GameId = games[0].Id,
-                    UserId = user.Id, // Use the inherited Id property from IdentityUser<Guid>
-                    Rating = 5,
-                    Comment = "An absolute masterpiece. The attention to detail and storytelling are unmatched.",
-                    CreatedAt = DateTime.UtcNow.AddDays(-3)
-                },
-                new Review
-                {
-                    GameId = games[0].Id,
-                    UserId = user.Id, // Use the inherited Id property from IdentityUser<Guid>
-                    Rating = 4,
-                    Comment = "A visually stunning game with a deep story, though it had some bugs at launch.",
-                    CreatedAt = DateTime.UtcNow.AddDays(-1)
-                }
-            };
-
-            context.Reviews.AddRange(reviews);
-            context.SaveChanges();
+            context.Database.Migrate();
         }
+
+        // Check if we already have games
+        if (context.Games.Any())
+        {
+            return; // DB has been seeded
+        }
+
+        // Ensure roles are created
+        var roles = new[] { "Administrator", "User" };
+        foreach (var role in roles)
+        {
+            if (!roleManager.RoleExistsAsync(role).Result)
+            {
+                roleManager.CreateAsync(new Role { Name = role }).Wait();
+            }
+        }
+
+        var user = new User
+        {
+            UserName = "admin@example.com",
+            Email = "admin@example.com"
+        };
+
+        if (userManager.FindByNameAsync(user.UserName).Result == null)
+        {
+            var result = userManager.CreateAsync(user, "Password123!").Result;
+            if (result.Succeeded)
+            {
+                userManager.AddToRoleAsync(user, "Administrator").Wait();
+            }
+        }
+
+        context.SaveChanges();
+
+        // Add test games
+        var games = new Game[]
+        {
+            new() {
+                Title = "The Legend of Zelda: Breath of the Wild",
+                Description = "Step into a world of discovery, exploration, and adventure in The Legend of Zelda: Breath of the Wild. Travel across vast fields, through forests, and to mountain peaks as you discover what has become of the kingdom of Hyrule in this stunning Open-Air Adventure.",
+                Genre = "Action-Adventure",
+                ReleaseDate = new DateTime(2017, 3, 3, 0, 0, 0, DateTimeKind.Utc),
+                Developer = "Nintendo EPD",
+                Publisher = "Nintendo"
+            }
+        };
+
+        context.Games.AddRange(games);
+        context.SaveChanges();
+
+        // Add test reviews with validation
+        var reviews = new Review[]
+        {
+            new() {
+                GameId = games[0].Id,
+                UserId = user.Id, // Use the inherited Id property from IdentityUser<Guid>
+                Rating = 5,
+                Comment = "One of the best games I've ever played! The open world is breathtaking and there's so much to discover.",
+                CreatedAt = DateTime.UtcNow.AddDays(-5)
+            },
+            new() {
+                GameId = games[0].Id,
+                UserId = user.Id, // Use the inherited Id property from IdentityUser<Guid>
+                Rating = 5,
+                Comment = "An absolute masterpiece. The attention to detail and storytelling are unmatched.",
+                CreatedAt = DateTime.UtcNow.AddDays(-3)
+            },
+            new() {
+                GameId = games[0].Id,
+                UserId = user.Id, // Use the inherited Id property from IdentityUser<Guid>
+                Rating = 4,
+                Comment = "A visually stunning game with a deep story, though it had some bugs at launch.",
+                CreatedAt = DateTime.UtcNow.AddDays(-1)
+            }
+        };
+
+        context.Reviews.AddRange(reviews);
+        context.SaveChanges();
     }
 }

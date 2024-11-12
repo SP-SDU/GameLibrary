@@ -27,11 +27,12 @@ public class User : IdentityUser<Guid>
     [StringLength(500)]
     [DataType(DataType.ImageUrl)]
     public string? AvatarUrl { get; set; }
-    // Navigation properties
-    public ICollection<Review> Reviews { get; set; } = new List<Review>();
-    public ICollection<UserFavorite> Favorites { get; set; } = new List<UserFavorite>();
 
     [Required]
     [DataType(DataType.DateTime)]
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    // Navigation properties
+    public ICollection<Review> Reviews { get; set; } = [];
+    public ICollection<UserFavorite> Favorites { get; set; } = [];
 }
