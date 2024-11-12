@@ -8,38 +8,44 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using GameLibrary.Data;
 using GameLibrary.Models;
 
+namespace GameLibrary.Pages.Games;
 
-namespace GameLibrary.Pages.Game
+public class CreateModel : PageModel
 {
-    public class CreateModel : PageModel
+    private readonly ApplicationDbContext _context;
+
+    public CreateModel(ApplicationDbContext context)
     {
-        private readonly GameLibrary.Data.ApplicationDbContext _context;
+        _context = context;
+    }
 
-        public CreateModel(GameLibrary.Data.ApplicationDbContext context)
+    public IActionResult OnGet()
+    {
+        Game = new Game
         {
-            _context = context;
-        }
+            Title = "Sample Game",
+            Genre = "Action",
+            ReleaseDate = DateTime.Now.ToString("yyyy-MM-dd"),
+            Description = "Description of the game",
+            Reviews = []
+        };
+        return Page();
+    }
 
-        public IActionResult OnGet()
+    [BindProperty]
+    public Game? Game { get; set; }
+
+    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if (!ModelState.IsValid)
         {
             return Page();
         }
 
-        [BindProperty]
-        public GameLibrary.Models.Game Game { get; set; } = default!;
+        _context.Games.Add(Game!);
+        await _context.SaveChangesAsync();
 
-        // For more information, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
-        {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            _context.Game.Add(Game);
-            await _context.SaveChangesAsync();
-
-            return RedirectToPage("./Index");
-        }
+        return RedirectToPage("./Index");
     }
 }

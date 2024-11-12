@@ -12,17 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GameLibrary.Models
-{
-    public class Game
-    {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public string ImageUrl { get; set; }
-        public string Genre { get; set; }
-        public string ReleaseDate { get; set; }
-        public string Description { get; set; }
+namespace GameLibrary.Models;
 
-        public required ICollection<Review> Reviews { get; set; }
-    }
+public class Game
+{
+    public int Id { get; set; }
+    public string? Title { get; set; }
+    public string? ImageUrl { get; set; }
+    public string? Genre { get; set; }
+    public string? ReleaseDate { get; set; }
+    public string? Description { get; set; }
+
+    public ICollection<Review>? Reviews { get; set; }
 }

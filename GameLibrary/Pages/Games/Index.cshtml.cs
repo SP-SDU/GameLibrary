@@ -8,8 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using GameLibrary.Data;
 using GameLibrary.Models;
 
-
-namespace GameLibrary.Pages.Game
+namespace GameLibrary.Pages.Games
 {
     public class IndexModel : PageModel
     {
@@ -20,11 +19,11 @@ namespace GameLibrary.Pages.Game
             _context = context;
         }
 
-        public IList<Game> Game { get; set; } = default!;
+        public IList<Game>? Games { get; set; }
 
         public async Task OnGetAsync()
         {
-            Game = await _context.Games.ToListAsync();
+            Games = await _context.Games.ToListAsync();
         }
     }
 }

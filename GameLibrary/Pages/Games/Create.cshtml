@@ -1,5 +1,5 @@
 ﻿@page
-@model GameLibrary.Pages.Game.CreateModel
+@model GameLibrary.Pages.Games.CreateModel
 
 @{
     ViewData["Title"] = "Create";
@@ -13,32 +13,31 @@
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
-                <label asp-for="Game.Title" class="control-label"></label>
-                <input asp-for="Game.Title" class="form-control" />
-                <span asp-validation-for="Game.Title" class="text-danger"></span>
+                <label asp-for="Game!.Title" class="control-label"></label>
+                <input asp-for="Game!.Title" class="form-control" />
+                <span asp-validation-for="Game!.Title" class="text-danger"></span>
             </div>
-			<div class="form-group">
-				<label asp-for="Game.ImageUrl" class="control-label"></label>
-				<input asp-for="Game.ImageUrl" class="form-control" />
-				<img src="@Model.Game.ImageUrl" class="img-thumbnail" />
-				<span asp-validation-for="Game.ImageUrl" class="text-danger"></span>
-			</div>
+
             <div class="form-group">
-                <label asp-for="Game.Genre" class="control-label"></label>
-                <input asp-for="Game.Genre" class="form-control" />
-                <span asp-validation-for="Game.Genre" class="text-danger"></span>
+                <label asp-for="Game!.Genre" class="control-label"></label>
+                <input asp-for="Game!.Genre" class="form-control" />
+                <span asp-validation-for="Game!.Genre" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Game.ReleaseDate" class="control-label"></label>
-                <input asp-for="Game.ReleaseDate" class="form-control" />
-                <span asp-validation-for="Game.ReleaseDate" class="text-danger"></span>
+                <label asp-for="Game!.ReleaseDate" class="control-label"></label>
+                <input asp-for="Game!.ReleaseDate" class="form-control" />
+                <span asp-validation-for="Game!.ReleaseDate" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Game.Description" class="control-label"></label>
-                <input asp-for="Game.Description" class="form-control" />
-                <span asp-validation-for="Game.Description" class="text-danger"></span>
+                <label asp-for="Game!.Description" class="control-label"></label>
+                <textarea asp-for="Game!.Description" class="form-control"></textarea>
+                <span asp-validation-for="Game!.Description" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -49,7 +48,3 @@
 <div>
     <a asp-page="Index">Back to List</a>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

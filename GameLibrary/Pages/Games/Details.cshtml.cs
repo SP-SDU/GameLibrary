@@ -8,36 +8,32 @@ using Microsoft.EntityFrameworkCore;
 using GameLibrary.Data;
 using GameLibrary.Models;
 
-namespace GameLibrary.Pages.Game
+namespace GameLibrary.Pages.Games;
+
+public class DetailsModel : PageModel
 {
-    public class DetailsModel : PageModel
+    private readonly ApplicationDbContext _context;
+
+    public DetailsModel(ApplicationDbContext context)
     {
-        private readonly GameLibrary.Data.ApplicationDbContext _context;
+        _context = context;
+    }
 
-        public DetailsModel(GameLibrary.Data.ApplicationDbContext context)
+    public Game? Game { get; set; }
+
+    public async Task<IActionResult> OnGetAsync(int? id)
+    {
+        if (id == null)
         {
-            _context = context;
+            return NotFound();
         }
 
-        public GameLibrary.Models.Game Game { get; set; } = default!;
+        Game = await _context.Games.FirstOrDefaultAsync(m => m.Id == id);
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        if (Game == null)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var game = await _context.Game.FirstOrDefaultAsync(m => m.Id == id);
-            if (game == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                Game = game;
-            }
-            return Page();
+            return NotFound();
         }
+        return Page();
     }
 }
