@@ -1,4 +1,4 @@
-// Copyright 2024 PET Group16
+// Copyright 2024 Web.Tech. Group17
 //
 // Licensed under the Apache License, Version 2.0 (the "License"):
 // you may not use this file except in compliance with the License.
@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GameLibrary.Pages;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Diagnostics;
-using GameLibrary.Pages;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace GameLibrary.Tests;
 

@@ -12,21 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Identity;
 
-namespace GameLibrary.Pages;
+namespace GameLibrary.Models;
 
-public class IndexModel : PageModel
+public class User : IdentityUser<Guid>
 {
-    private readonly ILogger<IndexModel> _logger;
-
-    public IndexModel(ILogger<IndexModel> logger)
-    {
-        _logger = logger;
-    }
-
-    public void OnGet()
-    {
-
-    }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? Address { get; set; }
+    public string? ProfilePicture { get; set; }
 }
