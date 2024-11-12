@@ -12,24 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GameLibrary.Models;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
-namespace GameLibrary.Data;
+namespace GameLibrary.Models;
 
-public class ApplicationDbContext : DbContext
+public class Role : IdentityRole<Guid>
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
-    {
-    }
-
-    public DbSet<Game> Games { get; set; }
-    public DbSet<Review> Reviews { get; set; }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Game>().ToTable("Game");
-        modelBuilder.Entity<Review>().ToTable("Review");
-    }
+    public string? Description { get; set; }
 }
