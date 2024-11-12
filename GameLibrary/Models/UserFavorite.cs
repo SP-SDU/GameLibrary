@@ -12,29 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GameLibrary.Data;
-using GameLibrary.Models;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace GameLibrary.Pages;
+namespace GameLibrary.Models;
 
-public class IndexModel : PageModel
+[Index(nameof(UserId), nameof(GameId), IsUnique = true, Name = "IX_UserFavorites_UserGame")]
+public class UserFavorite
 {
-    private readonly ApplicationDbContext _context;
+    public int Id { get; set; }
 
-    public IndexModel(ApplicationDbContext context)
-    {
-        _context = context;
-    }
+    [Required]
+    public int UserId { get; set; }
 
-    public IList<Game> Games { get; set; } = new List<Game>();
+    [Required]
+    public int GameId { get; set; }
 
-    public async Task OnGetAsync()
-    {
-        Games = await _context.Games
-            .OrderByDescending(g => g.Rating)
-            .ThenByDescending(g => g.ReleaseDate)
-            .ToListAsync();
-    }
+    [Required]
+    [DataType(DataType.DateTime)]
+    public DateTime AddedAt { get; set; }
+
+    // Navigation properties
+    public User? User { get; set; }
+    public Game? Game { get; set; }
 }
