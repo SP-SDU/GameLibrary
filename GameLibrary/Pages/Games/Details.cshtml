@@ -1,0 +1,80 @@
+@page "{id:int}"
+@model GameLibrary.Pages.Games.DetailsModel
+@{
+    ViewData["Title"] = Model.Game?.Title ?? "Game Details";
+}
+
+<div class="game-details-container">
+    <div class="game-header">
+        @if (!string.IsNullOrEmpty(Model.Game?.ImageUrl))
+        {
+            <img src="@Model.Game.ImageUrl" alt="@Model.Game.Title" class="game-cover" />
+        }
+        <div class="game-info">
+            <h1>@Model.Game?.Title</h1>
+            <div class="game-meta">
+                <span class="genre">@Model.Game?.Genre</span>
+                <span class="developer">@Model.Game?.Developer</span>
+                <span class="publisher">@Model.Game?.Publisher</span>
+                <span class="release-date">@Model.Game?.ReleaseDate.ToString("MMMM d, yyyy")</span>
+            </div>
+            <div class="rating">
+                <span class="stars">
+                    @for (var i = 1; i <= 5; i++)
+                    {
+                        if (Model.Game?.Rating >= i)
+                        {
+                            <i class="fas fa-star"></i>
+                        }
+                        else if (Model.Game?.Rating > i - 1)
+                        {
+                            <i class="fas fa-star-half-alt"></i>
+                        }
+                        else
+                        {
+                            <i class="far fa-star"></i>
+                        }
+                    }
+                </span>
+                <span class="rating-value">@(Model.Game?.Rating.ToString("F1") ?? "N/A")</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-description">
+        <h2>About</h2>
+        <p>@Model.Game?.Description</p>
+    </div>
+
+    <div class="game-reviews" hx-trigger="load"
+        hx-get="@Url.Page("./Details", "OnGetReviewsAsync", new { id = Model.Game?.Id })" hx-target="this">
+        <div class="loading">Loading reviews...</div>
+    </div>
+
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <div class="add-review">
+            <h3>Add Your Review</h3>
+            <form hx-post="@Url.Page("./Details", "AddReview", new { id = Model.Game?.Id })" hx-target="#reviews-list">
+                <div class="rating-input">
+                    @for (var i = 1; i <= 5; i++)
+                    {
+                        <input type="radio" id="star@(i)" name="rating" value="@i" />
+                        <label for="star@(i)"><i class="far fa-star"></i></label>
+                    }
+                </div>
+                <textarea name="comment" required placeholder="Write your review here..."></textarea>
+                <button type="submit" class="btn btn-primary">Submit Review</button>
+            </form>
+        </div>
+    }
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/games/details.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+}
+
+@section Scripts {
+    <script src="~/js/games/details.js"></script>
+}

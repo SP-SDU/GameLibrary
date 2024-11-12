@@ -12,21 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+
+using GameLibrary.Data;
+using GameLibrary.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameLibrary.Pages;
 
 public class IndexModel : PageModel
 {
-    private readonly ILogger<IndexModel> _logger;
+    private readonly ApplicationDbContext _context;
 
-    public IndexModel(ILogger<IndexModel> logger)
+    public IndexModel(ApplicationDbContext context)
     {
-        _logger = logger;
+        _context = context;
     }
 
-    public void OnGet()
-    {
+    public IList<Game> Games { get; set; } = new List<Game>();
 
+    public async Task OnGetAsync()
+    {
+        Games = await _context.Games
+            .OrderByDescending(g => g.Rating)
+            .ThenByDescending(g => g.ReleaseDate)
+            .ToListAsync();
     }
 }
