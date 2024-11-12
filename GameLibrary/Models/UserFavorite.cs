@@ -23,7 +23,7 @@ public class UserFavorite
     public int Id { get; set; }
 
     [Required]
-    public int UserId { get; set; }
+    public Guid UserId { get; set; }
 
     [Required]
     public int GameId { get; set; }

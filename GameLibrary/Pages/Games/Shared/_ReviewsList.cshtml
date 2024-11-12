@@ -15,7 +15,7 @@
                     <div class="reviewer-info">
                         @if (!string.IsNullOrEmpty(review.User?.AvatarUrl))
                         {
-                            <img src="@review.User.AvatarUrl" alt="@review.User.Username" class="reviewer-avatar" />
+                            <img src="@review.User.AvatarUrl" alt="@review.User.UserName" class="reviewer-avatar" />
                         }
                         else
                         {
@@ -23,7 +23,7 @@
                                 <i class="fas fa-user"></i>
                             </div>
                         }
-                        <span class="reviewer-name">@review.User?.Username</span>
+                        <span class="reviewer-name">@review.User?.UserName</span>
                     </div>
                     <div class="review-rating">
                         @for (var i = 1; i <= 5; i++)
@@ -39,11 +39,11 @@
                         }
                     </div>
                 </div>
-                <div class="review-content">
+                <div class="review-body">
                     <p>@review.Comment</p>
                 </div>
                 <div class="review-footer">
-                    <span class="review-date">@review.CreatedAt.ToString("MMMM d, yyyy")</span>
+                    <span class="review-date">@review.CreatedAt.ToString("MMMM dd, yyyy")</span>
                 </div>
             </div>
         }

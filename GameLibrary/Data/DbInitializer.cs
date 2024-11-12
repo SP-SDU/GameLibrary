@@ -13,20 +13,15 @@
 // limitations under the License.
 
 using GameLibrary.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using BCrypt.Net;
 
-namespace GameLibrary.Data;
-
-public static class DbInitializer
+namespace GameLibrary.Data
 {
-    public static void Initialize(ApplicationDbContext context)
+    public static class DbInitializer
     {
-        try
+        public static void Initialize(ApplicationDbContext context, UserManager<User> userManager, RoleManager<Role> roleManager)
         {
-            // Ensure database is created
-            context.Database.EnsureCreated();
-
             // Apply any pending migrations
             if (context.Database.GetPendingMigrations().Any())
             {
@@ -39,18 +34,33 @@ public static class DbInitializer
                 return; // DB has been seeded
             }
 
+            // Ensure roles are created
+            var roles = new[] { "Administrator", "User" };
+            foreach (var role in roles)
+            {
+                if (!roleManager.RoleExistsAsync(role).Result)
+                {
+                    roleManager.CreateAsync(new Role { Name = role }).Wait();
+                }
+            }
+
             // Add test user with proper password hashing
             var user = new User
             {
-                Username = "testuser",
+                UserName = "testuser",
                 Email = "test@example.com",
-                // Use higher work factor for better security
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("password123", workFactor: 12),
-                IsAdmin = false,
                 CreatedAt = DateTime.UtcNow
             };
 
-            context.Users.Add(user);
+            if (userManager.FindByNameAsync(user.UserName).Result == null)
+            {
+                var result = userManager.CreateAsync(user, "password123").Result;
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "User").Wait();
+                }
+            }
+
             context.SaveChanges(); // Save to get the user ID
 
             // Add test games
@@ -63,65 +73,9 @@ public static class DbInitializer
                     Genre = "Action-Adventure",
                     ReleaseDate = new DateTime(2017, 3, 3),
                     Developer = "Nintendo EPD",
-                    Publisher = "Nintendo",
-                    ImageUrl = "https://assets.nintendo.com/image/upload/c_pad,f_auto,h_613,q_auto,w_1089/ncom/en_US/games/switch/t/the-legend-of-zelda-breath-of-the-wild-switch/hero?v=2021120201",
-                    Rating = 4.9
-                },
-                new Game
-                {
-                    Title = "Red Dead Redemption 2",
-                    Description = "America, 1899. The end of the Wild West era has begun. After a robbery goes badly wrong in the western town of Blackwater, Arthur Morgan and the Van der Linde gang are forced to flee. With federal agents and the best bounty hunters in the nation massing on their heels, the gang must rob, steal and fight their way across the rugged heartland of America in order to survive.",
-                    Genre = "Action",
-                    ReleaseDate = new DateTime(2018, 10, 26),
-                    Developer = "Rockstar Games",
-                    Publisher = "Rockstar Games",
-                    ImageUrl = "https://upload.wikimedia.org/wikipedia/en/thumb/4/44/Red_Dead_Redemption_II.jpg/220px-Red_Dead_Redemption_II.jpg",
-                    Rating = 4.8
-                },
-                new Game
-                {
-                    Title = "Cyberpunk 2077",
-                    Description = "Cyberpunk 2077 is an open-world, action-adventure story set in Night City, a megalopolis obsessed with power, glamour, and body modification. You play as V, a mercenary outlaw going after a one-of-a-kind implant that is the key to immortality.",
-                    Genre = "RPG",
-                    ReleaseDate = new DateTime(2020, 12, 10),
-                    Developer = "CD Projekt Red",
-                    Publisher = "CD Projekt",
-                    ImageUrl = "https://static.wikia.nocookie.net/cyberpunk/images/9/9f/Cyberpunk2077_box_art.jpg",
-                    Rating = 4.5
-                },
-                new Game
-                {
-                    Title = "Super Mario Bros. Wonder",
-                    Description = "Join Mario and his friends on a wondrous adventure in a world where anything can happen! Explore a vibrant and unpredictable land filled with secrets, power-ups, and captivating challenges.",
-                    Genre = "Platformer",
-                    ReleaseDate = new DateTime(2023, 10, 20),
-                    Developer = "Nintendo EPD",
-                    Publisher = "Nintendo",
-                    ImageUrl = "https://upload.wikimedia.org/wikipedia/en/3/34/Super_Mario_Bros._Wonder_cover_art.jpg",
-                    Rating = 4.7
-                },
-                new Game
-                {
-                    Title = "God of War",
-                    Description = "Embark on an epic and emotional journey as Kratos, the Spartan warrior, seeks a new life in the Norse realm. Confront powerful gods and mythical creatures while grappling with his past and guiding his son, Atreus.",
-                    Genre = "Action-Adventure",
-                    ReleaseDate = new DateTime(2018, 4, 20),
-                    Developer = "Santa Monica Studio",
-                    Publisher = "Sony Interactive Entertainment",
-                    ImageUrl = "https://upload.wikimedia.org/wikipedia/en/a/a7/God_of_War_4_cover.jpg",
-                    Rating = 4.8
-                },
-                new Game
-                {
-                    Title = "Elden Ring",
-                    Description = "Venture into the Lands Between, a vast and treacherous open world created by Hidetaka Miyazaki and George R. R. Martin. Unravel the mysteries of the Elden Ring, conquer demigods, and become the Elden Lord.",
-                    Genre = "Action RPG",
-                    ReleaseDate = new DateTime(2022, 2, 25),
-                    Developer = "FromSoftware",
-                    Publisher = "Bandai Namco Entertainment",
-                    ImageUrl = "https://upload.wikimedia.org/wikipedia/en/b/b9/Elden_Ring_cover_art.jpg",
-                    Rating = 4.6
+                    Publisher = "Nintendo"
                 }
+                // Add more games as needed
             };
 
             context.Games.AddRange(games);
@@ -133,23 +87,23 @@ public static class DbInitializer
                 new Review
                 {
                     GameId = games[0].Id,
-                    UserId = user.Id,
+                    UserId = user.Id, // Use the inherited Id property from IdentityUser<Guid>
                     Rating = 5,
                     Comment = "One of the best games I've ever played! The open world is breathtaking and there's so much to discover.",
                     CreatedAt = DateTime.UtcNow.AddDays(-5)
                 },
                 new Review
                 {
-                    GameId = games[1].Id,
-                    UserId = user.Id,
+                    GameId = games[0].Id,
+                    UserId = user.Id, // Use the inherited Id property from IdentityUser<Guid>
                     Rating = 5,
                     Comment = "An absolute masterpiece. The attention to detail and storytelling are unmatched.",
                     CreatedAt = DateTime.UtcNow.AddDays(-3)
                 },
                 new Review
                 {
-                    GameId = games[2].Id,
-                    UserId = user.Id,
+                    GameId = games[0].Id,
+                    UserId = user.Id, // Use the inherited Id property from IdentityUser<Guid>
                     Rating = 4,
                     Comment = "A visually stunning game with a deep story, though it had some bugs at launch.",
                     CreatedAt = DateTime.UtcNow.AddDays(-1)
@@ -158,10 +112,6 @@ public static class DbInitializer
 
             context.Reviews.AddRange(reviews);
             context.SaveChanges();
-        }
-        catch (Exception ex)
-        {
-            throw new ApplicationException("An error occurred while seeding the database.", ex);
         }
     }
 }
