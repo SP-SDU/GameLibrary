@@ -15,6 +15,18 @@
 1. Download the latest release from [releases](https://github.com/SP-SDU/GameLibrary/releases/).
 2. Follow the installation guide provided with the release.
 
+## Updating Migrations in the Asp.NET Project 🖱️
+
+If you make changes to the application database context, follow these steps to update the migrations:
+
+1. **Delete the ****`Migrations`**** folder** in the project directory.
+2. **Run the following command** in the Razor Pages project directory:
+   ```bash
+   dotnet ef migrations add Init
+   ```
+
+This will create a new initial migration reflecting the changes to the database context.
+
 ## Contributing 🤝
 
 1. **Clone** Open [GitHub Desktop](https://desktop.github.com/), go to `File > Clone Repository`, and enter:
