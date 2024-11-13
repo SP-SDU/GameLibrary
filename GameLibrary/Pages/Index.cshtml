@@ -85,10 +85,27 @@
             background-color: #FF8C00;
         }
 
-        .neon-button:focus {
+        .cta-button:focus {
             color: var(--clr-bg);
             text-shadow: none;
             opacity: 1;
+        }
+
+        .login-button {
+            margin-top: 10px;
+            font-size: 20px;
+            display: inline-block;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 15px 30px;
+            color: #FBFF00;
+            text-shadow: 0 0 0.125em #FBFF00, 0 0 0.35em currentColor;
+            border-radius: 25px;
+        }
+
+        .login-button:hover {
+            background-color: #FFA500;
         }
 
         .image-section img {
@@ -124,7 +141,6 @@
 <body>
 
     <div class="container">
-        <!-- Navbar -->
         <div class="navbar">
             <h2 style="color: #FFD700;">GAMELIB</h2>
             <div>
@@ -135,26 +151,24 @@
             </div>
         </div>
 
-        <!-- Hero Section -->
         <div class="hero-section">
             <div class="hero-text">
                 <h1>Discover Our Library<br> Review And Collect<br> Your Game</h1>
                 <p>Create a free account or log in if you already have one.</p>
                 <a href="#" class="cta-button">Create a free account</a>
+                <a href="#" class="login-button">Log In</a>
             </div>
             <div class="image-section">
                 <img src="~/images/Gamer.jpg" alt="Gaming setup">
             </div>
         </div>
 
-        <!-- About Section -->
         <div class="about-section">
             <h2>What Is GAMELIB?</h2>
             <p>GAMELIB is a site to track your game collection. Review the games you've played and add those upcoming to
                 your page.</p>
         </div>
 
-        <!-- Footer -->
         <div class="footer">
             <p>© GAMELIB 2024 • v1.0 • Powered by Group 17</p>
         </div>
