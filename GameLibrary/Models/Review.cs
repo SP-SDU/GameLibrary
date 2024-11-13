@@ -24,7 +24,7 @@ public class Review
     public int GameId { get; set; }
 
     [Required]
-    public Guid UserId { get; set; }
+    public int UserId { get; set; }
 
     [Required]
     [Range(1, 5, ErrorMessage = "Rating must be between 1 and 5")]

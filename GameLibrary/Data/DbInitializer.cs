@@ -21,8 +21,14 @@ namespace GameLibrary.Data;
 public static class DbInitializer
 {
     /// <summary> Seeding the database. </summary>
-    public static void Initialize(ApplicationDbContext context, UserManager<User> userManager, RoleManager<Role> roleManager)
+    public static void Initialize(this IApplicationBuilder app)
     {
+        using IServiceScope scope = app.ApplicationServices.CreateScope();
+        var services = scope.ServiceProvider;
+        using ApplicationDbContext context = services.GetRequiredService<ApplicationDbContext>();
+        var userManager = services.GetRequiredService<UserManager<User>>();
+        var roleManager = services.GetRequiredService<RoleManager<Role>>();
+
         // Apply any pending migrations
         if (context.Database.GetPendingMigrations().Any())
         {
@@ -48,7 +54,8 @@ public static class DbInitializer
         var user = new User
         {
             UserName = "admin@example.com",
-            Email = "admin@example.com"
+            Email = "admin@example.com",
+            EmailConfirmed = true
         };
 
         if (userManager.FindByNameAsync(user.UserName).Result == null)

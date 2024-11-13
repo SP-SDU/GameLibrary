@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace GameLibrary.Models;
 
-public class Role : IdentityRole<Guid>
+public class Role : IdentityRole<int>
 {
     public string? Description { get; set; }
 }

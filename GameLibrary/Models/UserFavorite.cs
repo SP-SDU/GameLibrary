@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace GameLibrary.Models;
 
@@ -23,7 +23,7 @@ public class UserFavorite
     public int Id { get; set; }
 
     [Required]
-    public Guid UserId { get; set; }
+    public int UserId { get; set; }
 
     [Required]
     public int GameId { get; set; }
