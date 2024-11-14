@@ -19,9 +19,9 @@ namespace GameLibrary.Migrations
 
             modelBuilder.Entity("GameLibrary.Models.Game", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -66,9 +66,9 @@ namespace GameLibrary.Migrations
 
             modelBuilder.Entity("GameLibrary.Models.Review", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Comment")
                         .IsRequired()
@@ -78,8 +78,8 @@ namespace GameLibrary.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("GameId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Rating")
                         .HasColumnType("INTEGER");
@@ -212,15 +212,15 @@ namespace GameLibrary.Migrations
 
             modelBuilder.Entity("GameLibrary.Models.UserFavorite", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("GameId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");

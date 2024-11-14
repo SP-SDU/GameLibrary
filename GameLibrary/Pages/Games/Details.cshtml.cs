@@ -31,7 +31,7 @@ namespace GameLibrary.Pages.Games
 
         public Game? Game { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int id)
+        public async Task<IActionResult> OnGetAsync(Guid id)
         {
             if (_context.Games == null)
             {
@@ -50,7 +50,7 @@ namespace GameLibrary.Pages.Games
             return Page();
         }
 
-        public async Task<IActionResult> OnGetReviewsAsync(int id)
+        public async Task<IActionResult> OnGetReviewsAsync(Guid id)
         {
             var reviews = await _context.Reviews
                 .Include(r => r.User)

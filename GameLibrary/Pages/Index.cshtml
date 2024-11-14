@@ -1,26 +1,64 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "GAMELIB";
+    ViewData["Title"] = "Home";
 }
-<div class="container">
-    <div class="hero-section">
-        <div class="hero-text">
-            <h1>Discover Our Library<br> Review And Collect<br> Your Game</h1>
-            <p>Create a free account or log in if you already have one.</p>
-            <a href="#" class="cta-button">Create a free account</a>
-            <a href="#" class="login-button">Log In</a>
+@section Scripts {
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+}
+
+<div class="container-fluid p-0">
+    <!-- Hero Section -->
+    <div class="hero-section text-center text-white d-flex flex-column justify-content-center align-items-center bg-dark position-relative rounded" style="height: 100vh; background-image: url('/images/Gamer.webp'); background-size: cover; background-position: center;">
+        <div class="hero-overlay" style="background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.8) 100%); width: 100%; height: 100%; position: absolute; top: 0; left: 0;"></div>
+        <div class="hero-text position-relative text-center px-3" style="z-index: 2;">
+            <h1 class="display-1 fw-bold text-uppercase animate__animated animate__fadeInDown">Discover Our Library</h1>
+            <h2 class="fs-2 mt-3 animate__animated animate__fadeIn">Review And Collect Your Games</h2>
+            <p class="lead mt-4 animate__animated animate__fadeIn">Create a free account or log in to start your journey.</p>
+            <div class="mt-5 animate__animated animate__zoomIn">
+                <a class="btn btn-primary btn-lg px-4 py-3 mx-2 rounded-pill shadow" asp-area="" asp-page="/Account/Register">Create a Free Account</a>
+                <a class="btn btn-outline-light btn-lg px-4 py-3 mx-2 rounded-pill shadow" asp-area="" asp-page="/Account/Login">Log In</a>
+            </div>
         </div>
-        <div class="image-section">
-            <img src="~/images/Gamer.jpg" alt="Gaming setup">
+        <div class="scroll-indicator position-absolute bottom-0 mb-3 text-white" style="z-index: 2;">
+            <span class="fs-5">Scroll Down</span>
+            <div class="scroll-arrow mt-2">
+                <i class="bi bi-chevron-double-down fs-1"></i>
+            </div>
         </div>
     </div>
 
-    <div class="about-section">
-        <h2>What Is GAMELIB?</h2>
-        <p>
-            GAMELIB is a site to track your game collection. Review the games you've played and add those upcoming to
-            your page.
-        </p>
+    <!-- About Section -->
+    <div class="about-section py-5 bg-primary-subtle text-light rounded">
+        <div class="container text-center">
+            <h2 class="fw-bold mb-4 display-4">What Is GAMELIB?</h2>
+            <p class="lead mb-5">
+                GAMELIB is the ultimate platform for gamers. Track your game collection, review the games you love, and
+                add upcoming titles to your library. Join a vibrant community of gaming enthusiasts today!
+            </p>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card p-4 shadow-sm h-100 rounded text-white">
+                        <i class="bi bi-controller fs-1 text-primary mb-3"></i>
+                        <h5 class="fw-bold">Track Your Games</h5>
+                        <p>Keep an organized list of all your favorite games in one place.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card p-4 shadow-sm h-100 rounded text-white">
+                        <i class="bi bi-star fs-1 text-primary mb-3"></i>
+                        <h5 class="fw-bold">Review & Share</h5>
+                        <p>Share your reviews and ratings with the gaming community.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card p-4 shadow-sm h-100 rounded text-white">
+                        <i class="bi bi-calendar-event fs-1 text-primary mb-3"></i>
+                        <h5 class="fw-bold">Plan for the Future</h5>
+                        <p>Stay updated with upcoming game releases and add them to your wishlist.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
