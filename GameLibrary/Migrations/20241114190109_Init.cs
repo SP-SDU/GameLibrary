@@ -1,4 +1,17 @@
-﻿using System;
+﻿// Copyright 2024 Web.Tech. Group17
+//
+// Licensed under the Apache License, Version 2.0 (the "License"):
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -60,8 +73,7 @@ namespace GameLibrary.Migrations
                 name: "Games",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Title = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: false),
                     Genre = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
@@ -186,9 +198,8 @@ namespace GameLibrary.Migrations
                 name: "Reviews",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    GameId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    GameId = table.Column<Guid>(type: "TEXT", nullable: false),
                     UserId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Rating = table.Column<int>(type: "INTEGER", nullable: false),
                     Comment = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: false),
@@ -216,10 +227,9 @@ namespace GameLibrary.Migrations
                 name: "UserFavorites",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     UserId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    GameId = table.Column<int>(type: "INTEGER", nullable: false),
+                    GameId = table.Column<Guid>(type: "TEXT", nullable: false),
                     AddedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>

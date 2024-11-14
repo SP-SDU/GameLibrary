@@ -29,7 +29,7 @@ public class IndexModel : PageModel
         _context = context;
     }
 
-    public IList<Game> Games { get; set; } = new List<Game>();
+    public IList<Game> Games { get; set; } = [];
 
     public async Task OnGetAsync()
     {

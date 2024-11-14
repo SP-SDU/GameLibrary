@@ -20,13 +20,13 @@ namespace GameLibrary.Models;
 [Index(nameof(UserId), nameof(GameId), IsUnique = true, Name = "IX_UserFavorites_UserGame")]
 public class UserFavorite
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
     public Guid UserId { get; set; }
 
     [Required]
-    public int GameId { get; set; }
+    public Guid GameId { get; set; }
 
     [Required]
     [DataType(DataType.DateTime)]

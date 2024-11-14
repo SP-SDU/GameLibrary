@@ -18,7 +18,7 @@ namespace GameLibrary.Models;
 
 public class Game
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
     [StringLength(100)]
@@ -52,6 +52,6 @@ public class Game
     public double Rating { get; set; }
 
     // Navigation properties
-    public ICollection<Review> Reviews { get; set; } = new List<Review>();
-    public ICollection<UserFavorite> UserFavorites { get; set; } = new List<UserFavorite>();
+    public ICollection<Review> Reviews { get; set; } = [];
+    public ICollection<UserFavorite> UserFavorites { get; set; } = [];
 }

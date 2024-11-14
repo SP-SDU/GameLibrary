@@ -18,10 +18,10 @@ namespace GameLibrary.Models;
 
 public class Review
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
-    public int GameId { get; set; }
+    public Guid GameId { get; set; }
 
     [Required]
     public Guid UserId { get; set; }
