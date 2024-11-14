@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GameLibrary.Data;
 using GameLibrary.Models;
+using System.IO;
 
 namespace GameLibrary.Pages.Games;
 
@@ -22,8 +23,9 @@ public class EditModel : PageModel
 
     [BindProperty]
     public Game? Game { get; set; }
+    public IFormFile? ImageFile { get; set; }
 
-    public async Task<IActionResult> OnGetAsync(int? id)
+    public async Task<IActionResult> OnGetAsync(Guid? id)
     {
         if (id == null)
         {
@@ -41,17 +43,66 @@ public class EditModel : PageModel
 
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see https://aka.ms/RazorPagesCRUD.
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<IActionResult> OnPostAsync(Guid? id)
     {
         if (!ModelState.IsValid)
         {
             return Page();
         }
 
-        _context.Attach(Game!).State = EntityState.Modified;
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        Game = await _context.Games.FindAsync(id);
+
+        // Remove existing image if it exists
+
+
+        if (ImageFile != null)
+        {
+            // Check file size (max 5MB)
+            if (ImageFile.Length > 5 * 1024 * 1024)
+            {
+                ModelState.AddModelError("ImageFile", "The file is too large.");
+                return Page();
+            }
+
+            // Check file extension
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+            var extension = Path.GetExtension(ImageFile.FileName);
+            if (!allowedExtensions.Contains(extension.ToLower()))
+            {
+                ModelState.AddModelError("ImageFile", "The file type is not allowed.");
+                return Page();
+            }
+
+            if (!string.IsNullOrEmpty(Game.ImageUrl))
+            {
+                var existingFilePath = Path.Combine("wwwroot", Game.ImageUrl);
+                if (System.IO.File.Exists(existingFilePath))
+                {
+                    System.IO.File.Delete(existingFilePath);
+                }
+            }
+
+            var fileName = $"{Game.Id}{extension}";
+            var filePath = Path.Combine("wwwroot", "images", fileName);
+
+
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await ImageFile.CopyToAsync(stream);
+            }
+
+            Game.ImageUrl = $"/images/{fileName}";
+        }
 
         try
         {
+            _context.Games.Update(Game!);
             await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
@@ -69,7 +120,7 @@ public class EditModel : PageModel
         return RedirectToPage("./Index");
     }
 
-    private bool GameExists(int id)
+    private bool GameExists(Guid id)
     {
         return _context.Games.Any(e => e.Id == id);
     }

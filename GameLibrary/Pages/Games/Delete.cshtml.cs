@@ -22,7 +22,7 @@ public class DeleteModel : PageModel
     [BindProperty]
     public Game? Game { get; set; }
 
-    public async Task<IActionResult> OnGetAsync(int? id)
+    public async Task<IActionResult> OnGetAsync(Guid? id)
     {
         if (id == null)
         {
@@ -38,7 +38,7 @@ public class DeleteModel : PageModel
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync(int? id)
+    public async Task<IActionResult> OnPostAsync(Guid? id)
     {
         if (id == null)
         {
@@ -49,6 +49,15 @@ public class DeleteModel : PageModel
 
         if (Game != null)
         {
+            if (!string.IsNullOrEmpty(Game.ImageUrl))
+            {
+                var existingFilePath = Path.Combine("wwwroot", Game.ImageUrl);
+                if (System.IO.File.Exists(existingFilePath))
+                {
+                    System.IO.File.Delete(existingFilePath);
+                }
+            }
+
             _context.Games.Remove(Game);
             await _context.SaveChangesAsync();
         }

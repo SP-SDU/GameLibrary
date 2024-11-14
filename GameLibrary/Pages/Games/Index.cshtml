@@ -22,6 +22,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Games![0].ReleaseDate)
             </th>
+			<th>
+				@Html.DisplayNameFor(model => model.Games![0].ImageUrl)
+			</th>
             <th></th>
         </tr>
     </thead>
@@ -38,6 +41,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.ReleaseDate)
                 </td>
+				<td>
+					<img src="@item.ImageUrl" class="img-thumbnail" title="Game Image" />
+				</td>
                 <td>
                     <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |

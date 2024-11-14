@@ -16,7 +16,7 @@ namespace GameLibrary.Models;
 
 public class Game
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
     public string? Title { get; set; }
     public string? ImageUrl { get; set; }
     public string? Genre { get; set; }

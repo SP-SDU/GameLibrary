@@ -20,8 +20,9 @@ public class DetailsModel : PageModel
     }
 
     public Game? Game { get; set; }
+    
 
-    public async Task<IActionResult> OnGetAsync(int? id)
+    public async Task<IActionResult> OnGetAsync(Guid? id)
     {
         if (id == null)
         {
@@ -30,6 +31,7 @@ public class DetailsModel : PageModel
 
         Game = await _context.Games.FirstOrDefaultAsync(m => m.Id == id);
 
+        
         if (Game == null)
         {
             return NotFound();
