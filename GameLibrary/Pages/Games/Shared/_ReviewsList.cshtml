@@ -1,0 +1,51 @@
+@model IEnumerable<GameLibrary.Models.Review>
+
+<div id="reviews-list" class="reviews-list">
+    <h2>User Reviews</h2>
+    @if (!Model.Any())
+    {
+        <p class="no-reviews">No reviews yet. Be the first to review this game!</p>
+    }
+    else
+    {
+        foreach (var review in Model)
+        {
+            <div class="review-item">
+                <div class="review-header">
+                    <div class="reviewer-info">
+                        @if (!string.IsNullOrEmpty(review.User?.AvatarUrl))
+                        {
+                            <img src="@review.User.AvatarUrl" alt="@review.User.UserName" class="reviewer-avatar" />
+                        }
+                        else
+                        {
+                            <div class="reviewer-avatar-placeholder">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        }
+                        <span class="reviewer-name">@review.User?.UserName</span>
+                    </div>
+                    <div class="review-rating">
+                        @for (var i = 1; i <= 5; i++)
+                        {
+                            if (review.Rating >= i)
+                            {
+                                <i class="fas fa-star"></i>
+                            }
+                            else
+                            {
+                                <i class="far fa-star"></i>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="review-body">
+                    <p>@review.Comment</p>
+                </div>
+                <div class="review-footer">
+                    <span class="review-date">@review.CreatedAt.ToString("MMMM dd, yyyy")</span>
+                </div>
+            </div>
+        }
+    }
+</div>

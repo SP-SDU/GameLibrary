@@ -1,0 +1,28 @@
+﻿@page
+@model GameLibrary.Pages.Games.IndexModel
+@{
+    ViewData["Title"] = "Welcome to GAMELIB";
+}
+
+<h1 style="color: #FFD43B;">Welcome to GAMELIB</h1>
+
+<div>
+    <h2>Game List</h2>
+    <div class="row">
+        @foreach (var game in Model.Games)
+        {
+            <div class="col-md-4">
+                <div class="card" style="margin-bottom: 20px;">
+                    <img src="@game.ImageUrl" class="card-img-top" alt="@game.Title"
+                        style="height: 200px; object-fit: cover;" />
+                    <div class="card-body">
+                        <h5 class="card-title">@game.Title</h5>
+                        <p class="card-text">@game.Description.Substring(0, Math.Min(100, @game.Description.Length)) + "..."
+                        </p>
+                        <a href="/Games/Details?id=@game.Id" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

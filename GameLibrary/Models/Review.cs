@@ -12,27 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace GameLibrary.Models;
 
-public class User : IdentityUser<Guid>
+public class Review
 {
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
-    public string? Address { get; set; }
+    public int Id { get; set; }
 
-    [StringLength(500)]
-    [DataType(DataType.ImageUrl)]
-    public string? AvatarUrl { get; set; }
+    [Required]
+    public int GameId { get; set; }
+
+    [Required]
+    public Guid UserId { get; set; }
+
+    [Required]
+    [Range(1, 5, ErrorMessage = "Rating must be between 1 and 5")]
+    public int Rating { get; set; }
+
+    [Required]
+    [StringLength(1000, MinimumLength = 10, ErrorMessage = "Comment must be between 10 and 1000 characters")]
+    public string Comment { get; set; } = string.Empty;
 
     [Required]
     [DataType(DataType.DateTime)]
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; }
 
     // Navigation properties
-    public ICollection<Review> Reviews { get; set; } = [];
-    public ICollection<UserFavorite> Favorites { get; set; } = [];
+    public Game? Game { get; set; }
+    public User? User { get; set; }
 }
