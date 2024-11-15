@@ -10,7 +10,7 @@ using GameLibrary.Models;
 using static System.Net.Mime.MediaTypeNames;
 using System.Security.Cryptography;
 
-namespace GameLibrary.Pages.Games;
+namespace GameLibrary.Pages.Admin.Games;
 
 public class CreateModel : PageModel
 {

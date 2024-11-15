@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using GameLibrary.Data;
 using GameLibrary.Models;
 
-namespace GameLibrary.Pages.Games;
+namespace GameLibrary.Pages.Admin.Games;
 
 public class DetailsModel : PageModel
 {

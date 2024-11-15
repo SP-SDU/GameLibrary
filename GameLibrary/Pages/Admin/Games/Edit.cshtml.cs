@@ -10,7 +10,7 @@ using GameLibrary.Data;
 using GameLibrary.Models;
 using System.IO;
 
-namespace GameLibrary.Pages.Games;
+namespace GameLibrary.Pages.Admin.Games;
 
 public class EditModel : PageModel
 {
