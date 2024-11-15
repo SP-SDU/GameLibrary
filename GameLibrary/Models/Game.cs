@@ -12,16 +12,46 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel.DataAnnotations;
+
 namespace GameLibrary.Models;
 
 public class Game
 {
     public Guid Id { get; set; } = Guid.NewGuid();
-    public string? Title { get; set; }
-    public string? ImageUrl { get; set; }
-    public string? Genre { get; set; }
-    public string? ReleaseDate { get; set; }
-    public string? Description { get; set; }
 
-    public ICollection<Review>? Reviews { get; set; }
+    [Required]
+    [StringLength(100)]
+    public string Title { get; set; } = string.Empty;
+
+    [Required]
+    [StringLength(2000)]
+    public string Description { get; set; } = string.Empty;
+
+    [Required]
+    [StringLength(50)]
+    public string Genre { get; set; } = string.Empty;
+
+    [Required]
+    [DataType(DataType.Date)]
+    public DateTime ReleaseDate { get; set; }
+
+    [Required]
+    [StringLength(100)]
+    public string Developer { get; set; } = string.Empty;
+
+    [Required]
+    [StringLength(100)]
+    public string Publisher { get; set; } = string.Empty;
+
+    [StringLength(500)]
+    [DataType(DataType.ImageUrl)]
+    public string? ImageUrl { get; set; }
+
+    [Range(0, 5.0)]
+    public double Rating { get; set; }
+
+    // Navigation properties
+    public ICollection<Review> Reviews { get; set; } = [];
+    public ICollection<UserFavorite> UserFavorites { get; set; } = [];
 }

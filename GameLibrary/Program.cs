@@ -29,20 +29,11 @@ public class Program
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlite(connectionString));
 
-        builder.Services.AddDefaultIdentity<User>(options =>
-            builder.Configuration.GetSection("Identity").Bind(options))
+        builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddRoles<Role>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
         builder.Services.AddRazorPages();
-
-        builder.Services.AddAuthorization(options =>
-        {
-            builder.Configuration.GetSection("Authorization:Policies")
-                .Get<Dictionary<string, string[]>>()?
-                .ToList()
-                .ForEach(policy => options.AddPolicy(policy.Key, policyBuilder => policyBuilder.RequireRole(policy.Value)));
-        });
 
         var app = builder.Build();
 
@@ -50,6 +41,7 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseMigrationsEndPoint();
+            app.Initialize();
         }
         else
         {

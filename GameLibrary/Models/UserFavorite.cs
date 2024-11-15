@@ -12,27 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace GameLibrary.Models;
 
-public class User : IdentityUser<Guid>
+[Index(nameof(UserId), nameof(GameId), IsUnique = true, Name = "IX_UserFavorites_UserGame")]
+public class UserFavorite
 {
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
-    public string? Address { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
 
-    [StringLength(500)]
-    [DataType(DataType.ImageUrl)]
-    public string? AvatarUrl { get; set; }
+    [Required]
+    public Guid UserId { get; set; }
+
+    [Required]
+    public Guid GameId { get; set; }
 
     [Required]
     [DataType(DataType.DateTime)]
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime AddedAt { get; set; }
 
     // Navigation properties
-    public ICollection<Review> Reviews { get; set; } = [];
-    public ICollection<UserFavorite> Favorites { get; set; } = [];
+    public User? User { get; set; }
+    public Game? Game { get; set; }
 }

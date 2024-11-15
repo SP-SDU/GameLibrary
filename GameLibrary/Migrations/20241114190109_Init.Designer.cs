@@ -3,6 +3,7 @@ using System;
 using GameLibrary.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+<<<<<<<< HEAD:GameLibrary/Migrations/20241114152558_Init.Designer.cs
+    [Migration("20241114152558_Init")]
+========
+    [Migration("20241114190109_Init")]
+>>>>>>>> main:GameLibrary/Migrations/20241114190109_Init.Designer.cs
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
@@ -24,6 +31,20 @@ namespace GameLibrary.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
+<<<<<<<< HEAD:GameLibrary/Migrations/20241114152558_Init.Designer.cs
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Genre")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReleaseDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+========
                         .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("TEXT");
@@ -57,6 +78,7 @@ namespace GameLibrary.Migrations
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(100)
+>>>>>>>> main:GameLibrary/Migrations/20241114190109_Init.Designer.cs
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -66,6 +88,13 @@ namespace GameLibrary.Migrations
 
             modelBuilder.Entity("GameLibrary.Models.Review", b =>
                 {
+<<<<<<<< HEAD:GameLibrary/Migrations/20241114152558_Init.Designer.cs
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Content")
+========
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
@@ -76,6 +105,7 @@ namespace GameLibrary.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
+>>>>>>>> main:GameLibrary/Migrations/20241114190109_Init.Designer.cs
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("GameId")
@@ -93,10 +123,14 @@ namespace GameLibrary.Migrations
 
                     b.HasIndex("UserId");
 
+<<<<<<<< HEAD:GameLibrary/Migrations/20241114152558_Init.Designer.cs
+                    b.ToTable("Reviews");
+========
                     b.ToTable("Reviews", t =>
                         {
                             t.HasCheckConstraint("CK_Review_Rating", "Rating >= 1 AND Rating <= 5");
                         });
+>>>>>>>> main:GameLibrary/Migrations/20241114190109_Init.Designer.cs
                 });
 
             modelBuilder.Entity("GameLibrary.Models.Role", b =>
@@ -351,6 +385,9 @@ namespace GameLibrary.Migrations
                         .IsRequired();
 
                     b.HasOne("GameLibrary.Models.User", "User")
+<<<<<<<< HEAD:GameLibrary/Migrations/20241114152558_Init.Designer.cs
+                        .WithMany()
+========
                         .WithMany("Reviews")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -371,6 +408,7 @@ namespace GameLibrary.Migrations
 
                     b.HasOne("GameLibrary.Models.User", "User")
                         .WithMany("Favorites")
+>>>>>>>> main:GameLibrary/Migrations/20241114190109_Init.Designer.cs
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -434,6 +472,8 @@ namespace GameLibrary.Migrations
             modelBuilder.Entity("GameLibrary.Models.Game", b =>
                 {
                     b.Navigation("Reviews");
+<<<<<<<< HEAD:GameLibrary/Migrations/20241114152558_Init.Designer.cs
+========
 
                     b.Navigation("UserFavorites");
                 });
@@ -443,6 +483,7 @@ namespace GameLibrary.Migrations
                     b.Navigation("Favorites");
 
                     b.Navigation("Reviews");
+>>>>>>>> main:GameLibrary/Migrations/20241114190109_Init.Designer.cs
                 });
 #pragma warning restore 612, 618
         }
