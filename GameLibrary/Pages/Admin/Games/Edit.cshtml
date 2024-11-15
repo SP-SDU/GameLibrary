@@ -1,0 +1,76 @@
+﻿@page
+@model GameLibrary.Pages.Admin.Games.EditModel
+
+@{
+	ViewData["Title"] = "Edit";
+}
+
+<body>
+	<header>
+		<h1>Edit Game</h1>
+	</header>
+
+		<div class="row">
+			<div class="col-md-4">
+				<form method="post" enctype="multipart/form-data">
+					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+					<input type="hidden" asp-for="Game!.Id" />
+					<div class="form-group">
+						<label asp-for="Game!.Title" class="control-label">Title</label>
+						<input asp-for="Game!.Title" class="form-control" />
+						<span asp-validation-for="Game!.Title" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<label asp-for="ImageFile" class="control-label">New Image</label>
+						<input type="file" asp-for="ImageFile" class="form-control" onchange="previewImage(event)" />
+						<span asp-validation-for="ImageFile" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<label asp-for="Game!.Genre" class="control-label">Genre</label>
+						<input asp-for="Game!.Genre" class="form-control" />
+						<span asp-validation-for="Game!.Genre" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<label asp-for="Game!.ReleaseDate.Date" class="control-label">Release Date</label>
+						<input asp-for="Game!.ReleaseDate.Date" class="form-control" />
+                    <span asp-validation-for="Game!.ReleaseDate.Date" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<label asp-for="Game!.Description" class="control-label">Description</label>
+						<input asp-for="Game!.Description" class="form-control" />
+						<span asp-validation-for="Game!.Description" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<input type="submit" value="Save" class="btn btn-primary" style="background-color: #420599; color: #FFD43B;" />
+						<a asp-page="./Index" class="btn" style="background-color: #420599; color: #FFD43B;">Back to List</a>
+					</div>
+				</form>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group text-center">
+					<label asp-for="Game!.ImageUrl" class="control-label">Current Image</label><br />
+					<img src="@Model.Game!.ImageUrl" class="img-thumbnail" title="Game Image" />
+					<span asp-validation-for="Game!.ImageUrl" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-4">
+			<div class="form-group text-center">
+					<label asp-for="ImageFile" class="control-label">New Image</label><br />
+					<img id="imagePreview" src="#" class="img-thumbnail" style="display:none;" />
+					<span asp-validation-for="ImageFile" class="text-danger"></span>
+				</div>
+			</div>
+		</div>
+
+	<script type="text/javascript">
+		function previewImage(event) {
+			var reader = new FileReader();
+			reader.onload = function(){
+				var output = document.getElementById('imagePreview');
+				output.src = reader.result;
+				output.style.display = 'block';
+			};
+			reader.readAsDataURL(event.target.files[0]);
+		}
+	</script>
+</body>

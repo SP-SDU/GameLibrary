@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241114190109_Init")]
+    [Migration("20241115083615_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -28,30 +28,24 @@ namespace GameLibrary.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(2000)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Developer")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Genre")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ImageUrl")
-                        .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Publisher")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<double>("Rating")
-                        .HasPrecision(3, 1)
                         .HasColumnType("REAL");
 
                     b.Property<DateTime>("ReleaseDate")
@@ -59,7 +53,6 @@ namespace GameLibrary.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -96,10 +89,7 @@ namespace GameLibrary.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews", t =>
-                        {
-                            t.HasCheckConstraint("CK_Review_Rating", "Rating >= 1 AND Rating <= 5");
-                        });
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("GameLibrary.Models.Role", b =>
@@ -231,10 +221,6 @@ namespace GameLibrary.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("GameId");
-
-                    b.HasIndex("UserId", "GameId")
-                        .IsUnique()
-                        .HasDatabaseName("IX_UserFavorites_UserGame");
 
                     b.HasIndex(new[] { "UserId", "GameId" }, "IX_UserFavorites_UserGame")
                         .IsUnique();

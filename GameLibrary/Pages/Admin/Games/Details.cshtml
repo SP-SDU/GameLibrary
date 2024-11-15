@@ -1,0 +1,59 @@
+﻿@page
+@model GameLibrary.Pages.Admin.Games.DetailsModel
+
+@{
+	ViewData["Title"] = "Details";
+}
+
+<body>
+
+    <header>
+        <h1>Game Details</h1>
+    </header>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Game!.Title)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Game!.Title)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Game!.Genre)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Game!.Genre)
+                    </dd>
+                    <dt class="col-sm-4">
+                        Release Date
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Game!.ReleaseDate.Date)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Game!.Description)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Game!.Description)
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-md-6 text-center">
+                <label asp-for="Game!.ImageUrl" class="control-label">Image</label><br />
+                <img src="@Model.Game!.ImageUrl" class="img-thumbnail" title="Game Image" />
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <form method="post">
+                    <input type="hidden" asp-for="Game!.Id" />
+                    <a asp-page="./Edit" asp-route-id="@Model.Game!.Id" class="btn" style="background-color: #420599; color: #FFD43B;">Edit</a>
+                    <a asp-page="./Index" class="btn" style="background-color: #420599; color: #FFD43B;">Back to List</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
