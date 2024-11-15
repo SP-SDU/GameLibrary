@@ -2,39 +2,78 @@
 @model GameLibrary.Pages.Games.DeleteModel
 
 @{
-    ViewData["Title"] = "Delete";
+	ViewData["Title"] = "Delete";
 }
 
-<h1>Delete</h1>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"]</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+	<style>
+		body {
+			background-color: #000235;
+			color: #FFD43B;
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<h1>Delete</h1>
+		<h3>Are you sure you want to delete this game?</h3>
+	</header>
 
-<h3>Are you sure you want to delete this game?</h3>
-<div>
-    <h4>Game</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Game!.Title)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Game!.Title)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Game!.Genre)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Game!.Genre)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Game!.ReleaseDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Game!.ReleaseDate)
-        </dd>
-    </dl>
+	<div class="row">
+		<div class="col-md-6">
+			<dl class="row">
+				<dt class="col-sm-4">
+					@Html.DisplayNameFor(model => model.Game!.Title)
+				</dt>
+				<dd class="col-sm-8">
+					@Html.DisplayFor(model => model.Game!.Title)
+				</dd>
+				<dt class="col-sm-4">
+					@Html.DisplayNameFor(model => model.Game!.Genre)
+				</dt>
+				<dd class="col-sm-8">
+					@Html.DisplayFor(model => model.Game!.Genre)
+				</dd>
+				<dt class="col-sm-4">
+					Release Date
+				</dt>
+				<dd class="col-sm-8">
+					@Html.DisplayFor(model => model.Game!.ReleaseDate)
+				</dd>
+				<dt class="col-sm-4">
+					@Html.DisplayNameFor(model => model.Game!.Description)
+				</dt>
+				<dd class="col-sm-8">
+					@Html.DisplayFor(model => model.Game!.Description)
+				</dd>
+			</dl>
+		</div>
 
-    <form method="post">
-        <input type="hidden" asp-for="Game!.Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-page="./Index">Back to List</a>
-    </form>
-</div>
+		<div class="col-md-6">
+			<label asp-for="Game!.ImageUrl" class="control-label">Current Image</label><br />
+			<img src="@Model.Game!.ImageUrl" class="img-thumbnail" title="Game Image" />
+			<span asp-validation-for="Game!.ImageUrl" class="text-danger"></span>
+		</div>
+	</div>
+
+	<div class="row mt-3">
+		<form method="post">
+			<input type="hidden" asp-for="Game!.Id" />
+			<input type="submit" value="Delete" class="btn btn-danger" style="background-color: #420599; color: #FFD43B;" />
+			<a asp-page="./Index" class="btn" style="background-color: #420599; color: #FFD43B;">Back to List</a>
+		</form>
+	</div>
+
+	<footer class="text-center text-lg-start position-absolute bottom-0 w-100">
+		<div class="container text-center p-3">
+			© 2024 Web-Tech Group 17 | This site uses cookies to enhance your experience. <a asp-area="" asp-page="/Privacy" class="text-white">Learn more</a>
+		</div>
+	</footer>
+</body>
+</html>

@@ -55,69 +55,62 @@ public class EditModel : PageModel
             return NotFound();
         }
 
-        Game = await _context.Games.FindAsync(id);
+        var gameToUpdate = await _context.Games.FindAsync(id);
 
-        // Remove existing image if it exists
-
-
-        if (ImageFile != null)
+        if (gameToUpdate == null)
         {
-            // Check file size (max 5MB)
-            if (ImageFile.Length > 5 * 1024 * 1024)
-            {
-                ModelState.AddModelError("ImageFile", "The file is too large.");
-                return Page();
-            }
+            return NotFound();
+        }
 
-            // Check file extension
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
-            var extension = Path.GetExtension(ImageFile.FileName);
-            if (!allowedExtensions.Contains(extension.ToLower()))
+        if (await TryUpdateModelAsync<Game>(
+            gameToUpdate,
+            "game",
+            g => g.Title, g => g.Genre, g => g.ReleaseDate, g => g.Description))
+        {
+            if (ImageFile != null)
             {
-                ModelState.AddModelError("ImageFile", "The file type is not allowed.");
-                return Page();
-            }
-
-            if (!string.IsNullOrEmpty(Game.ImageUrl))
-            {
-                var existingFilePath = Path.Combine("wwwroot", Game.ImageUrl);
-                if (System.IO.File.Exists(existingFilePath))
+                // Check file size (max 5MB)
+                if (ImageFile.Length > 5 * 1024 * 1024)
                 {
-                    System.IO.File.Delete(existingFilePath);
+                    ModelState.AddModelError("ImageFile", "The file is too large.");
+                    return Page();
                 }
+
+                // Check file extension
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+                var extension = Path.GetExtension(ImageFile.FileName);
+                if (!allowedExtensions.Contains(extension.ToLower()))
+                {
+                    ModelState.AddModelError("ImageFile", "The file type is not allowed.");
+                    return Page();
+                }
+
+                var fileName = $"{gameToUpdate.Id}{extension}";
+                var filePath = Path.Combine("wwwroot", "images", fileName);
+
+                if (!string.IsNullOrEmpty(gameToUpdate.ImageUrl))
+                {
+                    var fileImageName = Path.GetFileName(gameToUpdate.ImageUrl);
+                    var existingFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileImageName);
+                    if (System.IO.File.Exists(existingFilePath))
+                    {
+                        System.IO.File.Delete(existingFilePath);
+                    }
+                }
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await ImageFile.CopyToAsync(stream);
+                }
+
+                gameToUpdate.ImageUrl = $"/images/{fileName}";
             }
 
-            var fileName = $"{Game.Id}{extension}";
-            var filePath = Path.Combine("wwwroot", "images", fileName);
-
-
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await ImageFile.CopyToAsync(stream);
-            }
-
-            Game.ImageUrl = $"/images/{fileName}";
-        }
-
-        try
-        {
-            _context.Games.Update(Game!);
             await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!GameExists(Game!.Id))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
+            return RedirectToPage("./Index");
         }
 
-        return RedirectToPage("./Index");
+        return Page();
     }
 
     private bool GameExists(Guid id)

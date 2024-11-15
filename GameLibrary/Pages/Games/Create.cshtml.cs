@@ -27,11 +27,11 @@ public class CreateModel : PageModel
     {
         Game = new Game
         {
-            Title = "Sample Game",
-            ImageUrl = "Game Image",
-            Genre = "Action",
+            Title = "",
+            ImageUrl = "",
+            Genre = "",
             ReleaseDate = DateTime.Now.ToString("yyyy-MM-dd"),
-            Description = "Description of the game",
+            Description = "",
             Reviews = new List<Review>()
         };
         return Page();

@@ -51,7 +51,8 @@ public class DeleteModel : PageModel
         {
             if (!string.IsNullOrEmpty(Game.ImageUrl))
             {
-                var existingFilePath = Path.Combine("wwwroot", Game.ImageUrl);
+                var fileName = Path.GetFileName(Game.ImageUrl);
+                var existingFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images",fileName);
                 if (System.IO.File.Exists(existingFilePath))
                 {
                     System.IO.File.Delete(existingFilePath);
