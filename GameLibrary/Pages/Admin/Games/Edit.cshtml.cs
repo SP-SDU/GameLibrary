@@ -77,7 +77,7 @@ public class EditModel : PageModel
                 }
 
                 // Check file extension
-                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
                 var extension = Path.GetExtension(ImageFile.FileName);
                 if (!allowedExtensions.Contains(extension.ToLower()))
                 {

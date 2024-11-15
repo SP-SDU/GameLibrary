@@ -30,9 +30,9 @@ public class CreateModel : PageModel
             Title = "",
             ImageUrl = "",
             Genre = "",
-            ReleaseDate = DateTime.Now.ToString("yyyy-MM-dd"),
+            ReleaseDate = DateTime.Now.Date,
             Description = "",
-            Reviews = new List<Review>()
+            Reviews = []
         };
         return Page();
     }

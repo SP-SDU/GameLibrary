@@ -5,20 +5,6 @@
 	ViewData["Title"] = "Edit";
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>@ViewData["Title"]</title>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
-	<style>
-		body {
-			background-color: #000235;
-			color: #FFD43B;
-		}
-	</style>
-</head>
 <body>
 	<header>
 		<h1>Edit Game</h1>
@@ -45,9 +31,9 @@
 						<span asp-validation-for="Game!.Genre" class="text-danger"></span>
 					</div>
 					<div class="form-group">
-						<label asp-for="Game!.ReleaseDate" class="control-label">Release Date</label>
-						<input asp-for="Game!.ReleaseDate" class="form-control" />
-						<span asp-validation-for="Game!.ReleaseDate" class="text-danger"></span>
+						<label asp-for="Game!.ReleaseDate.Date" class="control-label">Release Date</label>
+						<input asp-for="Game!.ReleaseDate.Date" class="form-control" />
+                    <span asp-validation-for="Game!.ReleaseDate.Date" class="text-danger"></span>
 					</div>
 					<div class="form-group">
 						<label asp-for="Game!.Description" class="control-label">Description</label>
@@ -76,12 +62,6 @@
 			</div>
 		</div>
 
-	<footer class="text-center text-lg-start position-absolute bottom-0 w-100">
-		<div class="container text-center p-3">
-			© 2024 Web-Tech Group 17 | This site uses cookies to enhance your experience. <a asp-area="" asp-page="/Privacy" class="text-white">Learn more</a>
-		</div>
-	</footer>
-
 	<script type="text/javascript">
 		function previewImage(event) {
 			var reader = new FileReader();
@@ -94,4 +74,3 @@
 		}
 	</script>
 </body>
-</html>

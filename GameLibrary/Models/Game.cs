@@ -20,35 +20,20 @@ public class Game
 {
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required]
-    [StringLength(100)]
     public string Title { get; set; } = string.Empty;
 
-    [Required]
-    [StringLength(2000)]
     public string Description { get; set; } = string.Empty;
 
-    [Required]
-    [StringLength(50)]
     public string Genre { get; set; } = string.Empty;
 
-    [Required]
-    [DataType(DataType.Date)]
-    public DateTime ReleaseDate { get; set; }
+    public DateTime ReleaseDate { get; set; } = DateTime.Now.Date;
 
-    [Required]
-    [StringLength(100)]
     public string Developer { get; set; } = string.Empty;
 
-    [Required]
-    [StringLength(100)]
     public string Publisher { get; set; } = string.Empty;
 
-    [StringLength(500)]
-    [DataType(DataType.ImageUrl)]
-    public string? ImageUrl { get; set; }
+    public string? ImageUrl { get; set; } = string.Empty;
 
-    [Range(0, 5.0)]
     public double Rating { get; set; }
 
     // Navigation properties
