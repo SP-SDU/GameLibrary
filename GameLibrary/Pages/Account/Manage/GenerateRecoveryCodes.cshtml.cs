@@ -14,7 +14,6 @@
 
 #nullable disable
 
-using GameLibrary.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -23,11 +22,11 @@ namespace GameLibrary.Pages.Account.Manage;
 
 public class GenerateRecoveryCodesModel : PageModel
 {
-    private readonly UserManager<User> _userManager;
+    private readonly UserManager<IdentityUser> _userManager;
     private readonly ILogger<GenerateRecoveryCodesModel> _logger;
 
     public GenerateRecoveryCodesModel(
-        UserManager<User> userManager,
+        UserManager<IdentityUser> userManager,
         ILogger<GenerateRecoveryCodesModel> logger)
     {
         _userManager = userManager;

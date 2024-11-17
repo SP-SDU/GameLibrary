@@ -1,0 +1,110 @@
+@page
+@model GameLibrary.Pages.User.LibraryModel
+@{
+    ViewData["Title"] = "My Game Library";
+}
+
+<div class="container py-4">
+    <h1 class="text-warning mb-4">My Game Library</h1>
+
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-primary active" data-filter="all">All</button>
+                <button type="button" class="btn btn-outline-primary" data-filter="Playing">Playing</button>
+                <button type="button" class="btn btn-outline-primary" data-filter="Completed">Completed</button>
+                <button type="button" class="btn btn-outline-primary" data-filter="On Hold">On Hold</button>
+                <button type="button" class="btn btn-outline-primary" data-filter="Dropped">Dropped</button>
+                <button type="button" class="btn btn-outline-primary" data-filter="Plan to Play">Plan to Play</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var item in Model.LibraryItems)
+        {
+            <div class="col game-item" data-status="@item.Status">
+                <div class="card h-100 bg-primary-subtle">
+                    <img src="@item.Game.ImageUrl" class="card-img-top" alt="@item.Game.Title" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Game.Title</h5>
+                        <p class="card-text">
+                            <span class="badge bg-primary">@item.Status</span>
+                            @if (item.IsFavorite)
+                            {
+                                <span class="badge bg-danger"><i class="fas fa-heart"></i> Favorite</span>
+                            }
+                        </p>
+                        <div class="rating">
+                            @if (item.Rating > 0)
+                            {
+                                for (int i = 1; i <= 5; i++)
+                                {
+                                    <i class="@(i <= item.Rating ? "fas" : "far") fa-star text-warning"></i>
+                                }
+                            }
+                            else
+                            {
+                                <span class="text-muted">Not rated yet</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="btn-group w-100">
+                            <a href="/Games/Details/@item.Game.Id" class="btn btn-primary">View Details</a>
+                            <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
+                                Status
+                            </button>
+                            <ul class="dropdown-menu">
+                                @foreach (var status in new[] { "Playing", "Completed", "On Hold", "Dropped", "Plan to Play" })
+                                {
+                                    <li>
+                                        <form method="post" asp-page-handler="UpdateStatus" class="d-inline">
+                                            <input type="hidden" name="gameId" value="@item.Game.Id" />
+                                            <input type="hidden" name="status" value="@status" />
+                                            <button type="submit" class="dropdown-item @(item.Status == status ? "active" : "")">
+                                                @status
+                                            </button>
+                                        </form>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/user/library.css" />
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterButtons = document.querySelectorAll('[data-filter]');
+            const gameItems = document.querySelectorAll('.game-item');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const filter = button.dataset.filter;
+                    
+                    // Update active button
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    // Filter games
+                    gameItems.forEach(item => {
+                        if (filter === 'all' || item.dataset.status === filter) {
+                            item.style.display = '';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+}

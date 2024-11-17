@@ -1,80 +1,212 @@
-@page "{id:int}"
+@page "{id:guid}"
 @model GameLibrary.Pages.Games.DetailsModel
 @{
-    ViewData["Title"] = Model.Game?.Title ?? "Game Details";
+    ViewData["Title"] = Model.Game.Title;
 }
 
-<div class="game-details-container">
-    <div class="game-header">
-        @if (!string.IsNullOrEmpty(Model.Game?.ImageUrl))
-        {
-            <img src="@Model.Game.ImageUrl" alt="@Model.Game.Title" class="game-cover" />
-        }
-        <div class="game-info">
-            <h1>@Model.Game?.Title</h1>
-            <div class="game-meta">
-                <span class="genre">@Model.Game?.Genre</span>
-                <span class="developer">@Model.Game?.Developer</span>
-                <span class="publisher">@Model.Game?.Publisher</span>
-                <span class="release-date">@Model.Game?.ReleaseDate.ToString("MMMM d, yyyy")</span>
-            </div>
-            <div class="rating">
-                <span class="stars">
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            @if (!string.IsNullOrEmpty(Model.Game.ImageUrl))
+            {
+                <img src="@Model.Game.ImageUrl" class="img-fluid rounded" alt="@Model.Game.Title">
+            }
+            else
+            {
+                <div class="placeholder-image">
+                    <i class="fas fa-gamepad fa-5x"></i>
+                </div>
+            }
+        </div>
+        <div class="col-md-8">
+            <h1>@Model.Game.Title</h1>
+            <div class="mb-3">
+                <div class="game-rating">
                     @for (var i = 1; i <= 5; i++)
                     {
-                        if (Model.Game?.Rating >= i)
+                        if (Model.Game.Rating >= i)
                         {
-                            <i class="fas fa-star"></i>
-                        }
-                        else if (Model.Game?.Rating > i - 1)
-                        {
-                            <i class="fas fa-star-half-alt"></i>
+                            <i class="fas fa-star text-warning"></i>
                         }
                         else
                         {
-                            <i class="far fa-star"></i>
+                            <i class="far fa-star text-warning"></i>
                         }
                     }
-                </span>
-                <span class="rating-value">@(Model.Game?.Rating.ToString("F1") ?? "N/A")</span>
+                    <span class="ms-2">(@Model.Game.Rating.ToString("F1"))</span>
+                </div>
+            </div>
+            <p class="lead">@Model.Game.Description</p>
+            <div class="game-details bg-dark p-3 rounded">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Developer:</strong> @Model.Game.Developer</p>
+                        <p><strong>Publisher:</strong> @Model.Game.Publisher</p>
+                        <p><strong>Release Date:</strong> @Model.Game.ReleaseDate.ToString("MMMM dd, yyyy")</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Genre:</strong> @Model.Game.Genre</p>
+                        <p><strong>Platform:</strong> @Model.Game.Platform</p>
+                        <p><strong>Price:</strong> @Model.Game.Price.ToString("C")</p>
+                    </div>
+                </div>
+            </div>
+            <div class="game-actions mt-4">
+                @if (!Model.IsInLibrary)
+                {
+                    <form method="post" asp-page-handler="AddToLibrary" asp-route-id="@Model.Game.Id" class="d-inline">
+                        <div class="input-group mb-3">
+                            <select name="status" class="form-select" required>
+                                <option value="">Select Status...</option>
+                                <option value="Playing">Currently Playing</option>
+                                <option value="Completed">Completed</option>
+                                <option value="OnHold">On Hold</option>
+                                <option value="Dropped">Dropped</option>
+                                <option value="PlanToPlay">Plan to Play</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Add to Library
+                            </button>
+                        </div>
+                    </form>
+                }
+                else
+                {
+                    <form method="post" asp-page-handler="RemoveFromLibrary" asp-route-id="@Model.Game.Id" class="d-inline">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to remove this game from your library?')">
+                            <i class="fas fa-trash"></i> Remove from Library
+                        </button>
+                    </form>
+                }
+                
+                @if (!Model.IsFavorite)
+                {
+                    <form method="post" asp-page-handler="AddToFavorites" asp-route-id="@Model.Game.Id" class="d-inline">
+                        <button type="submit" class="btn btn-outline-danger">
+                            <i class="far fa-heart"></i> Add to Favorites
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <form method="post" asp-page-handler="RemoveFromFavorites" asp-route-id="@Model.Game.Id" class="d-inline">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-heart"></i> Remove from Favorites
+                        </button>
+                    </form>
+                }
             </div>
         </div>
     </div>
 
-    <div class="game-description">
-        <h2>About</h2>
-        <p>@Model.Game?.Description</p>
-    </div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card bg-dark">
+                <div class="card-body">
+                    <h2>Reviews</h2>
+                    <div class="review-stats mb-4">
+                        <div class="average-rating">
+                            <h3>Average Rating: @Model.AverageRating.ToString("F1")</h3>
+                            <div class="rating-stars">
+                                @for (var i = 1; i <= 5; i++)
+                                {
+                                    if (Model.AverageRating >= i)
+                                    {
+                                        <i class="fas fa-star text-warning"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="far fa-star text-warning"></i>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
 
-    <div class="game-reviews" hx-trigger="load"
-        hx-get="@Url.Page("./Details", "OnGetReviewsAsync", new { id = Model.Game?.Id })" hx-target="this">
-        <div class="loading">Loading reviews...</div>
-    </div>
-
-    @if (User.Identity?.IsAuthenticated == true)
-    {
-        <div class="add-review">
-            <h3>Add Your Review</h3>
-            <form hx-post="@Url.Page("./Details", "AddReview", new { id = Model.Game?.Id })" hx-target="#reviews-list">
-                <div class="rating-input">
-                    @for (var i = 1; i <= 5; i++)
+                    @if (!Model.Reviews.Any(r => r.UserId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value))
                     {
-                        <input type="radio" id="star@(i)" name="rating" value="@i" />
-                        <label for="star@(i)"><i class="far fa-star"></i></label>
+                        <div class="add-review mb-4">
+                            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#reviewForm">
+                                Write a Review
+                            </button>
+                            <div class="collapse mt-3" id="reviewForm">
+                                <div class="card card-body bg-dark">
+                                    <form method="post" asp-page-handler="AddReview" asp-route-id="@Model.Game.Id">
+                                        <div class="mb-3">
+                                            <label for="rating" class="form-label">Rating</label>
+                                            <select class="form-select" id="rating" name="rating" required>
+                                                <option value="">Select rating</option>
+                                                <option value="5">5 - Excellent</option>
+                                                <option value="4">4 - Very Good</option>
+                                                <option value="3">3 - Good</option>
+                                                <option value="2">2 - Fair</option>
+                                                <option value="1">1 - Poor</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="content" class="form-label">Review</label>
+                                            <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     }
+
+                    <partial name="_ReviewsList" model="@Model.Reviews" />
                 </div>
-                <textarea name="comment" required placeholder="Write your review here..."></textarea>
-                <button type="submit" class="btn btn-primary">Submit Review</button>
-            </form>
+            </div>
         </div>
-    }
+    </div>
 </div>
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/games/details.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-}
+<style>
+    .placeholder-image {
+        background-color: #2b3035;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.375rem;
+    }
 
-@section Scripts {
-    <script src="~/js/games/details.js"></script>
-}
+    .game-details {
+        background-color: #2b3035;
+    }
+
+    .game-details p {
+        margin-bottom: 0.5rem;
+    }
+
+    .game-rating {
+        font-size: 1.25rem;
+    }
+
+    .review-stats {
+        border-bottom: 1px solid #495057;
+        padding-bottom: 1rem;
+    }
+
+    .average-rating {
+        text-align: center;
+    }
+
+    .rating-stars {
+        font-size: 1.5rem;
+        color: #ffc107;
+    }
+
+    .add-review {
+        margin-top: 2rem;
+    }
+
+    .card {
+        border: none;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+
+    .card-body {
+        padding: 2rem;
+    }
+</style>

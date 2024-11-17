@@ -14,7 +14,6 @@
 
 #nullable disable
 
-using GameLibrary.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -28,13 +27,13 @@ namespace GameLibrary.Pages.Account.Manage;
 
 public class EmailModel : PageModel
 {
-    private readonly UserManager<User> _userManager;
-    private readonly SignInManager<User> _signInManager;
+    private readonly UserManager<IdentityUser> _userManager;
+    private readonly SignInManager<IdentityUser> _signInManager;
     private readonly IEmailSender _emailSender;
 
     public EmailModel(
-        UserManager<User> userManager,
-        SignInManager<User> signInManager,
+        UserManager<IdentityUser> userManager,
+        SignInManager<IdentityUser> signInManager,
         IEmailSender emailSender)
     {
         _userManager = userManager;
@@ -84,7 +83,7 @@ public class EmailModel : PageModel
         public string NewEmail { get; set; }
     }
 
-    private async Task LoadAsync(User user)
+    private async Task LoadAsync(IdentityUser user)
     {
         var email = await _userManager.GetEmailAsync(user);
         Email = email;

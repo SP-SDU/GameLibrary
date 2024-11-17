@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using GameLibrary.Data;
 using GameLibrary.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GameLibrary.Pages.Admin.Games;
 
+[Authorize(Policy = "RequireAdministratorRole")]
 public class DetailsModel : PageModel
 {
     private readonly ApplicationDbContext _context;

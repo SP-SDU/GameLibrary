@@ -26,6 +26,10 @@ public class Game
 
     public string Genre { get; set; } = string.Empty;
 
+    public string Platform { get; set; } = string.Empty;
+
+    public decimal Price { get; set; }
+
     public DateTime ReleaseDate { get; set; } = DateTime.Now.Date;
 
     public string Developer { get; set; } = string.Empty;

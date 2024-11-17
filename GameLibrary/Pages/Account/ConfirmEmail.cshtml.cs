@@ -14,7 +14,6 @@
 
 #nullable disable
 
-using GameLibrary.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -25,9 +24,9 @@ namespace GameLibrary.Pages.Account;
 
 public class ConfirmEmailModel : PageModel
 {
-    private readonly UserManager<User> _userManager;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    public ConfirmEmailModel(UserManager<User> userManager)
+    public ConfirmEmailModel(UserManager<IdentityUser> userManager)
     {
         _userManager = userManager;
     }

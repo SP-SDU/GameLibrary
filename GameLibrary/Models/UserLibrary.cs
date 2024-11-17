@@ -12,31 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 namespace GameLibrary.Models;
 
-[Index(nameof(UserId), nameof(GameId), IsUnique = true, Name = "IX_UserFavorites_UserGame")]
-public class UserFavorite
+public class UserLibrary
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
+    [Key]
+    public Guid Id { get; set; }
 
-    [Required]
     public string UserId { get; set; } = null!;
-
-    [ForeignKey("UserId")]
     public IdentityUser User { get; set; } = null!;
 
-    [Required]
     public Guid GameId { get; set; }
+    public Game Game { get; set; } = null!;
 
+    public DateTime AddedDate { get; set; } = DateTime.UtcNow;
+    
+    public bool IsUpcoming { get; set; }
+    
+    // Status can be: Playing, Completed, On Hold, Dropped, Plan to Play
     [Required]
-    [DataType(DataType.DateTime)]
-    public DateTime AddedAt { get; set; }
-
-    // Navigation properties
-    public Game? Game { get; set; }
+    [StringLength(20)]
+    public string Status { get; set; } = "Plan to Play";
 }

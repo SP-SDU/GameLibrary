@@ -26,17 +26,17 @@ namespace GameLibrary.Tests.Pages.Account;
 
 public class RegisterModelTests
 {
-    private readonly Mock<UserManager<User>> _mockUserManager;
-    private readonly Mock<SignInManager<User>> _mockSignInManager;
-    private readonly Mock<IUserEmailStore<User>> _mockEmailStore;
+    private readonly Mock<UserManager<IdentityUser>> _mockUserManager;
+    private readonly Mock<SignInManager<IdentityUser>> _mockSignInManager;
+    private readonly Mock<IUserEmailStore<IdentityUser>> _mockEmailStore;
     private readonly Mock<ILogger<RegisterModel>> _mockLogger;
     private readonly Mock<IEmailSender> _mockEmailSender;
     private readonly RegisterModel _registerModel;
 
     public RegisterModelTests()
     {
-        _mockEmailStore = new Mock<IUserEmailStore<User>>();
-        _mockUserManager = new Mock<UserManager<User>>(
+        _mockEmailStore = new Mock<IUserEmailStore<IdentityUser>>();
+        _mockUserManager = new Mock<UserManager<IdentityUser>>(
             _mockEmailStore.Object, null!, null!, null!, null!, null!, null!, null!, null!);
 
         _mockUserManager.Setup(u => u.SupportsUserEmail).Returns(true);
@@ -59,15 +59,15 @@ public class RegisterModelTests
         _registerModel.Url = Mock.Of<IUrlHelper>();
     }
 
-    private static Mock<SignInManager<User>> MockSignInManager()
+    private static Mock<SignInManager<IdentityUser>> MockSignInManager()
     {
-        var userManager = new Mock<UserManager<User>>(
-            Mock.Of<IUserStore<User>>(), null!, null!, null!, null!, null!, null!, null!, null!);
+        var userManager = new Mock<UserManager<IdentityUser>>(
+            Mock.Of<IUserStore<IdentityUser>>(), null!, null!, null!, null!, null!, null!, null!, null!);
 
-        return new Mock<SignInManager<User>>(
+        return new Mock<SignInManager<IdentityUser>>(
             userManager.Object,
             Mock.Of<IHttpContextAccessor>(),
-            Mock.Of<IUserClaimsPrincipalFactory<User>>(),
+            Mock.Of<IUserClaimsPrincipalFactory<IdentityUser>>(),
             null!, null!, null!, null!);
     }
 
@@ -82,7 +82,7 @@ public class RegisterModelTests
             ConfirmPassword = "Password123!"
         };
 
-        _mockUserManager.Setup(u => u.CreateAsync(It.IsAny<User>(), _registerModel.Input.Password))
+        _mockUserManager.Setup(u => u.CreateAsync(It.IsAny<IdentityUser>(), _registerModel.Input.Password))
             .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "User creation failed." }));
 
         // Act
@@ -105,7 +105,7 @@ public class RegisterModelTests
             ConfirmPassword = "Password123!"
         };
 
-        _mockUserManager.Setup(u => u.CreateAsync(It.IsAny<User>(), _registerModel.Input.Password))
+        _mockUserManager.Setup(u => u.CreateAsync(It.IsAny<IdentityUser>(), _registerModel.Input.Password))
             .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "Registration failed." }));
 
         // Act

@@ -24,7 +24,7 @@ namespace GameLibrary.Tests.Pages.Account;
 
 public class LoginModelTests
 {
-    private readonly Mock<SignInManager<User>> _mockSignInManager;
+    private readonly Mock<SignInManager<IdentityUser>> _mockSignInManager;
     private readonly Mock<ILogger<LoginModel>> _mockLogger;
     private readonly LoginModel _loginModel;
 
@@ -35,15 +35,15 @@ public class LoginModelTests
         _loginModel = new LoginModel(_mockSignInManager.Object, _mockLogger.Object);
     }
 
-    private static Mock<SignInManager<User>> MockSignInManager()
+    private static Mock<SignInManager<IdentityUser>> MockSignInManager()
     {
-        var userManager = new Mock<UserManager<User>>(
-            Mock.Of<IUserStore<User>>(), null!, null!, null!, null!, null!, null!, null!, null!);
+        var userManager = new Mock<UserManager<IdentityUser>>(
+            Mock.Of<IUserStore<IdentityUser>>(), null!, null!, null!, null!, null!, null!, null!, null!);
 
-        return new Mock<SignInManager<User>>(
+        return new Mock<SignInManager<IdentityUser>>(
             userManager.Object,
             Mock.Of<IHttpContextAccessor>(),
-            Mock.Of<IUserClaimsPrincipalFactory<User>>(),
+            Mock.Of<IUserClaimsPrincipalFactory<IdentityUser>>(),
             null!, null!, null!, null!);
     }
 

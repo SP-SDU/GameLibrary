@@ -1,0 +1,52 @@
+@model IEnumerable<GameLibrary.Models.Review>
+
+@if (Model.Any())
+{
+    <div class="reviews-list">
+        @foreach (var review in Model.OrderByDescending(r => r.CreatedAt))
+        {
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h5 class="card-title">@(review.User?.Email?.Split('@')[0] ?? "Anonymous")</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                @review.CreatedAt.ToString("MMMM dd, yyyy")
+                                @if (review.UpdatedAt.HasValue)
+                                {
+                                    <span>(Edited @review.UpdatedAt.Value.ToString("MMMM dd, yyyy"))</span>
+                                }
+                            </h6>
+                        </div>
+                        <div class="rating-stars">
+                            @for (var i = 1; i <= 5; i++)
+                            {
+                                if (review.Rating >= i)
+                                {
+                                    <i class="fas fa-star text-warning"></i>
+                                }
+                                else
+                                {
+                                    <i class="far fa-star text-warning"></i>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <p class="card-text mt-3">@review.Content</p>
+                    @if (!string.IsNullOrEmpty(review.UserLibrary?.Status))
+                    {
+                        <div class="mt-2">
+                            <span class="badge bg-info">@review.UserLibrary?.Status</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        No reviews yet. Be the first to review this game!
+    </div>
+}

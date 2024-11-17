@@ -14,7 +14,6 @@
 
 #nullable disable
 
-using GameLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -30,10 +29,10 @@ namespace GameLibrary.Pages.Account;
 [AllowAnonymous]
 public class ResendEmailConfirmationModel : PageModel
 {
-    private readonly UserManager<User> _userManager;
+    private readonly UserManager<IdentityUser> _userManager;
     private readonly IEmailSender _emailSender;
 
-    public ResendEmailConfirmationModel(UserManager<User> userManager, IEmailSender emailSender)
+    public ResendEmailConfirmationModel(UserManager<IdentityUser> userManager, IEmailSender emailSender)
     {
         _userManager = userManager;
         _emailSender = emailSender;
