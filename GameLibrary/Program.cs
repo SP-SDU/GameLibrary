@@ -33,13 +33,13 @@ public class Program
             .AddRoles<Role>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
-        builder.Services.AddAuthentication()
-            .AddCookie(options =>
-            {
-                options.LoginPath = "/Account/Login";
-                options.LogoutPath = "/Account/Logout";
-                options.AccessDeniedPath = "/Account/AccessDenied";
-            });
+        builder.Services.ConfigureApplicationCookie(options =>
+        {
+            options.LoginPath = "/Account/Login";
+            options.LogoutPath = "/Account/Logout";
+            options.AccessDeniedPath = "/Account/AccessDenied";
+        });
+
         builder.Services.AddRazorPages()
             .AddRazorPagesOptions(options =>
             {
