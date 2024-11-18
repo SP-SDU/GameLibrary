@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.ComponentModel.DataAnnotations;
-
 namespace GameLibrary.Models;
 
 public class Game
@@ -25,6 +23,10 @@ public class Game
     public string Description { get; set; } = string.Empty;
 
     public string Genre { get; set; } = string.Empty;
+
+    public string Platform { get; set; } = string.Empty;
+
+    public decimal Price { get; set; }
 
     public DateTime ReleaseDate { get; set; } = DateTime.Now.Date;
 

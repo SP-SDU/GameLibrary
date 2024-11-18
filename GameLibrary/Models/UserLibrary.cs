@@ -12,27 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace GameLibrary.Models;
 
-public class User : IdentityUser<Guid>
+public class UserLibrary
 {
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public string Address { get; set; } = string.Empty;
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid UserId { get; set; }
+    public Guid GameId { get; set; }
+    public DateTime AddedDate { get; set; } = DateTime.UtcNow;
+    public bool IsUpcoming { get; set; }
 
-    [StringLength(500)]
-    [DataType(DataType.ImageUrl)]
-    public string AvatarUrl { get; set; } = string.Empty;
-
+    // Status can be: Playing, Completed, On Hold, Dropped, Plan to Play
     [Required]
-    [DataType(DataType.DateTime)]
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    [StringLength(20)]
+    public string Status { get; set; } = "Plan to Play";
 
     // Navigation properties
-    public ICollection<Review> Reviews { get; set; } = [];
-    public ICollection<UserFavorite> Favorites { get; set; } = [];
+    public Game Game { get; set; } = null!;
+    public User User { get; set; } = null!;
 }

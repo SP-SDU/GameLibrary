@@ -53,6 +53,7 @@ public static class DbInitializer
 
         var user = new User
         {
+            Id = Guid.Parse("611bc41d-1065-483c-9689-1c59a77f196f"),
             UserName = "admin@example.com",
             Email = "admin@example.com",
             EmailConfirmed = true
@@ -194,21 +195,21 @@ public static class DbInitializer
                 GameId = games[0].Id,
                 UserId = user.Id, // Use the inherited Id property from IdentityUser<Guid>
                 Rating = 5,
-                Comment = "One of the best games I've ever played! The open world is breathtaking and there's so much to discover.",
+                Content = "One of the best games I've ever played! The open world is breathtaking and there's so much to discover.",
                 CreatedAt = DateTime.UtcNow.AddDays(-5)
             },
             new() {
                 GameId = games[0].Id,
                 UserId = user.Id, // Use the inherited Id property from IdentityUser<Guid>
                 Rating = 5,
-                Comment = "An absolute masterpiece. The attention to detail and storytelling are unmatched.",
+                Content = "An absolute masterpiece. The attention to detail and storytelling are unmatched.",
                 CreatedAt = DateTime.UtcNow.AddDays(-3)
             },
             new() {
                 GameId = games[0].Id,
                 UserId = user.Id, // Use the inherited Id property from IdentityUser<Guid>
                 Rating = 4,
-                Comment = "A visually stunning game with a deep story, though it had some bugs at launch.",
+                Content = "A visually stunning game with a deep story, though it had some bugs at launch.",
                 CreatedAt = DateTime.UtcNow.AddDays(-1)
             }
         };

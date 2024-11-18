@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GameLibrary.Models;
 
@@ -21,24 +22,27 @@ public class Review
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
-    public Guid GameId { get; set; }
+    public Guid UserId { get; set; }
 
     [Required]
-    public Guid UserId { get; set; }
+    public Guid GameId { get; set; }
+
+    public string Content { get; set; } = string.Empty;
 
     [Required]
     [Range(1, 5, ErrorMessage = "Rating must be between 1 and 5")]
     public int Rating { get; set; }
 
     [Required]
-    [StringLength(1000, MinimumLength = 10, ErrorMessage = "Comment must be between 10 and 1000 characters")]
-    public string Comment { get; set; } = string.Empty;
-
-    [Required]
     [DataType(DataType.DateTime)]
     public DateTime CreatedAt { get; set; }
 
+    public DateTime? UpdatedAt { get; set; }
+
     // Navigation properties
-    public Game? Game { get; set; }
-    public User? User { get; set; }
+    public Game Game { get; set; } = null!;
+    public User User { get; set; } = null!;
+
+    [NotMapped]
+    public UserLibrary? UserLibrary { get; set; }
 }

@@ -1,0 +1,95 @@
+@model IEnumerable<GameLibrary.Models.Review>
+
+<div class="reviews-container">
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var review in Model.OrderByDescending(r => r.CreatedAt))
+        {
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="review-rating">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            if (review.Rating >= i)
+                            {
+                                <i class="fas fa-star text-warning"></i>
+                            }
+                            else
+                            {
+                                <i class="far fa-star text-warning"></i>
+                            }
+                        }
+                    </div>
+                    <div class="review-date">
+                        @review.CreatedAt.ToString("MMM dd, yyyy")
+                        @if (review.UpdatedAt.HasValue)
+                        {
+                            <span>(Edited @review.UpdatedAt.Value.ToString("MMM dd, yyyy"))</span>
+                        }
+                    </div>
+                </div>
+                <div class="review-content">
+                    <h5>@(review.User?.Email?.Split('@')[0] ?? "Anonymous")</h5>
+                    <p>@review.Content</p>
+                </div>
+                @if (!string.IsNullOrEmpty(review.UserLibrary?.Status))
+                {
+                    <div class="review-status">
+                        <span class="badge bg-info">@review.UserLibrary.Status</span>
+                    </div>
+                }
+            </div>
+        }
+    }
+    else
+    {
+        <div class="no-reviews">
+            <p>No reviews yet. Be the first to review this game!</p>
+        </div>
+    }
+</div>
+
+<style>
+    .reviews-container {
+        margin-top: 20px;
+    }
+
+    .review-card {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .review-rating {
+        color: #ffc107;
+    }
+
+    .review-date {
+        color: #6c757d;
+        font-size: 0.9em;
+    }
+
+    .review-content {
+        color: #212529;
+        line-height: 1.5;
+    }
+
+    .review-status .badge {
+        margin-top: 5px;
+    }
+
+    .no-reviews {
+        text-align: center;
+        color: #6c757d;
+        padding: 20px;
+    }
+</style>

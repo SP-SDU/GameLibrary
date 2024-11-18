@@ -33,6 +33,23 @@ public class Program
             .AddRoles<Role>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
+        builder.Services.AddAuthentication()
+            .AddCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+            });
+        builder.Services.AddRazorPages()
+            .AddRazorPagesOptions(options =>
+            {
+                options.Conventions.AuthorizeFolder("/Admin", "RequireAdministratorRole");
+            });
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Administrator"));
+        });
+
         builder.Services.AddRazorPages();
 
         var app = builder.Build();
@@ -55,6 +72,7 @@ public class Program
 
         app.UseRouting();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapRazorPages();

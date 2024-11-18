@@ -24,7 +24,9 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
         : base(options)
     {
     }
+
     public DbSet<Game> Games => Set<Game>();
     public DbSet<Review> Reviews => Set<Review>();
+    public DbSet<UserLibrary> UserLibraries => Set<UserLibrary>();
     public DbSet<UserFavorite> UserFavorites => Set<UserFavorite>();
 }
