@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 using GameLibrary.Data;
 using GameLibrary.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace GameLibrary.Pages.Games;
 
@@ -30,10 +30,37 @@ public class IndexModel : PageModel
     }
 
     public IList<Game> Games { get; set; } = [];
+    public IList<string> Genres { get; set; } = [];
+    public string? SearchQuery { get; set; }
+    public string? SelectedGenre { get; set; }
 
-    public async Task OnGetAsync()
+    public async Task OnGetAsync(string? search, string? genre)
     {
-        Games = await _context.Games
+        SearchQuery = search;
+        SelectedGenre = genre;
+
+        // Fetch unique genres
+        Genres = await _context.Games
+            .Select(g => g.Genre)
+            .Distinct()
+            .OrderBy(g => g)
+            .ToListAsync();
+
+        // Filter games
+        var query = _context.Games.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(g => EF.Functions.Like(g.Title, $"%{search}%") ||
+                                     EF.Functions.Like(g.Description, $"%{search}%"));
+        }
+
+        if (!string.IsNullOrWhiteSpace(genre))
+        {
+            query = query.Where(g => g.Genre == genre);
+        }
+
+        Games = await query
             .OrderByDescending(g => g.Rating)
             .ThenByDescending(g => g.ReleaseDate)
             .ToListAsync();
