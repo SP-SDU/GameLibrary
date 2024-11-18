@@ -1,0 +1,40 @@
+@page
+@model GameLibrary.Pages.Admin.Users.IndexModel
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+<body style="color:#FFD43B;">
+    <header>
+        <h1>Users</h1>
+        <p class="text-lg-end">
+            <a asp-page="Create" class="btn" style="background-color: #420599; color: #FFD43B;">Create New</a>
+        </p>
+    </header>
+
+    <div class="container">
+        <table class="table" style="background-color: #000235;">
+            <thead>
+                <tr style="color:#FFD43B;">
+                    <th style="color:#FFD43B;">User Name</th>
+                    <th style="color:#FFD43B;">Email</th>
+                    <th style="color:#FFD43B;">Actions</th>
+                </tr>
+            </thead>
+            <tbody style="color:#FFD43B;">
+                @foreach (var item in Model.Users!)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                        <td>
+                            <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm" style="background-color: #420599; color: #FFD43B;">Edit</a>
+                            <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" style="background-color: #420599; color: #FFD43B;">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>

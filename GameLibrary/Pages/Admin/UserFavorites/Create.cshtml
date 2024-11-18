@@ -1,0 +1,43 @@
+@page
+@model GameLibrary.Pages.Admin.UserFavorites.CreateModel
+
+@{
+    ViewData["Title"] = "Create User Favorite Entry";
+}
+
+<body style="color:#FFD43B;">
+
+    <header>
+        <h1>Create User Favorite Entry</h1>
+    </header>
+
+    <div class="row container">
+        <div class="col-md-4">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="UserFavorite!.UserId" class="control-label">User</label>
+                    <select asp-for="UserFavorite!.UserId" class="form-control" asp-items="Model.Users">
+                        <option value="">Select a user</option>
+                    </select>
+                    <span asp-validation-for="UserFavorite!.UserId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="UserFavorite!.GameId" class="control-label">Game</label>
+                    <select asp-for="UserFavorite!.GameId" class="form-control" asp-items="Model.Games">
+                        <option value="">Select a game</option>
+                    </select>
+                    <span asp-validation-for="UserFavorite!.GameId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" style="background-color: #420599; color: #FFD43B;" />
+                    <a asp-page="Index" class="btn" style="background-color: #420599; color: #FFD43B;">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>

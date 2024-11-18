@@ -1,0 +1,56 @@
+@page
+@model GameLibrary.Pages.Admin.Reviews.EditModel
+
+@{
+    ViewData["Title"] = "Edit Review";
+}
+
+<body style="color:#FFD43B;">
+
+    <header>
+        <h1>Edit Review</h1>
+    </header>
+
+    <div class="row container">
+        <div class="col-md-4">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Review!.Id" />
+
+                <div class="form-group">
+                    <label asp-for="Review!.GameId" class="control-label">Game</label>
+                    <select asp-for="Review!.GameId" class="form-control" asp-items="Model.Games">
+                        <option value="">Select a game</option>
+                    </select>
+                    <span asp-validation-for="Review!.GameId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Review!.UserId" class="control-label">User</label>
+                    <select asp-for="Review!.UserId" class="form-control" asp-items="Model.Users">
+                        <option value="">Select a user</option>
+                    </select>
+                    <span asp-validation-for="Review!.UserId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Review!.Rating" class="control-label">Rating</label>
+                    <input asp-for="Review!.Rating" class="form-control" />
+                    <span asp-validation-for="Review!.Rating" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Review!.Content" class="control-label">Content</label>
+                    <textarea asp-for="Review!.Content" class="form-control"></textarea>
+                    <span asp-validation-for="Review!.Content" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" style="background-color: #420599; color: #FFD43B;" />
+                    <a asp-page="Index" class="btn" style="background-color: #420599; color: #FFD43B;">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>

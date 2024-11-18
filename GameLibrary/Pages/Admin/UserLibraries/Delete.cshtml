@@ -1,0 +1,52 @@
+@page
+@model GameLibrary.Pages.Admin.UserLibraries.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete User Library Entry";
+}
+
+<body>
+    <header>
+        <h1>Delete User Library Entry</h1>
+        <h3>Are you sure you want to delete this entry?</h3>
+    </header>
+
+    <div class="row">
+        <div class="col-md-6">
+            <dl class="row">
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.UserLibrary!.UserId)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.UserLibrary!.UserId)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.UserLibrary!.GameId)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.UserLibrary!.GameId)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.UserLibrary!.Status)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.UserLibrary!.Status)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.UserLibrary!.IsUpcoming)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.UserLibrary!.IsUpcoming)
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <form method="post">
+            <input type="hidden" asp-for="UserLibrary!.Id" />
+            <input type="submit" value="Delete" class="btn btn-danger" style="background-color: #420599; color: #FFD43B;" />
+            <a asp-page="./Index" class="btn" style="background-color: #420599; color: #FFD43B;">Back to List</a>
+        </form>
+    </div>
+</body>

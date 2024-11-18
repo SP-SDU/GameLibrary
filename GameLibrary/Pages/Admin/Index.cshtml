@@ -1,0 +1,18 @@
+@page
+@model GameLibrary.Pages.Admin.IndexModel
+
+@{
+    ViewData["Title"] = "Admin Index";
+}
+
+<h1>Admin Index</h1>
+
+<div class="list-group">
+    <a asp-page="Dashboard" class="list-group-item list-group-item-action">Dashboard</a>
+    <a asp-page="Games/Index" class="list-group-item list-group-item-action">Games</a>
+    <a asp-page="Reviews/Index" class="list-group-item list-group-item-action">Reviews</a>
+    <a asp-page="UserLibraries/Index" class="list-group-item list-group-item-action">User Libraries</a>
+    <a asp-page="UserFavorites/Index" class="list-group-item list-group-item-action">User Favorites</a>
+    <a asp-page="Users/Index" class="list-group-item list-group-item-action">Users</a>
+    <a asp-page="Roles/Index" class="list-group-item list-group-item-action">Roles</a>
+</div>
