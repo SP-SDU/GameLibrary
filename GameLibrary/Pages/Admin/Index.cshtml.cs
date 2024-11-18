@@ -1,34 +1,58 @@
+// Copyright 2024 Web.Tech. Group17
+//
+// Licensed under the Apache License, Version 2.0 (the "License"):
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+using GameLibrary.Data;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameLibrary.Pages.Admin;
 
 public class IndexModel : PageModel
 {
-    public List<string> NavigationLinks { get; set; } = new();
+    private readonly ApplicationDbContext _context;
 
-    public void OnGet()
+    public IndexModel(ApplicationDbContext context)
     {
-        NavigationLinks.Add("Dashboard");
-        NavigationLinks.Add("Games");
-        NavigationLinks.Add("Reviews");
-        NavigationLinks.Add("User Libraries");
-        NavigationLinks.Add("User Favorites");
-        NavigationLinks.Add("Users");
-        NavigationLinks.Add("Roles");
+        _context = context;
     }
 
-    public IActionResult OnPostNavigate(string link)
+    public int TotalGames { get; set; }
+    public int TotalReviews { get; set; }
+    public int TotalUsers { get; set; }
+    public int TotalFavorites { get; set; }
+
+    public Dictionary<string, int> GameGenres { get; set; } = new();
+    public Dictionary<string, int> UserActivity { get; set; } = new();
+    public Dictionary<int, int> ReviewRatings { get; set; } = new();
+
+    public async Task OnGetAsync()
     {
-        return link switch
-        {
-            "Dashboard" => RedirectToPage("Dashboard"),
-            "Games" => RedirectToPage("Games/Index"),
-            "Reviews" => RedirectToPage("Reviews/Index"),
-            "User Libraries" => RedirectToPage("UserLibraries/Index"),
-            "User Favorites" => RedirectToPage("UserFavorites/Index"),
-            "Users" => RedirectToPage("Users/Index"),
-            "Roles" => RedirectToPage("Roles/Index"),
-            _ => Page()
-        };
+        TotalGames = await _context.Games.CountAsync();
+        TotalReviews = await _context.Reviews.CountAsync();
+        TotalUsers = await _context.Users.CountAsync();
+        TotalFavorites = await _context.UserFavorites.CountAsync();
+
+        GameGenres = await _context.Games
+            .GroupBy(g => g.Genre)
+            .ToDictionaryAsync(g => g.Key, g => g.Count());
+
+        UserActivity = await _context.Users
+            .GroupBy(u => u.CreatedAt.Date)
+            .ToDictionaryAsync(u => u.Key.ToString("yyyy-MM-dd"), u => u.Count());
+
+        ReviewRatings = await _context.Reviews
+            .GroupBy(r => r.Rating)
+            .ToDictionaryAsync(r => r.Key, r => r.Count());
     }
 }
