@@ -28,10 +28,10 @@ public class IndexModel : PageModel
         _context = context;
     }
 
-    public IList<User>? Users { get; set; }
+    public IList<User>? IdentityUsers { get; set; }
 
     public async Task OnGetAsync()
     {
-        Users = await _context.Users.ToListAsync();
+        IdentityUsers = await _context.Users.ToListAsync();
     }
 }

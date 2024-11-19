@@ -39,12 +39,13 @@ public class EditModel : PageModel
             return NotFound();
         }
 
-        Role = await _context.Roles.FindAsync(id);
-
-        if (Role == null)
+        var role = await _context.Roles.FindAsync(id);
+        if (role == null)
         {
             return NotFound();
         }
+
+        Role = role;
         return Page();
     }
 

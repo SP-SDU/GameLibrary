@@ -33,7 +33,7 @@ public class DeleteModel : PageModel
     }
 
     [BindProperty]
-    public User? User { get; set; }
+    public User? IdentityUser { get; set; }
 
     public async Task<IActionResult> OnGetAsync(Guid? id)
     {
@@ -42,9 +42,9 @@ public class DeleteModel : PageModel
             return NotFound();
         }
 
-        User = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+        IdentityUser = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
 
-        if (User == null)
+        if (IdentityUser == null)
         {
             return NotFound();
         }
@@ -59,11 +59,11 @@ public class DeleteModel : PageModel
             return NotFound();
         }
 
-        User = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+        IdentityUser = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
 
-        if (User != null)
+        if (IdentityUser != null)
         {
-            var result = await _userManager.DeleteAsync(User);
+            var result = await _userManager.DeleteAsync(IdentityUser);
 
             if (result.Succeeded)
             {

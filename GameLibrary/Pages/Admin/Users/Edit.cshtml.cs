@@ -33,7 +33,7 @@ public class EditModel : PageModel
     }
 
     [BindProperty]
-    public User? User { get; set; }
+    public User? IdentityUser { get; set; }
 
     [BindProperty]
     public string? Password { get; set; }
@@ -45,7 +45,7 @@ public class EditModel : PageModel
             return NotFound();
         }
 
-        User = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+        IdentityUser = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
 
         if (User == null)
         {

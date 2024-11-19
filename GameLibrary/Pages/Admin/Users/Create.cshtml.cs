@@ -33,7 +33,7 @@ public class CreateModel : PageModel
 
     public IActionResult OnGet()
     {
-        User = new User
+        IdentityUser = new User
         {
             UserName = "",
             Email = "",
@@ -43,7 +43,7 @@ public class CreateModel : PageModel
     }
 
     [BindProperty]
-    public User? User { get; set; }
+    public User? IdentityUser { get; set; }
 
     [BindProperty]
     public string? Password { get; set; }
@@ -57,8 +57,8 @@ public class CreateModel : PageModel
 
         var user = new User
         {
-            UserName = User!.UserName,
-            Email = User.Email,
+            UserName = IdentityUser!.UserName,
+            Email = IdentityUser.Email,
             CreatedAt = DateTime.UtcNow
         };
 

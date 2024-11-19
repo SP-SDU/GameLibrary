@@ -16,16 +16,16 @@
         <div class="col-md-6">
             <dl class="row">
                 <dt class="col-sm-4">
-                    @Html.DisplayNameFor(model => model.User!.UserName)
+                    @Html.DisplayNameFor(model => model.IdentityUser!.UserName)
                 </dt>
                 <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.User!.UserName)
+                    @Html.DisplayFor(model => model.IdentityUser!.UserName)
                 </dd>
                 <dt class="col-sm-4">
-                    @Html.DisplayNameFor(model => model.User!.Email)
+                    @Html.DisplayNameFor(model => model.IdentityUser!.Email)
                 </dt>
                 <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.User!.Email)
+                    @Html.DisplayFor(model => model.IdentityUser!.Email)
                 </dd>
             </dl>
         </div>
@@ -33,7 +33,7 @@
 
     <div class="row mt-3">
         <form method="post">
-            <input type="hidden" asp-for="User!.Id" />
+            <input type="hidden" asp-for="IdentityUser!.Id" />
             <input type="submit" value="Delete" class="btn btn-danger" style="background-color: #420599; color: #FFD43B;" />
             <a asp-page="./Index" class="btn" style="background-color: #420599; color: #FFD43B;">Back to List</a>
         </form>

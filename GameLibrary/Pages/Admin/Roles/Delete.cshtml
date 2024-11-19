@@ -14,15 +14,15 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Role.Name)
+            @Html.DisplayNameFor(model => model.Role!.Name)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Role.Name)
+            @Html.DisplayFor(model => model.Role!.Name)
         </dd>
     </dl>
     
     <form method="post">
-        <input type="hidden" asp-for="Role.Id" />
+        <input type="hidden" asp-for="Role!.Id" />
         <input type="submit" value="Delete" class="btn btn-danger" />
         <a asp-page="Index" class="btn btn-secondary">Back to List</a>
     </form>
