@@ -1,4 +1,8 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
+﻿function previewImage(event) {
+    const files = event.target.files;
+    if (files.length > 0) {
+        const preview = document.getElementById('imagePreview');
+        preview.src = URL.createObjectURL(files[0]);
+        preview.style.display = 'block';
+    }
+}
