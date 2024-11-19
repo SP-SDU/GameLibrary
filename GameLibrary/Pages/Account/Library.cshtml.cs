@@ -27,13 +27,11 @@ public class LibraryModel : PageModel
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<User> _userManager;
-    private readonly ILogger<LibraryModel> _logger;
 
-    public LibraryModel(ApplicationDbContext context, UserManager<User> userManager, ILogger<LibraryModel> logger)
+    public LibraryModel(ApplicationDbContext context, UserManager<User> userManager)
     {
         _context = context;
         _userManager = userManager;
-        _logger = logger;
     }
 
     public class LibraryItemViewModel
@@ -45,8 +43,9 @@ public class LibraryModel : PageModel
     }
 
     public List<LibraryItemViewModel> LibraryItems { get; set; } = [];
+    public string Filter { get; set; } = "all";
 
-    public async Task<IActionResult> OnGetAsync()
+    public async Task<IActionResult> OnGetAsync(string? filter)
     {
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
@@ -54,11 +53,21 @@ public class LibraryModel : PageModel
             return NotFound();
         }
 
+        // Default filter
+        Filter = filter ?? "all";
+
         // Get user's library items with related game data
-        var libraryItems = await _context.UserLibraries
+        var libraryItemsQuery = _context.UserLibraries
             .Include(ul => ul.Game)
-            .Where(ul => ul.UserId == user.Id)
-            .ToListAsync();
+            .Where(ul => ul.UserId == user.Id);
+
+        // Apply filter if necessary
+        if (Filter != "all")
+        {
+            libraryItemsQuery = libraryItemsQuery.Where(ul => ul.Status == Filter);
+        }
+
+        var libraryItems = await libraryItemsQuery.ToListAsync();
 
         // Get user's favorites
         var favorites = await _context.UserFavorites
@@ -73,34 +82,14 @@ public class LibraryModel : PageModel
             .ToDictionaryAsync(g => g.Key, g => g.OrderByDescending(r => r.CreatedAt).First().Rating);
 
         // Build view models
-        LibraryItems = libraryItems.Select(li => new LibraryItemViewModel
+        LibraryItems = libraryItems.ConvertAll(li => new LibraryItemViewModel
         {
             Game = li.Game,
             Status = li.Status,
             IsFavorite = favorites.Contains(li.GameId),
             Rating = ratings.GetValueOrDefault(li.GameId)
-        }).ToList();
+        });
 
         return Page();
-    }
-
-    public async Task<IActionResult> OnPostUpdateStatusAsync(Guid gameId, string status)
-    {
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        var libraryItem = await _context.UserLibraries
-            .FirstOrDefaultAsync(ul => ul.UserId == user.Id && ul.GameId == gameId);
-
-        if (libraryItem != null)
-        {
-            libraryItem.Status = status;
-            await _context.SaveChangesAsync();
-        }
-
-        return RedirectToPage();
     }
 }

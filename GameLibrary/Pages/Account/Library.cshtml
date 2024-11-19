@@ -1,29 +1,33 @@
 @page
 @model LibraryModel
 @{
-    ViewData["Title"] = "My Game Library";
+    ViewData["Title"] = "Library";
 }
 
 <div class="container py-4">
     <h1 class="text-warning mb-4">My Game Library</h1>
 
+    <!-- Filter Form -->
     <div class="row mb-4">
         <div class="col-md-8">
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-outline-primary active" data-filter="all">All</button>
-                <button type="button" class="btn btn-outline-primary" data-filter="Playing">Playing</button>
-                <button type="button" class="btn btn-outline-primary" data-filter="Completed">Completed</button>
-                <button type="button" class="btn btn-outline-primary" data-filter="On Hold">On Hold</button>
-                <button type="button" class="btn btn-outline-primary" data-filter="Dropped">Dropped</button>
-                <button type="button" class="btn btn-outline-primary" data-filter="Plan to Play">Plan to Play</button>
-            </div>
+            <form method="get">
+                <div class="btn-group" role="group">
+                    <button type="submit" name="filter" value="all" class="btn btn-outline-primary @(Model.Filter == "all" ? "active" : "")">All</button>
+                    <button type="submit" name="filter" value="Playing" class="btn btn-outline-primary @(Model.Filter == "Playing" ? "active" : "")">Playing</button>
+                    <button type="submit" name="filter" value="Completed" class="btn btn-outline-primary @(Model.Filter == "Completed" ? "active" : "")">Completed</button>
+                    <button type="submit" name="filter" value="On Hold" class="btn btn-outline-primary @(Model.Filter == "On Hold" ? "active" : "")">On Hold</button>
+                    <button type="submit" name="filter" value="Dropped" class="btn btn-outline-primary @(Model.Filter == "Dropped" ? "active" : "")">Dropped</button>
+                    <button type="submit" name="filter" value="Plan to Play" class="btn btn-outline-primary @(Model.Filter == "Plan to Play" ? "active" : "")">Plan to Play</button>
+                </div>
+            </form>
         </div>
     </div>
 
+    <!-- Game List -->
     <div class="row row-cols-1 row-cols-md-3 g-4">
         @foreach (var item in Model.LibraryItems)
         {
-            <div class="col game-item" data-status="@item.Status">
+            <div class="col game-item">
                 <div class="card h-100 bg-primary-subtle">
                     <img src="@item.Game.ImageUrl" class="card-img-top" alt="@item.Game.Title" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
@@ -77,34 +81,7 @@
     </div>
 </div>
 
+
 @section Styles {
     <link rel="stylesheet" href="~/css/user/library.css" />
-}
-
-@section Scripts {
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const filterButtons = document.querySelectorAll('[data-filter]');
-            const gameItems = document.querySelectorAll('.game-item');
-
-            filterButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const filter = button.dataset.filter;
-                    
-                    // Update active button
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-
-                    // Filter games
-                    gameItems.forEach(item => {
-                        if (filter === 'all' || item.dataset.status === filter) {
-                            item.style.display = '';
-                        } else {
-                            item.style.display = 'none';
-                        }
-                    });
-                });
-            });
-        });
-    </script>
 }

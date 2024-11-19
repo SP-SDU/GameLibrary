@@ -8,18 +8,18 @@
   --standard-border-radius: 6px;
 
   /* Light theme colors */
-  --bg: #ffffff;
-  --accent-bg: #f3f3f3;
-  --text: #1f1f1f;
-  --text-light: #606060;
-  --border: #d1d9e1;
-  --accent: #0078d4;
-  --accent-hover: #005a9e;
-  --accent-text: #ffffff;
-  --code: #d81b60;
-  --preformatted: #444444;
-  --marked: #ffcc00;
-  --disabled: #f7f7f7;
+  --bg: #000235;
+  --accent-bg: #420599;
+  --text: #FFD43B;
+  --text-light: #FFD43B;
+  --border: #FFD43B;
+  --accent: #FFD43B;
+  --accent-hover: #FFD43B;
+  --accent-text: #000235;
+  --code: #FFD43B;
+  --preformatted: #FFD43B;
+  --marked: #FFD43B;
+  --disabled: #FFD43B;
 }
 
 /* Dark theme */
@@ -27,16 +27,18 @@
   :root,
   ::backdrop {
     color-scheme: dark;
-    --bg: #1e1e1e;
-    --accent-bg: #2e2e2e;
-    --text: #ffffff;
-    --text-light: #d9d9d9;
-    --accent: #1a73e8;
-    --accent-hover: #0c5bbf;
+    --bg: #000235;
+    --accent-bg: #420599;
+    --text: #FFD43B;
+    --text-light: #FFD43B;
+    --border: #FFD43B;
+    --accent: #FFD43B;
+    --accent-hover: #FFD43B;
     --accent-text: var(--bg);
-    --code: #ff7f7f;
-    --preformatted: #d9d9d9;
-    --disabled: #444444;
+    --code: #FFD43B;
+    --preformatted: #FFD43B;
+    --marked: #FFD43B;
+    --disabled: #FFD43B;
   }
   /* Add a bit of transparency so light media isn't so glaring in dark mode */
   img,
