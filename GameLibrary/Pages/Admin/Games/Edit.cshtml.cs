@@ -9,16 +9,19 @@ using Microsoft.EntityFrameworkCore;
 using GameLibrary.Data;
 using GameLibrary.Models;
 using System.IO;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace GameLibrary.Pages.Admin.Games;
 
 public class EditModel : PageModel
 {
     private readonly ApplicationDbContext _context;
+    private readonly IWebHostEnvironment _environment;
 
-    public EditModel(ApplicationDbContext context)
+    public EditModel(ApplicationDbContext context, IWebHostEnvironment environment)
     {
         _context = context;
+        _environment = environment;
     }
 
     [BindProperty]
@@ -41,18 +44,11 @@ public class EditModel : PageModel
         return Page();
     }
 
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task<IActionResult> OnPostAsync(Guid? id)
     {
         if (!ModelState.IsValid)
         {
             return Page();
-        }
-
-        if (id == null)
-        {
-            return NotFound();
         }
 
         var gameToUpdate = await _context.Games.FindAsync(id);
@@ -62,7 +58,7 @@ public class EditModel : PageModel
             return NotFound();
         }
 
-        if (await TryUpdateModelAsync<Game>(
+        if (await TryUpdateModelAsync(
             gameToUpdate,
             "game",
             g => g.Title, g => g.Genre, g => g.ReleaseDate, g => g.Description))
@@ -111,10 +107,5 @@ public class EditModel : PageModel
         }
 
         return Page();
-    }
-
-    private bool GameExists(Guid id)
-    {
-        return _context.Games.Any(e => e.Id == id);
     }
 }

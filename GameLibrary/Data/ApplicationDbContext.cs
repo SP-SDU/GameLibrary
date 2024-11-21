@@ -26,7 +26,7 @@ namespace GameLibrary.Data
         {
         }
 
-        public DbSet<Game> Games { get; set; }
+        public virtual DbSet<Game> Games { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<UserLibrary> UserLibraries { get; set; }
         public DbSet<UserFavorite> UserFavorites { get; set; }

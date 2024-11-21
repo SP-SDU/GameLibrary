@@ -44,7 +44,7 @@ public class CreateModel : PageModel
     public IFormFile? ImageFile { get; set; }
 
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<IActionResult> OnPostAsync(Guid gameId)
     {
         if (!ModelState.IsValid)
         {
@@ -69,7 +69,7 @@ public class CreateModel : PageModel
                 return Page();
             }
 
-            var fileName = $"{Game.Id.ToString()}{extension}";
+            var fileName = $"{Game!.Id.ToString()}{extension}";
             var filePath = Path.Combine("wwwroot","images", fileName);
             Directory.CreateDirectory(Path.GetDirectoryName(filePath));
 
