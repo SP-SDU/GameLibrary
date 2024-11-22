@@ -51,6 +51,11 @@ public class EditModel : PageModel
             return Page();
         }
 
+        if (id == null)
+        {
+            return NotFound();
+        }
+
         var gameToUpdate = await _context.Games.FindAsync(id);
 
         if (gameToUpdate == null)
@@ -58,7 +63,7 @@ public class EditModel : PageModel
             return NotFound();
         }
 
-        if (await TryUpdateModelAsync(
+        if (await TryUpdateModelAsync<Game>(
             gameToUpdate,
             "game",
             g => g.Title, g => g.Genre, g => g.ReleaseDate, g => g.Description))

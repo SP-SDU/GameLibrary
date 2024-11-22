@@ -14,7 +14,7 @@ public class DeleteModel : PageModel
 {
     private readonly ApplicationDbContext _context;
 
-    public DeleteModel(ApplicationDbContext context)
+    public DeleteModel(ApplicationDbContext context, IWebHostEnvironment @object)
     {
         _context = context;
     }
@@ -61,6 +61,11 @@ public class DeleteModel : PageModel
 
             _context.Games.Remove(Game);
             await _context.SaveChangesAsync();
+        }
+
+        else
+        {
+            return NotFound();
         }
 
         return RedirectToPage("./Index");
