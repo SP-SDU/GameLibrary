@@ -12,21 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GameLibrary.Data;
 using GameLibrary.Models;
-using System.IO;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace GameLibrary.Pages.Admin.Games;
-
 public class EditModel : PageModel
 {
     private readonly ApplicationDbContext _context;
@@ -55,6 +47,7 @@ public class EditModel : PageModel
         {
             return NotFound();
         }
+
         return Page();
     }
 
@@ -66,6 +59,11 @@ public class EditModel : PageModel
         }
 
         if (id == null)
+        {
+            return NotFound();
+        }
+
+        if (Game == null)
         {
             return NotFound();
         }

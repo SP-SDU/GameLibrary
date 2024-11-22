@@ -18,11 +18,6 @@ using GameLibrary.Pages.Admin.Games;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameLibrary.Tests.Pages.Admin.Games
 {
@@ -31,7 +26,6 @@ namespace GameLibrary.Tests.Pages.Admin.Games
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _environment;
         private readonly IndexModel _indexModel;
-        private readonly Game _game;
 
         public IndexGameTests()
         {
@@ -44,7 +38,7 @@ namespace GameLibrary.Tests.Pages.Admin.Games
         }
 
         [Fact]
-        public async Task OnGetAsync_PopulatesThePageModel_WithAListOfGames()
+        public async Task OnGetAsync_PopulatesThePageMode()
         {
             // Arrange
             _context.Games.Add(new Game { Title = "Game_1", Genre = "Genre_1", ReleaseDate = new (2024, 1, 1), Description = "Description_1" });
@@ -52,8 +46,10 @@ namespace GameLibrary.Tests.Pages.Admin.Games
             _context.Games.Add(new Game { Title = "Game_3", Genre = "Genre_3", ReleaseDate = new ( 2023,3,3), Description = "Description_3" });
 
             await _context.SaveChangesAsync();
+
             // Act
             await _indexModel.OnGetAsync();
+
             // Assert
             var games = Assert.IsAssignableFrom<IList<Game>>(_indexModel.Games);
             Assert.Equal(3, games.Count);

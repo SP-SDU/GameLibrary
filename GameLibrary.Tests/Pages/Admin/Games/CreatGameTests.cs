@@ -26,7 +26,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -36,7 +35,6 @@ using GameLibrary.Models;
 using GameLibrary.Pages.Admin.Games;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 
 namespace GameLibrary.Tests.Pages.Admin.Games
 {
@@ -45,8 +43,6 @@ namespace GameLibrary.Tests.Pages.Admin.Games
         private readonly ApplicationDbContext _context;
         private readonly Mock<IWebHostEnvironment> _mockEnvironment;
         private readonly CreateModel _createModel;
-        private readonly Mock<UserManager<IdentityUser>> _mockUserManager;
-        private readonly Mock<SignInManager<IdentityUser>> _mockSignInManager;
         private readonly Game _game;
 
         public CreateModelTests()
@@ -54,15 +50,10 @@ namespace GameLibrary.Tests.Pages.Admin.Games
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: "TestDatabase")
                 .Options;
-
             _context = new ApplicationDbContext(options);
             _mockEnvironment = new Mock<IWebHostEnvironment>();
-
-            var store = new Mock<IUserStore<IdentityUser>>();
-            _mockUserManager = new Mock<UserManager<IdentityUser>>(store.Object, null!, null!, null!, null!, null!, null!, null!, null!);
-            _mockSignInManager = new Mock<SignInManager<IdentityUser>>(_mockUserManager.Object, Mock.Of<IHttpContextAccessor>(), Mock.Of<IUserClaimsPrincipalFactory<IdentityUser>>(), null!, null!, null!, null!);
-
             _createModel = new CreateModel(_context, _mockEnvironment.Object);
+
             _game = new Game
             {
                 //Id = Guid.NewGuid(),

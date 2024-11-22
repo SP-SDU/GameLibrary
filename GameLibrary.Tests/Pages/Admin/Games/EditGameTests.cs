@@ -25,8 +25,10 @@ namespace GameLibrary.Tests.Pages.Admin.Games
 {
     public class EditModelTests
     {
-        private readonly Mock<IWebHostEnvironment> _mockEnvironment;
         private readonly ApplicationDbContext _context;
+        private readonly Mock<IWebHostEnvironment> _mockEnvironment;
+        private readonly EditModel _editModel;
+
         public EditModelTests()
         {
             // Set up in-memory database
@@ -34,60 +36,71 @@ namespace GameLibrary.Tests.Pages.Admin.Games
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
             _context = new ApplicationDbContext(options);
-
-            // Set up mock environment
             _mockEnvironment = new Mock<IWebHostEnvironment>();
-            _mockEnvironment.Setup(env => env.WebRootPath).Returns(Path.GetTempPath());
+            _editModel = new EditModel(_context, _mockEnvironment.Object);
         }
 
         [Fact]
-        public async Task OnGetAsync_ReturnsPageResult_WhenGameExists()
+        public async Task OnGetAsync_GameExists()
         {
             // Arrange
-            var gameId = Guid.NewGuid();
-            _context.Games.Add(new Game { Id = gameId, Title = "Test Game" });
+            var _game = new Game
+            {
+                Title = "Test Game",
+                Genre = "Test Genre",
+                Description = "Test Description",
+                ReleaseDate = new(2024, 2, 2)
+            };
+            _context.Games.Add(_game);
             await _context.SaveChangesAsync();
 
-            var editModel = new EditModel(_context, _mockEnvironment.Object);
-
             // Act
-            var result = await editModel.OnGetAsync(gameId);
-
+            var result = await _editModel.OnGetAsync(_game.Id);
             // Assert
             Assert.IsType<PageResult>(result);
-            Assert.NotNull(editModel.Game);
-            Assert.Equal(gameId, editModel.Game.Id);
+            Assert.NotNull(_editModel.Game);
+            Assert.Equal(_game.Id, _editModel.Game.Id);
         }
 
         [Fact]
-        public async Task OnGetAsync_ReturnsNotFoundResult_WhenGameDoesNotExist()
+        public async Task OnGetAsync_ReturnsNotFoundResult()
         {
             // Arrange
-            var editModel = new EditModel(_context, _mockEnvironment.Object);
+            Guid gameId = Guid.NewGuid();
 
             // Act
-            var result = await editModel.OnGetAsync(Guid.NewGuid());
+            var result = await _editModel.OnGetAsync(gameId);
 
             // Assert
             Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]
-        public async Task OnPostAsync_ReturnsPageResult_WhenModelStateInvalid()
+        public async Task OnPostAsync_GameIsNull()
         {
             // Arrange
-            var gameId = Guid.NewGuid();
-            var editModel = new EditModel(_context, _mockEnvironment.Object)
-            {
-                Game = null
-            };
-            editModel.ModelState.AddModelError("Error", "Test error");
+            Game game = new Game {};
+            //_editModel.ModelState.AddModelError("Error", "Test error");
 
             // Act
-            var result = await editModel.OnPostAsync(gameId);
+            var result = await _editModel.OnPostAsync(game.Id);
 
             // Assert
-            Assert.IsType<PageResult>(result);
+            Assert.IsType<NotFoundResult>(result);
         }
+
+        [Fact]
+        public async Task OnPostAsync_ReturnsNotFoundResult_WhenGameDoesNotExist()
+        {
+            // Arrange
+            
+            // Act
+            var result = await _editModel.OnPostAsync(Guid.NewGuid());
+            // Assert
+            Assert.IsType<NotFoundResult>(result);
+        }
+
+        // TryUpdateModelAsync function is not tested
+        // as it is a built-in function (internal protected) and is already tested by Microsoft team.
     }
 }

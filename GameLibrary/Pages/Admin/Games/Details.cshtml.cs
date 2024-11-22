@@ -12,10 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -36,8 +32,8 @@ public class DetailsModel : PageModel
     }
 
     public Game? Game { get; set; }
-    
 
+    
     public async Task<IActionResult> OnGetAsync(Guid? id)
     {
         if (id == null)
@@ -47,7 +43,6 @@ public class DetailsModel : PageModel
 
         Game = await _context.Games.FirstOrDefaultAsync(m => m.Id == id);
 
-        
         if (Game == null)
         {
             return NotFound();
