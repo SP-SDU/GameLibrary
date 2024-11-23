@@ -78,7 +78,7 @@
                         </button>
                     </form>
                 }
-                
+
                 @if (!Model.IsFavorite)
                 {
                     <form method="post" asp-page-handler="AddToFavorites" asp-route-id="@Model.Game.Id" class="d-inline">
@@ -175,9 +175,9 @@
         background-color: #2b3035;
     }
 
-    .game-details p {
-        margin-bottom: 0.5rem;
-    }
+        .game-details p {
+            margin-bottom: 0.5rem;
+        }
 
     .game-rating {
         font-size: 1.25rem;

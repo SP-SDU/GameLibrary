@@ -23,10 +23,12 @@ namespace GameLibrary.Pages.Admin.Games;
 public class DetailsModel : PageModel
 {
     private readonly ApplicationDbContext _context;
+    private readonly IWebHostEnvironment _environment;
 
-    public DetailsModel(ApplicationDbContext context)
+    public DetailsModel(ApplicationDbContext context, IWebHostEnvironment environment)
     {
         _context = context;
+        _environment = environment;
     }
 
     public Game? Game { get; set; }
@@ -40,7 +42,6 @@ public class DetailsModel : PageModel
         }
 
         Game = await _context.Games.FirstOrDefaultAsync(m => m.Id == id);
-
 
         if (Game == null)
         {

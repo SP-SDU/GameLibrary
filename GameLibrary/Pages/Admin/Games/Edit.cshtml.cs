@@ -19,14 +19,15 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameLibrary.Pages.Admin.Games;
-
 public class EditModel : PageModel
 {
     private readonly ApplicationDbContext _context;
+    private readonly IWebHostEnvironment _environment;
 
-    public EditModel(ApplicationDbContext context)
+    public EditModel(ApplicationDbContext context, IWebHostEnvironment environment)
     {
         _context = context;
+        _environment = environment;
     }
 
     [BindProperty]
@@ -46,11 +47,10 @@ public class EditModel : PageModel
         {
             return NotFound();
         }
+
         return Page();
     }
 
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task<IActionResult> OnPostAsync(Guid? id)
     {
         if (!ModelState.IsValid)
@@ -59,6 +59,11 @@ public class EditModel : PageModel
         }
 
         if (id == null)
+        {
+            return NotFound();
+        }
+
+        if (Game == null)
         {
             return NotFound();
         }
@@ -106,7 +111,7 @@ public class EditModel : PageModel
                     }
                 }
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                await using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await ImageFile.CopyToAsync(stream);
                 }
@@ -114,15 +119,10 @@ public class EditModel : PageModel
                 gameToUpdate.ImageUrl = $"/images/{fileName}";
             }
 
-            await _context.SaveChangesAsync();
+            _ = await _context.SaveChangesAsync();
             return RedirectToPage("./Index");
         }
 
         return Page();
-    }
-
-    private bool GameExists(Guid id)
-    {
-        return _context.Games.Any(e => e.Id == id);
     }
 }

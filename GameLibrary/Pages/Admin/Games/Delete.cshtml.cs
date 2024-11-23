@@ -19,14 +19,15 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameLibrary.Pages.Admin.Games;
-
 public class DeleteModel : PageModel
 {
     private readonly ApplicationDbContext _context;
+    private readonly IWebHostEnvironment _environment;
 
-    public DeleteModel(ApplicationDbContext context)
+    public DeleteModel(ApplicationDbContext context, IWebHostEnvironment environment)
     {
         _context = context;
+        _environment = environment;
     }
 
     [BindProperty]
@@ -69,8 +70,13 @@ public class DeleteModel : PageModel
                 }
             }
 
-            _context.Games.Remove(Game);
-            await _context.SaveChangesAsync();
+            _ = _context.Games.Remove(Game);
+            _ = await _context.SaveChangesAsync();
+        }
+
+        else
+        {
+            return NotFound();
         }
 
         return RedirectToPage("./Index");

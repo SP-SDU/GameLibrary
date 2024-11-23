@@ -36,10 +36,10 @@ public class DetailsModel : PageModel
         _logger = logger;
     }
 
-    public Game Game { get; set; }
+    public Game Game { get; set; } = null!;
     public bool IsInLibrary { get; set; }
     public bool IsFavorite { get; set; }
-    public List<Review> Reviews { get; set; }
+    public List<Review> Reviews { get; set; } = null!;
     public double AverageRating { get; set; }
     public int? UserRating { get; set; }
 
@@ -57,14 +57,14 @@ public class DetailsModel : PageModel
             return Unauthorized();
         }
 
-        Game = await _context.Games
+        var game = await _context.Games
             .Include(g => g.Reviews)
             .FirstOrDefaultAsync(g => g.Id == id);
-
-        if (Game == null)
+        if (game == null)
         {
             return NotFound();
         }
+        Game = game;
 
         IsInLibrary = await _context.UserLibraries
             .AnyAsync(ul => ul.GameId == id && ul.UserId == userGuid);
@@ -95,7 +95,7 @@ public class DetailsModel : PageModel
             AverageRating = Reviews.Average(r => r.Rating);
         }
 
-        var userReview = Reviews.FirstOrDefault(r => r.UserId == userGuid);
+        var userReview = Reviews.Find(r => r.UserId == userGuid);
         if (userReview != null)
         {
             UserRating = userReview.Rating;
@@ -233,7 +233,7 @@ public class DetailsModel : PageModel
                 .Select(r => r.Rating)
                 .ToListAsync();
 
-            game.Rating = ratings.Any() ? ratings.Average() : 0;
+            game.Rating = ratings.Count != 0 ? ratings.Average() : 0;
             await _context.SaveChangesAsync();
         }
 

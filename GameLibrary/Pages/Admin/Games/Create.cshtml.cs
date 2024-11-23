@@ -51,7 +51,7 @@ public class CreateModel : PageModel
     public IFormFile? ImageFile { get; set; }
 
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<IActionResult> OnPostAsync(Guid gameId)
     {
         if (!ModelState.IsValid)
         {

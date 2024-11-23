@@ -19,7 +19,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Diagnostics;
 
-namespace GameLibrary.Tests;
+namespace GameLibrary.Tests.Pages;
 
 public class ErrorModelTests
 {

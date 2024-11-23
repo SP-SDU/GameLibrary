@@ -17,22 +17,23 @@ using GameLibrary.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace GameLibrary.Pages.Admin.Games
+namespace GameLibrary.Pages.Admin.Games;
+
+public class IndexModel : PageModel
 {
-    public class IndexModel : PageModel
+    private readonly ApplicationDbContext _context;
+    private readonly IWebHostEnvironment _environment;
+
+    public IndexModel(ApplicationDbContext context, IWebHostEnvironment environment)
     {
-        private readonly ApplicationDbContext _context;
+        _context = context;
+        _environment = environment;
+    }
 
-        public IndexModel(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+    public IList<Game>? Games { get; set; }
 
-        public IList<Game>? Games { get; set; }
-
-        public async Task OnGetAsync()
-        {
-            Games = await _context.Games.ToListAsync();
-        }
+    public async Task OnGetAsync()
+    {
+        Games = await _context.Games.ToListAsync();
     }
 }
