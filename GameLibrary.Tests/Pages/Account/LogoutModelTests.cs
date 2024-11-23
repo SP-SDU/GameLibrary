@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GameLibrary.Models;
 using GameLibrary.Pages.Account;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -23,21 +24,21 @@ namespace GameLibrary.Tests.Pages.Account;
 
 public class LogoutModelTests
 {
-    private readonly Mock<SignInManager<IdentityUser>> _mockSignInManager;
+    private readonly Mock<SignInManager<User>> _mockSignInManager;
     private readonly Mock<ILogger<LogoutModel>> _mockLogger;
     private readonly LogoutModel _logoutModel;
 
     public LogoutModelTests()
     {
-        var userStoreMock = new Mock<IUserStore<IdentityUser>>();
-        var userManagerMock = new Mock<UserManager<IdentityUser>>(
+        var userStoreMock = new Mock<IUserStore<User>>();
+        var userManagerMock = new Mock<UserManager<User>>(
             userStoreMock.Object,
             null!, null!, null!, null!, null!, null!, null!, null!);
 
-        _mockSignInManager = new Mock<SignInManager<IdentityUser>>(
+        _mockSignInManager = new Mock<SignInManager<User>>(
             userManagerMock.Object,
             Mock.Of<IHttpContextAccessor>(),
-            Mock.Of<IUserClaimsPrincipalFactory<IdentityUser>>(),
+            Mock.Of<IUserClaimsPrincipalFactory<User>>(),
             null!, null!, null!, null!);
 
         _mockLogger = new Mock<ILogger<LogoutModel>>();

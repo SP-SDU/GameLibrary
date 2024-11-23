@@ -12,20 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GameLibrary.Data;
+using GameLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using GameLibrary.Data;
-using GameLibrary.Models;
 
 namespace GameLibrary.Pages.Admin.Games;
 public class DeleteModel : PageModel
 {
     private readonly ApplicationDbContext _context;
+    private readonly IWebHostEnvironment _environment;
 
-    public DeleteModel(ApplicationDbContext context, IWebHostEnvironment @object)
+    public DeleteModel(ApplicationDbContext context, IWebHostEnvironment environment)
     {
         _context = context;
+        _environment = environment;
     }
 
     [BindProperty]
@@ -61,15 +63,15 @@ public class DeleteModel : PageModel
             if (!string.IsNullOrEmpty(Game.ImageUrl))
             {
                 var fileName = Path.GetFileName(Game.ImageUrl);
-                var existingFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images",fileName);
+                var existingFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);
                 if (System.IO.File.Exists(existingFilePath))
                 {
                     System.IO.File.Delete(existingFilePath);
                 }
             }
 
-            _context.Games.Remove(Game);
-            await _context.SaveChangesAsync();
+            _ = _context.Games.Remove(Game);
+            _ = await _context.SaveChangesAsync();
         }
 
         else

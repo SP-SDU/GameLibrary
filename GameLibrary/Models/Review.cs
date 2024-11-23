@@ -14,7 +14,6 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
 
 namespace GameLibrary.Models;
 
@@ -23,15 +22,12 @@ public class Review
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
-    public string UserId { get; set; } = null!;
-
-    [ForeignKey("UserId")]
-    public IdentityUser User { get; set; } = null!;
+    public Guid UserId { get; set; }
 
     [Required]
     public Guid GameId { get; set; }
 
-    public string Content { get; set; }
+    public string Content { get; set; } = string.Empty;
 
     [Required]
     [Range(1, 5, ErrorMessage = "Rating must be between 1 and 5")]
@@ -44,7 +40,8 @@ public class Review
     public DateTime? UpdatedAt { get; set; }
 
     // Navigation properties
-    public Game? Game { get; set; }
+    public Game Game { get; set; } = null!;
+    public User User { get; set; } = null!;
 
     [NotMapped]
     public UserLibrary? UserLibrary { get; set; }

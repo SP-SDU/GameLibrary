@@ -21,13 +21,13 @@ namespace GameLibrary.Data;
 public static class DbInitializer
 {
     /// <summary> Seeding the database. </summary>
-    public static async Task Initialize(this IApplicationBuilder app)
+    public static void Initialize(this IApplicationBuilder app)
     {
         using IServiceScope scope = app.ApplicationServices.CreateScope();
         var services = scope.ServiceProvider;
         using ApplicationDbContext context = services.GetRequiredService<ApplicationDbContext>();
-        var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
-        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        var userManager = services.GetRequiredService<UserManager<User>>();
+        var roleManager = services.GetRequiredService<RoleManager<Role>>();
 
         // Apply any pending migrations
         if (context.Database.GetPendingMigrations().Any())
@@ -47,24 +47,24 @@ public static class DbInitializer
         {
             if (!roleManager.RoleExistsAsync(role).Result)
             {
-                roleManager.CreateAsync(new IdentityRole { Name = role }).Wait();
+                roleManager.CreateAsync(new Role { Name = role }).Wait();
             }
         }
 
-        // Create test user
-        var user = new IdentityUser
+        var user = new User
         {
-            UserName = "test@example.com",
-            Email = "test@example.com",
+            Id = Guid.Parse("611bc41d-1065-483c-9689-1c59a77f196f"),
+            UserName = "admin@example.com",
+            Email = "admin@example.com",
             EmailConfirmed = true
         };
 
-        if (userManager.FindByEmailAsync(user.Email).Result == null)
+        if (userManager.FindByNameAsync(user.UserName).Result == null)
         {
-            var result = userManager.CreateAsync(user, "Test123!").Result;
+            var result = userManager.CreateAsync(user, "Password123!").Result;
             if (result.Succeeded)
             {
-                userManager.AddToRoleAsync(user, "User").Wait();
+                userManager.AddToRoleAsync(user, "Administrator").Wait();
             }
         }
 
@@ -192,24 +192,24 @@ public static class DbInitializer
         var reviews = new Review[]
         {
             new() {
-                UserId = user.Id,
                 GameId = games[0].Id,
-                Content = "One of the best games I've ever played! The open world is breathtaking and there's so much to discover.",
+                UserId = user.Id, // Use the inherited Id property from IdentityUser<Guid>
                 Rating = 5,
+                Content = "One of the best games I've ever played! The open world is breathtaking and there's so much to discover.",
                 CreatedAt = DateTime.UtcNow.AddDays(-5)
             },
             new() {
-                UserId = user.Id,
                 GameId = games[0].Id,
-                Content = "An absolute masterpiece. The attention to detail and storytelling are unmatched.",
+                UserId = user.Id, // Use the inherited Id property from IdentityUser<Guid>
                 Rating = 5,
+                Content = "An absolute masterpiece. The attention to detail and storytelling are unmatched.",
                 CreatedAt = DateTime.UtcNow.AddDays(-3)
             },
             new() {
-                UserId = user.Id,
                 GameId = games[0].Id,
-                Content = "A visually stunning game with a deep story, though it had some bugs at launch.",
+                UserId = user.Id, // Use the inherited Id property from IdentityUser<Guid>
                 Rating = 4,
+                Content = "A visually stunning game with a deep story, though it had some bugs at launch.",
                 CreatedAt = DateTime.UtcNow.AddDays(-1)
             }
         };

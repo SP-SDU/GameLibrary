@@ -20,70 +20,69 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 
-namespace GameLibrary.Tests.Pages.Admin.Games
+namespace GameLibrary.Tests.Pages.Admin.Games;
+
+public class DetailsGameTests
 {
-    public class DetailsGameTests
+    private readonly ApplicationDbContext _context;
+    private readonly IWebHostEnvironment _environment;
+    private readonly DetailsModel _detailsModel;
+
+    public DetailsGameTests()
     {
-        private readonly ApplicationDbContext _context;
-        private readonly IWebHostEnvironment _environment;
-        private readonly DetailsModel _detailsModel;
-
-        public DetailsGameTests()
-        {
-            var dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .Options;
-            _context = new ApplicationDbContext(dbContextOptions);
-            _environment = new Mock<IWebHostEnvironment>().Object;
-            _detailsModel = new DetailsModel(_context);
-        }
-
-        [Fact]
-        public async Task OnGetAsync_WithValidId_PopulatesGameProperty()
-        {
-            // Arrange
-            var game = new Game
-            {
-                Title = "Test Game",
-                Genre = "Test Genre",
-                Description = "Test Description",
-                ReleaseDate = DateTime.Now,
-                Price = 10.00m
-            };
-            _context.Games.Add(game);
-            await _context.SaveChangesAsync();
-            // Act
-            await _detailsModel.OnGetAsync(game.Id);
-            // Assert
-            Assert.NotNull(_detailsModel.Game);
-            Assert.Equal(game.Id, _detailsModel.Game.Id);
-            Assert.Equal(game.Title, _detailsModel.Game.Title);
-            Assert.Equal(game.Description, _detailsModel.Game.Description);
-            Assert.Equal(game.ReleaseDate, _detailsModel.Game.ReleaseDate);
-            Assert.Equal(game.Price, _detailsModel.Game.Price);
-        }
-
-        [Fact]
-        public async Task OnGetAsync_WithInvalidId()
-        {
-            // Arrange
-            // Act
-            var result = await _detailsModel.OnGetAsync(Guid.NewGuid());
-            // Assert
-            Assert.IsType<NotFoundResult>(result);
-        }
-
-        [Fact]
-        public async Task OnGetAsync_WithGameNull()
-        {
-            // Arrange
-            Game game = new Game{};
-
-            // Act
-            var result = await _detailsModel.OnGetAsync(game.Id);
-            // Assert
-            Assert.IsType<NotFoundResult>(result);
-        }
-
+        var dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+        _context = new ApplicationDbContext(dbContextOptions);
+        _environment = new Mock<IWebHostEnvironment>().Object;
+        _detailsModel = new DetailsModel(_context, _environment);
     }
+
+    [Fact]
+    public async Task OnGetAsync_WithValidId_PopulatesGameProperty()
+    {
+        // Arrange
+        var game = new Game
+        {
+            Title = "Test Game",
+            Genre = "Test Genre",
+            Description = "Test Description",
+            ReleaseDate = DateTime.Now,
+            Price = 10.00m
+        };
+        _ = _context.Games.Add(game);
+        _ = await _context.SaveChangesAsync();
+        // Act
+        _ = await _detailsModel.OnGetAsync(game.Id);
+        // Assert
+        Assert.NotNull(_detailsModel.Game);
+        Assert.Equal(game.Id, _detailsModel.Game.Id);
+        Assert.Equal(game.Title, _detailsModel.Game.Title);
+        Assert.Equal(game.Description, _detailsModel.Game.Description);
+        Assert.Equal(game.ReleaseDate, _detailsModel.Game.ReleaseDate);
+        Assert.Equal(game.Price, _detailsModel.Game.Price);
+    }
+
+    [Fact]
+    public async Task OnGetAsync_WithInvalidId()
+    {
+        // Arrange
+        // Act
+        var result = await _detailsModel.OnGetAsync(Guid.NewGuid());
+        // Assert
+        Assert.IsType<NotFoundResult>(result);
+    }
+
+    [Fact]
+    public async Task OnGetAsync_WithGameNull()
+    {
+        // Arrange
+        Game game = new Game();
+
+        // Act
+        var result = await _detailsModel.OnGetAsync(game.Id);
+        // Assert
+        Assert.IsType<NotFoundResult>(result);
+    }
+
 }

@@ -12,40 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Microsoft.AspNetCore.Identity;
+using GameLibrary.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using GameLibrary.Models;
 
-namespace GameLibrary.Data
+namespace GameLibrary.Data;
+
+public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
 {
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : base(options)
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-        }
-
-        public DbSet<Game> Games { get; set; }
-        public DbSet<Review> Reviews { get; set; }
-        public DbSet<UserLibrary> UserLibraries { get; set; }
-        public DbSet<UserFavorite> UserFavorites { get; set; }
-
-        protected void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-
-            builder.Entity<Game>()
-                .HasMany(g => g.Reviews)
-                .WithOne(r => r.Game)
-                .HasForeignKey(r => r.GameId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.Entity<UserLibrary>()
-                .HasKey(ul => new { ul.UserId, ul.GameId });
-
-            builder.Entity<UserFavorite>()
-                .HasKey(uf => new { uf.UserId, uf.GameId });
-        }
     }
+
+    public DbSet<Game> Games => Set<Game>();
+    public DbSet<Review> Reviews => Set<Review>();
+    public DbSet<UserLibrary> UserLibraries => Set<UserLibrary>();
+    public DbSet<UserFavorite> UserFavorites => Set<UserFavorite>();
 }

@@ -4,21 +4,24 @@
     ViewData["Title"] = "Welcome to GAMELIB";
 }
 <div class="container py-5">
-    <!-- Search and Filters Section DOes -->
+    <!-- Search and Filters Section -->
     <div class="row mb-4">
         <div class="col-md-8">
             <form method="get" action="/Games/Index" class="d-flex">
-                <input type="text" name="search" class="form-control me-2" placeholder="Search for a game..." />
+                <input type="text" name="search" value="@Model.SearchQuery" class="form-control me-2" placeholder="Search for a game..." />
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
         </div>
         <div class="col-md-4">
-            <select class="form-select" aria-label="Filter games by genre">
-                <option selected>Filter by Genre</option>
-                <option value="1">Action</option>
-                <option value="2">RPG</option>
-                <option value="3">Strategy</option>
-            </select>
+            <form method="get" action="/Games/Index">
+                <select name="genre" class="form-select" aria-label="Filter games by genre" onchange="this.form.submit()">
+                    <option value="">All Genres</option>
+                    @foreach (var genre in Model.Genres)
+                    {
+                        <option value="@genre" selected="@(genre == Model.SelectedGenre)">@genre</option>
+                    }
+                </select>
+            </form>
         </div>
     </div>
 

@@ -14,11 +14,11 @@
 
 using GameLibrary.Data;
 using GameLibrary.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
 
 namespace GameLibrary.Pages.Games;
 
@@ -26,20 +26,20 @@ namespace GameLibrary.Pages.Games;
 public class DetailsModel : PageModel
 {
     private readonly ApplicationDbContext _context;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<User> _userManager;
     private readonly ILogger<DetailsModel> _logger;
 
-    public DetailsModel(ApplicationDbContext context, UserManager<IdentityUser> userManager, ILogger<DetailsModel> logger)
+    public DetailsModel(ApplicationDbContext context, UserManager<User> userManager, ILogger<DetailsModel> logger)
     {
         _context = context;
         _userManager = userManager;
         _logger = logger;
     }
 
-    public Game Game { get; set; }
+    public Game Game { get; set; } = null!;
     public bool IsInLibrary { get; set; }
     public bool IsFavorite { get; set; }
-    public List<Review> Reviews { get; set; }
+    public List<Review> Reviews { get; set; } = null!;
     public double AverageRating { get; set; }
     public int? UserRating { get; set; }
 
@@ -51,21 +51,26 @@ public class DetailsModel : PageModel
         }
 
         var userId = _userManager.GetUserId(User);
+        if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var userGuid))
+        {
+            _logger.LogWarning("Invalid UserId: {UserId}", userId);
+            return Unauthorized();
+        }
 
-        Game = await _context.Games
+        var game = await _context.Games
             .Include(g => g.Reviews)
             .FirstOrDefaultAsync(g => g.Id == id);
-
-        if (Game == null)
+        if (game == null)
         {
             return NotFound();
         }
+        Game = game;
 
         IsInLibrary = await _context.UserLibraries
-            .AnyAsync(ul => ul.GameId == id && ul.UserId == userId);
+            .AnyAsync(ul => ul.GameId == id && ul.UserId == userGuid);
 
         IsFavorite = await _context.UserFavorites
-            .AnyAsync(uf => uf.GameId == id && uf.UserId == userId);
+            .AnyAsync(uf => uf.GameId == id && uf.UserId == userGuid);
 
         Reviews = await _context.Reviews
             .Where(r => r.GameId == id)
@@ -73,7 +78,6 @@ public class DetailsModel : PageModel
             .OrderByDescending(r => r.CreatedAt)
             .ToListAsync();
 
-        // Load UserLibrary data for each review
         var userLibraries = await _context.UserLibraries
             .Where(ul => ul.GameId == id && Reviews.Select(r => r.UserId).Contains(ul.UserId))
             .ToDictionaryAsync(ul => ul.UserId);
@@ -91,7 +95,7 @@ public class DetailsModel : PageModel
             AverageRating = Reviews.Average(r => r.Rating);
         }
 
-        var userReview = Reviews.FirstOrDefault(r => r.UserId == userId);
+        var userReview = Reviews.Find(r => r.UserId == userGuid);
         if (userReview != null)
         {
             UserRating = userReview.Rating;
@@ -103,15 +107,20 @@ public class DetailsModel : PageModel
     public async Task<IActionResult> OnPostAddToLibraryAsync(Guid id, string status)
     {
         var userId = _userManager.GetUserId(User);
+        if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var userGuid))
+        {
+            _logger.LogWarning("Invalid UserId: {UserId}", userId);
+            return Unauthorized();
+        }
 
         var exists = await _context.UserLibraries
-            .AnyAsync(ul => ul.GameId == id && ul.UserId == userId);
+            .AnyAsync(ul => ul.GameId == id && ul.UserId == userGuid);
 
         if (!exists)
         {
             var userLibrary = new UserLibrary
             {
-                UserId = userId,
+                UserId = userGuid,
                 GameId = id,
                 AddedDate = DateTime.UtcNow,
                 Status = status,
@@ -128,9 +137,14 @@ public class DetailsModel : PageModel
     public async Task<IActionResult> OnPostRemoveFromLibraryAsync(Guid id)
     {
         var userId = _userManager.GetUserId(User);
+        if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var userGuid))
+        {
+            _logger.LogWarning("Invalid UserId: {UserId}", userId);
+            return Unauthorized();
+        }
 
         var userLibrary = await _context.UserLibraries
-            .FirstOrDefaultAsync(ul => ul.GameId == id && ul.UserId == userId);
+            .FirstOrDefaultAsync(ul => ul.GameId == id && ul.UserId == userGuid);
 
         if (userLibrary != null)
         {
@@ -144,15 +158,20 @@ public class DetailsModel : PageModel
     public async Task<IActionResult> OnPostAddToFavoritesAsync(Guid id)
     {
         var userId = _userManager.GetUserId(User);
+        if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var userGuid))
+        {
+            _logger.LogWarning("Invalid UserId: {UserId}", userId);
+            return Unauthorized();
+        }
 
         var exists = await _context.UserFavorites
-            .AnyAsync(uf => uf.GameId == id && uf.UserId == userId);
+            .AnyAsync(uf => uf.GameId == id && uf.UserId == userGuid);
 
         if (!exists)
         {
             var userFavorite = new UserFavorite
             {
-                UserId = userId,
+                UserId = userGuid,
                 GameId = id
             };
 
@@ -166,9 +185,14 @@ public class DetailsModel : PageModel
     public async Task<IActionResult> OnPostRemoveFromFavoritesAsync(Guid id)
     {
         var userId = _userManager.GetUserId(User);
+        if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var userGuid))
+        {
+            _logger.LogWarning("Invalid UserId: {UserId}", userId);
+            return Unauthorized();
+        }
 
         var userFavorite = await _context.UserFavorites
-            .FirstOrDefaultAsync(uf => uf.GameId == id && uf.UserId == userId);
+            .FirstOrDefaultAsync(uf => uf.GameId == id && uf.UserId == userGuid);
 
         if (userFavorite != null)
         {
@@ -182,10 +206,15 @@ public class DetailsModel : PageModel
     public async Task<IActionResult> OnPostAddReviewAsync(Guid id, string content, int rating)
     {
         var userId = _userManager.GetUserId(User);
+        if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var userGuid))
+        {
+            _logger.LogWarning("Invalid UserId: {UserId}", userId);
+            return Unauthorized();
+        }
 
         var review = new Review
         {
-            UserId = userId,
+            UserId = userGuid,
             GameId = id,
             Content = content,
             Rating = rating,
@@ -204,7 +233,7 @@ public class DetailsModel : PageModel
                 .Select(r => r.Rating)
                 .ToListAsync();
 
-            game.Rating = ratings.Any() ? ratings.Average() : 0;
+            game.Rating = ratings.Count != 0 ? ratings.Average() : 0;
             await _context.SaveChangesAsync();
         }
 
@@ -214,9 +243,14 @@ public class DetailsModel : PageModel
     public async Task<IActionResult> OnPostDeleteReviewAsync(Guid id)
     {
         var userId = _userManager.GetUserId(User);
+        if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var userGuid))
+        {
+            _logger.LogWarning("Invalid UserId: {UserId}", userId);
+            return Unauthorized();
+        }
 
         var review = await _context.Reviews
-            .FirstOrDefaultAsync(r => r.GameId == id && r.UserId == userId);
+            .FirstOrDefaultAsync(r => r.GameId == id && r.UserId == userGuid);
 
         if (review != null)
         {

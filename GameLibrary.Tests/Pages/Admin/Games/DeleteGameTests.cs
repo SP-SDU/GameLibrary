@@ -21,83 +21,82 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 
-namespace GameLibrary.Tests.Pages.Admin.Games
+namespace GameLibrary.Tests.Pages.Admin.Games;
+
+public class DeleteGameTests
 {
-    public class DeleteGameTests
+    private readonly ApplicationDbContext _context;
+    private readonly Mock<IWebHostEnvironment> _mockEnvironment;
+    private readonly DeleteModel _deleteModel;
+
+    public DeleteGameTests()
     {
-        private readonly ApplicationDbContext _context;
-        private readonly Mock<IWebHostEnvironment> _mockEnvironment;
-        private readonly DeleteModel _deleteModel;
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseInMemoryDatabase(databaseName: "TestDatabase")
+            .Options;
+        _context = new ApplicationDbContext(options);
+        _mockEnvironment = new Mock<IWebHostEnvironment>();
+        _deleteModel = new DeleteModel(_context, _mockEnvironment.Object);
+    }
 
-        public DeleteGameTests()
-        {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDatabase")
-                .Options;
-            _context = new ApplicationDbContext(options);
-            _mockEnvironment = new Mock<IWebHostEnvironment>();
-            _deleteModel = new DeleteModel(_context, _mockEnvironment.Object);
-        }
+    [Fact]
+    public async Task OnGetAsync_ReturnsPageResult()
+    {
+        // Arrange
+        _ = _context.Games.Add(new Game { Title = "Test First Game" });
+        _ = await _context.SaveChangesAsync();
+        var gameId = _context.Games.First().Id;
 
-        [Fact]
-        public async Task OnGetAsync_ReturnsPageResult()
-        {
-            // Arrange
-            _context.Games.Add(new Game { Title = "Test First Game" });
-            await _context.SaveChangesAsync();
-            var gameId = _context.Games.First().Id;
+        // Act
+        var result = await _deleteModel.OnGetAsync(gameId);
+        // Assert
+        Assert.IsType<PageResult>(result);
+        Assert.NotNull(_deleteModel.Game);
+        Assert.Equal(gameId, _deleteModel.Game.Id);
+    }
 
-            // Act
-            var result = await _deleteModel.OnGetAsync(gameId);
-            // Assert
-            Assert.IsType<PageResult>(result);
-            Assert.NotNull(_deleteModel.Game);
-            Assert.Equal(gameId, _deleteModel.Game.Id);
-        }
+    [Fact]
+    public async Task OnGetAsync_ReturnsNotFoundResult()
+    {
+        // Arrange
+        var gameId = Guid.NewGuid();
+        _ = _context.Games.Add(new Game { Title = "Test Second Game" });
+        _ = await _context.SaveChangesAsync();
 
-        [Fact]
-        public async Task OnGetAsync_ReturnsNotFoundResult()
-        {
-            // Arrange
-            var gameId = Guid.NewGuid();
-            _context.Games.Add(new Game { Title = "Test Second Game" });
-            await _context.SaveChangesAsync();
-           
-            // Act
-            var result = await _deleteModel.OnGetAsync(gameId);
+        // Act
+        var result = await _deleteModel.OnGetAsync(gameId);
 
-            // Assert
-            Assert.IsType<NotFoundResult>(result);
-            Assert.Null(_deleteModel.Game);
-            Assert.NotEqual(gameId, _context.Games.First().Id);
-        }
+        // Assert
+        Assert.IsType<NotFoundResult>(result);
+        Assert.Null(_deleteModel.Game);
+        Assert.NotEqual(gameId, _context.Games.First().Id);
+    }
 
-        [Fact]
-        public async Task OnPostAsync_ReturnsRedirect()
-        {
-            // Arrange
-            _context.Games.Add(new Game { Title = "Test Third Game" });
-            await _context.SaveChangesAsync();
-            var gameId = _context.Games.First().Id;
-            // Act
-            var result = await _deleteModel.OnPostAsync(gameId);
-            // Assert
-            Assert.IsType<RedirectToPageResult>(result);
-            Assert.Null(_context.Games.Find(gameId));
-        }
+    [Fact]
+    public async Task OnPostAsync_ReturnsRedirect()
+    {
+        // Arrange
+        _ = _context.Games.Add(new Game { Title = "Test Third Game" });
+        _ = await _context.SaveChangesAsync();
+        var gameId = _context.Games.First().Id;
+        // Act
+        var result = await _deleteModel.OnPostAsync(gameId);
+        // Assert
+        Assert.IsType<RedirectToPageResult>(result);
+        Assert.Null(_context.Games.Find(gameId));
+    }
 
-        [Fact]
-        public async Task OnPostAsync_ReturnsNotFoundResult()
-        {
-            // Arrange
-            var gameId = Guid.NewGuid();
-            _context.Games.Add(new Game { Title = "Test Fourth Game" });
-            await _context.SaveChangesAsync();
-            // Act
-            var result = await _deleteModel.OnPostAsync(gameId);
-            // Assert
-            Assert.IsType<NotFoundResult>(result);
-            Assert.NotNull(_context.Games.First().Title);
-        }
+    [Fact]
+    public async Task OnPostAsync_ReturnsNotFoundResult()
+    {
+        // Arrange
+        var gameId = Guid.NewGuid();
+        _ = _context.Games.Add(new Game { Title = "Test Fourth Game" });
+        _ = await _context.SaveChangesAsync();
+        // Act
+        var result = await _deleteModel.OnPostAsync(gameId);
+        // Assert
+        Assert.IsType<NotFoundResult>(result);
+        Assert.NotNull(_context.Games.First().Title);
     }
 }

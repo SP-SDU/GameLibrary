@@ -24,13 +24,13 @@ namespace GameLibrary.Pages.Account;
 
 public class LoginWithRecoveryCodeModel : PageModel
 {
-    private readonly SignInManager<IdentityUser> _signInManager;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly SignInManager<User> _signInManager;
+    private readonly UserManager<User> _userManager;
     private readonly ILogger<LoginWithRecoveryCodeModel> _logger;
 
     public LoginWithRecoveryCodeModel(
-        SignInManager<IdentityUser> signInManager,
-        UserManager<IdentityUser> userManager,
+        SignInManager<User> signInManager,
+        UserManager<User> userManager,
         ILogger<LoginWithRecoveryCodeModel> logger)
     {
         _signInManager = signInManager;

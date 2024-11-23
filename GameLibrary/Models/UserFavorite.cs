@@ -13,9 +13,7 @@
 // limitations under the License.
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GameLibrary.Models;
 
@@ -25,10 +23,7 @@ public class UserFavorite
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
-    public string UserId { get; set; } = null!;
-
-    [ForeignKey("UserId")]
-    public IdentityUser User { get; set; } = null!;
+    public Guid UserId { get; set; }
 
     [Required]
     public Guid GameId { get; set; }
@@ -38,5 +33,6 @@ public class UserFavorite
     public DateTime AddedAt { get; set; }
 
     // Navigation properties
-    public Game? Game { get; set; }
+    public Game Game { get; set; } = null!;
+    public User User { get; set; } = null!;
 }

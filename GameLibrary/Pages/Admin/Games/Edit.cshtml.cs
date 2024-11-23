@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GameLibrary.Data;
+using GameLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using GameLibrary.Data;
-using GameLibrary.Models;
 
 namespace GameLibrary.Pages.Admin.Games;
 public class EditModel : PageModel
@@ -111,7 +111,7 @@ public class EditModel : PageModel
                     }
                 }
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                await using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await ImageFile.CopyToAsync(stream);
                 }
@@ -119,7 +119,7 @@ public class EditModel : PageModel
                 gameToUpdate.ImageUrl = $"/images/{fileName}";
             }
 
-            await _context.SaveChangesAsync();
+            _ = await _context.SaveChangesAsync();
             return RedirectToPage("./Index");
         }
 

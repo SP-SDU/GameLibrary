@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using GameLibrary.Data;
 using GameLibrary.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace GameLibrary.Pages.Admin.Games;
 
@@ -76,9 +76,9 @@ public class CreateModel : PageModel
                 return Page();
             }
 
-            var fileName = $"{Game!.Id.ToString()}{extension}";
-            var filePath = Path.Combine("wwwroot","images", fileName);
-            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+            var fileName = $"{Game!.Id}{extension}";
+            var filePath = Path.Combine("wwwroot", "images", fileName);
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {

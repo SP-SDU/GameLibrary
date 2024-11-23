@@ -20,13 +20,13 @@ namespace GameLibrary.Models;
 
 public class User : IdentityUser<Guid>
 {
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
-    public string? Address { get; set; }
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public string Address { get; set; } = string.Empty;
 
     [StringLength(500)]
     [DataType(DataType.ImageUrl)]
-    public string? AvatarUrl { get; set; }
+    public string AvatarUrl { get; set; } = string.Empty;
 
     [Required]
     [DataType(DataType.DateTime)]

@@ -21,86 +21,81 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 
-namespace GameLibrary.Tests.Pages.Admin.Games
+namespace GameLibrary.Tests.Pages.Admin.Games;
+
+public class EditModelTests
 {
-    public class EditModelTests
+    private readonly ApplicationDbContext _context;
+    private readonly Mock<IWebHostEnvironment> _mockEnvironment;
+    private readonly EditModel _editModel;
+
+    public EditModelTests()
     {
-        private readonly ApplicationDbContext _context;
-        private readonly Mock<IWebHostEnvironment> _mockEnvironment;
-        private readonly EditModel _editModel;
+        // Set up in-memory database
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+        _context = new ApplicationDbContext(options);
+        _mockEnvironment = new Mock<IWebHostEnvironment>();
+        _editModel = new EditModel(_context, _mockEnvironment.Object);
+    }
 
-        public EditModelTests()
+    [Fact]
+    public async Task OnGetAsync_GameExists()
+    {
+        // Arrange
+        var _game = new Game
         {
-            // Set up in-memory database
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .Options;
-            _context = new ApplicationDbContext(options);
-            _mockEnvironment = new Mock<IWebHostEnvironment>();
-            _editModel = new EditModel(_context, _mockEnvironment.Object);
-        }
+            Title = "Test Game",
+            Genre = "Test Genre",
+            Description = "Test Description",
+            ReleaseDate = new(2024, 2, 2, 0, 0, 0, DateTimeKind.Utc)
+        };
+        _ = _context.Games.Add(_game);
+        _ = await _context.SaveChangesAsync();
 
-        [Fact]
-        public async Task OnGetAsync_GameExists()
-        {
-            // Arrange
-            var _game = new Game
-            {
-                Title = "Test Game",
-                Genre = "Test Genre",
-                Description = "Test Description",
-                ReleaseDate = new(2024, 2, 2)
-            };
-            _context.Games.Add(_game);
-            await _context.SaveChangesAsync();
+        // Act
+        var result = await _editModel.OnGetAsync(_game.Id);
+        // Assert
+        Assert.IsType<PageResult>(result);
+        Assert.NotNull(_editModel.Game);
+        Assert.Equal(_game.Id, _editModel.Game.Id);
+    }
 
-            // Act
-            var result = await _editModel.OnGetAsync(_game.Id);
-            // Assert
-            Assert.IsType<PageResult>(result);
-            Assert.NotNull(_editModel.Game);
-            Assert.Equal(_game.Id, _editModel.Game.Id);
-        }
+    [Fact]
+    public async Task OnGetAsync_ReturnsNotFoundResult()
+    {
+        // Arrange
+        Guid gameId = Guid.NewGuid();
 
-        [Fact]
-        public async Task OnGetAsync_ReturnsNotFoundResult()
-        {
-            // Arrange
-            Guid gameId = Guid.NewGuid();
+        // Act
+        var result = await _editModel.OnGetAsync(gameId);
 
-            // Act
-            var result = await _editModel.OnGetAsync(gameId);
+        // Assert
+        Assert.IsType<NotFoundResult>(result);
+    }
 
-            // Assert
-            Assert.IsType<NotFoundResult>(result);
-        }
+    [Fact]
+    public async Task OnPostAsync_GameIsNull()
+    {
+        // Arrange
+        Game game = new Game();
 
-        [Fact]
-        public async Task OnPostAsync_GameIsNull()
-        {
-            // Arrange
-            Game game = new Game {};
-            //_editModel.ModelState.AddModelError("Error", "Test error");
+        // Act
+        var result = await _editModel.OnPostAsync(game.Id);
 
-            // Act
-            var result = await _editModel.OnPostAsync(game.Id);
+        // Assert
+        Assert.IsType<NotFoundResult>(result);
+    }
 
-            // Assert
-            Assert.IsType<NotFoundResult>(result);
-        }
+    [Fact]
+    public async Task OnPostAsync_ReturnsNotFoundResult_WhenGameDoesNotExist()
+    {
+        // Arrange
 
-        [Fact]
-        public async Task OnPostAsync_ReturnsNotFoundResult_WhenGameDoesNotExist()
-        {
-            // Arrange
-            
-            // Act
-            var result = await _editModel.OnPostAsync(Guid.NewGuid());
-            // Assert
-            Assert.IsType<NotFoundResult>(result);
-        }
-
-        // TryUpdateModelAsync function is not tested
-        // as it is a built-in function (internal protected) and is already tested by Microsoft team.
+        // Act
+        var result = await _editModel.OnPostAsync(Guid.NewGuid());
+        // Assert
+        Assert.IsType<NotFoundResult>(result);
     }
 }

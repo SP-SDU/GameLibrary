@@ -78,7 +78,7 @@
                         </button>
                     </form>
                 }
-                
+
                 @if (!Model.IsFavorite)
                 {
                     <form method="post" asp-page-handler="AddToFavorites" asp-route-id="@Model.Game.Id" class="d-inline">
@@ -123,7 +123,7 @@
                         </div>
                     </div>
 
-                    @if (!Model.Reviews.Any(r => r.UserId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value))
+                    @if (!Model.Reviews.Any(r => r.UserId.ToString() == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value))
                     {
                         <div class="add-review mb-4">
                             <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#reviewForm">
@@ -175,9 +175,9 @@
         background-color: #2b3035;
     }
 
-    .game-details p {
-        margin-bottom: 0.5rem;
-    }
+        .game-details p {
+            margin-bottom: 0.5rem;
+        }
 
     .game-rating {
         font-size: 1.25rem;

@@ -19,40 +19,39 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 
-namespace GameLibrary.Tests.Pages.Admin.Games
+namespace GameLibrary.Tests.Pages.Admin.Games;
+
+public class IndexGameTests
 {
-    public class IndexGameTests
+    private readonly ApplicationDbContext _context;
+    private readonly IWebHostEnvironment _environment;
+    private readonly IndexModel _indexModel;
+
+    public IndexGameTests()
     {
-        private readonly ApplicationDbContext _context;
-        private readonly IWebHostEnvironment _environment;
-        private readonly IndexModel _indexModel;
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+        _context = new ApplicationDbContext(options);
+        _environment = new Mock<IWebHostEnvironment>().Object;
+        _indexModel = new IndexModel(_context, _environment);
+    }
 
-        public IndexGameTests()
-        {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .Options;
-            _context = new ApplicationDbContext(options);
-            _environment = new Mock<IWebHostEnvironment>().Object;
-            _indexModel = new IndexModel(_context);
-        }
+    [Fact]
+    public async Task OnGetAsync_PopulatesThePageMode()
+    {
+        // Arrange
+        _ = _context.Games.Add(new Game { Title = "Game_1", Genre = "Genre_1", ReleaseDate = new(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc), Description = "Description_1" });
+        _ = _context.Games.Add(new Game { Title = "Game_2", Genre = "Genre_2", ReleaseDate = new(2024, 2, 2, 0, 0, 0, DateTimeKind.Utc), Description = "Description_2" });
+        _ = _context.Games.Add(new Game { Title = "Game_3", Genre = "Genre_3", ReleaseDate = new(2023, 3, 3, 0, 0, 0, DateTimeKind.Utc), Description = "Description_3" });
 
-        [Fact]
-        public async Task OnGetAsync_PopulatesThePageMode()
-        {
-            // Arrange
-            _context.Games.Add(new Game { Title = "Game_1", Genre = "Genre_1", ReleaseDate = new (2024, 1, 1), Description = "Description_1" });
-            _context.Games.Add(new Game { Title = "Game_2", Genre = "Genre_2", ReleaseDate = new(2024,2,2), Description = "Description_2" });
-            _context.Games.Add(new Game { Title = "Game_3", Genre = "Genre_3", ReleaseDate = new ( 2023,3,3), Description = "Description_3" });
+        _ = await _context.SaveChangesAsync();
 
-            await _context.SaveChangesAsync();
+        // Act
+        await _indexModel.OnGetAsync();
 
-            // Act
-            await _indexModel.OnGetAsync();
-
-            // Assert
-            var games = Assert.IsAssignableFrom<IList<Game>>(_indexModel.Games);
-            Assert.Equal(3, games.Count);
-        }
+        // Assert
+        var games = Assert.IsAssignableFrom<IList<Game>>(_indexModel.Games);
+        Assert.Equal(3, games.Count);
     }
 }

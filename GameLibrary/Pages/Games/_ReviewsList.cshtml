@@ -1,52 +1,95 @@
 @model IEnumerable<GameLibrary.Models.Review>
 
-@if (Model.Any())
-{
-    <div class="reviews-list">
+<div class="reviews-container">
+    @if (Model != null && Model.Any())
+    {
         @foreach (var review in Model.OrderByDescending(r => r.CreatedAt))
         {
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h5 class="card-title">@(review.User?.Email?.Split('@')[0] ?? "Anonymous")</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">
-                                @review.CreatedAt.ToString("MMMM dd, yyyy")
-                                @if (review.UpdatedAt.HasValue)
-                                {
-                                    <span>(Edited @review.UpdatedAt.Value.ToString("MMMM dd, yyyy"))</span>
-                                }
-                            </h6>
-                        </div>
-                        <div class="rating-stars">
-                            @for (var i = 1; i <= 5; i++)
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="review-rating">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            if (review.Rating >= i)
                             {
-                                if (review.Rating >= i)
-                                {
-                                    <i class="fas fa-star text-warning"></i>
-                                }
-                                else
-                                {
-                                    <i class="far fa-star text-warning"></i>
-                                }
+                                <i class="fas fa-star text-warning"></i>
                             }
-                        </div>
+                            else
+                            {
+                                <i class="far fa-star text-warning"></i>
+                            }
+                        }
                     </div>
-                    <p class="card-text mt-3">@review.Content</p>
-                    @if (!string.IsNullOrEmpty(review.UserLibrary?.Status))
-                    {
-                        <div class="mt-2">
-                            <span class="badge bg-info">@review.UserLibrary?.Status</span>
-                        </div>
-                    }
+                    <div class="review-date">
+                        @review.CreatedAt.ToString("MMM dd, yyyy")
+                        @if (review.UpdatedAt.HasValue)
+                        {
+                            <span>(Edited @review.UpdatedAt.Value.ToString("MMM dd, yyyy"))</span>
+                        }
+                    </div>
                 </div>
+                <div class="review-content">
+                    <h5>@(review.User?.Email?.Split('@')[0] ?? "Anonymous")</h5>
+                    <p>@review.Content</p>
+                </div>
+                @if (!string.IsNullOrEmpty(review.UserLibrary?.Status))
+                {
+                    <div class="review-status">
+                        <span class="badge bg-info">@review.UserLibrary.Status</span>
+                    </div>
+                }
             </div>
         }
-    </div>
-}
-else
-{
-    <div class="alert alert-info">
-        No reviews yet. Be the first to review this game!
-    </div>
-}
+    }
+    else
+    {
+        <div class="no-reviews">
+            <p>No reviews yet. Be the first to review this game!</p>
+        </div>
+    }
+</div>
+
+<style>
+    .reviews-container {
+        margin-top: 20px;
+    }
+
+    .review-card {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .review-rating {
+        color: #ffc107;
+    }
+
+    .review-date {
+        color: #6c757d;
+        font-size: 0.9em;
+    }
+
+    .review-content {
+        color: #212529;
+        line-height: 1.5;
+    }
+
+    .review-status .badge {
+        margin-top: 5px;
+    }
+
+    .no-reviews {
+        text-align: center;
+        color: #6c757d;
+        padding: 20px;
+    }
+</style>

@@ -1,11 +1,10 @@
-@page
+﻿@page
 @model IndexModel
 @{
     ViewData["Title"] = "Home";
 }
 @section Scripts {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
 }
 
 <div class="container-fluid p-0">
@@ -15,23 +14,16 @@
         <div class="hero-text position-relative text-center px-3" style="z-index: 2;">
             <h1 class="display-1 fw-bold text-uppercase animate__animated animate__fadeInDown">Discover Our Library</h1>
             <h2 class="fs-2 mt-3 animate__animated animate__fadeIn">Review And Collect Your Games</h2>
-            @if (!User.Identity?.IsAuthenticated ?? true)
-            {
-                <p class="lead mt-4 animate__animated animate__fadeIn">Create a free account or log in to start your journey.</p>
-                <div class="mt-5 animate__animated animate__zoomIn">
-                    <a class="btn btn-primary btn-lg px-4 py-3 mx-2 rounded-pill shadow" asp-area="" asp-page="/Account/Register">Create a Free Account</a>
-                    <a class="btn btn-outline-light btn-lg px-4 py-3 mx-2 rounded-pill shadow" asp-area="" asp-page="/Account/Login">Log In</a>
-                </div>
-            }
-            else
-            {
-                <p class="lead mt-4 animate__animated animate__fadeIn">Welcome back! Continue exploring and reviewing games.</p>
-            }
+            <p class="lead mt-4 animate__animated animate__fadeIn">Create a free account or log in to start your journey.</p>
+            <div class="mt-5 animate__animated animate__zoomIn">
+                <a class="btn btn-primary btn-lg px-4 py-3 mx-2 rounded-pill shadow" asp-area="" asp-page="/Account/Register">Create a Free Account</a>
+                <a class="btn btn-outline-light btn-lg px-4 py-3 mx-2 rounded-pill shadow" asp-area="" asp-page="/Account/Login">Log In</a>
+            </div>
         </div>
-        <div class="scroll-indicator position-absolute bottom-0 mb-4 text-white animate__animated animate__fadeIn animate__delay-1s" style="z-index: 2;">
+        <div class="scroll-indicator position-absolute bottom-0 mb-3 text-white" style="z-index: 2;">
             <span class="fs-5">Scroll Down</span>
             <div class="scroll-arrow mt-2">
-                <i class="fas fa-chevron-down fs-3 animate__animated animate__bounce animate__infinite"></i>
+                <i class="bi bi-chevron-double-down fs-1"></i>
             </div>
         </div>
     </div>

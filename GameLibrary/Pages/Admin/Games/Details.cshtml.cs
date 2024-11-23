@@ -12,28 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GameLibrary.Data;
+using GameLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using GameLibrary.Data;
-using GameLibrary.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace GameLibrary.Pages.Admin.Games;
 
-[Authorize(Policy = "RequireAdministratorRole")]
 public class DetailsModel : PageModel
 {
     private readonly ApplicationDbContext _context;
+    private readonly IWebHostEnvironment _environment;
 
-    public DetailsModel(ApplicationDbContext context)
+    public DetailsModel(ApplicationDbContext context, IWebHostEnvironment environment)
     {
         _context = context;
+        _environment = environment;
     }
 
     public Game? Game { get; set; }
 
-    
+
     public async Task<IActionResult> OnGetAsync(Guid? id)
     {
         if (id == null)

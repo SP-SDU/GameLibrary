@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using GameLibrary.Data;
-using Microsoft.AspNetCore.Identity;
+using GameLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameLibrary;
@@ -25,42 +25,32 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlite(connectionString));
 
-        builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+        builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+            .AddRoles<Role>()
+            .AddEntityFrameworkStores<ApplicationDbContext>();
 
-        builder.Services.AddDefaultIdentity<IdentityUser>(options => 
+        builder.Services.ConfigureApplicationCookie(options =>
         {
-            options.SignIn.RequireConfirmedAccount = true;
-            options.Password.RequireDigit = true;
-            options.Password.RequireLowercase = true;
-            options.Password.RequireUppercase = true;
-            options.Password.RequireNonAlphanumeric = true;
-            options.Password.RequiredLength = 8;
-        })
-        .AddRoles<IdentityRole>()
-        .AddEntityFrameworkStores<ApplicationDbContext>();
-
-        builder.Services.AddAuthentication()
-            .AddCookie(options =>
-            {
-                options.LoginPath = "/Identity/Account/Login";
-                options.LogoutPath = "/Identity/Account/Logout";
-                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
-            });
+            options.LoginPath = "/Account/Login";
+            options.LogoutPath = "/Account/Logout";
+            options.AccessDeniedPath = "/Account/AccessDenied";
+        });
 
         builder.Services.AddRazorPages()
             .AddRazorPagesOptions(options =>
             {
                 options.Conventions.AuthorizeFolder("/Admin", "RequireAdministratorRole");
             });
-
         builder.Services.AddAuthorization(options =>
         {
-            options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Admin"));
+            options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Administrator"));
         });
+
+        builder.Services.AddRazorPages();
 
         var app = builder.Build();
 
