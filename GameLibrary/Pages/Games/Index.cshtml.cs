@@ -16,7 +16,6 @@ using GameLibrary.Data;
 using GameLibrary.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace GameLibrary.Pages.Games;
 
