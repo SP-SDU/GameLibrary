@@ -1,72 +1,92 @@
 ﻿@page
 @model GameLibrary.Pages.Admin.Games.CreateModel
-
 @{
 	ViewData["Title"] = "Create";
 }
-
 <body style=" color:#FFD43B;">
-
     <header>
         <h1>Create Game</h1>
     </header>
+	<!--Create Game Details Section-->
+	<div class="container py-2">
+		<div class="row">
+			<div class="col-lg-6 col-md-12">
+				<form method="post" enctype="multipart/form-data">
+					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <div class="row container">
-        <div class="col-md-4">
-            <form method="post" enctype="multipart/form-data">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+					<div class="form-group">
+						<label asp-for="Game!.Title" class="control-label">Title:</label>
+						<input asp-for="Game!.Title" class="form-control" required />
+						<span asp-validation-for="Game!.Title" class="text-danger"></span>
+					</div>
 
-                <div class="form-group">
-                    <label asp-for="Game!.Title" class="control-label">Title</label>
-                    <input asp-for="Game!.Title" class="form-control" />
-                    <span asp-validation-for="Game!.Title" class="text-danger"></span>
-                </div>
+					<div class="form-group">
+						<label asp-for="ImageFile" class="control-label">Image:</label>
+						<input type="file" asp-for="ImageFile" class="form-control" onchange="previewImage(event)" required />
+						<span asp-validation-for="ImageFile" class="text-danger"></span>
+					</div>
 
-                <div class="form-group">
-                    <label asp-for="ImageFile" class="control-label">Image</label>
-                    <input type="file" asp-for="ImageFile" class="form-control" onchange="previewImage(event)" />
-                    <span asp-validation-for="ImageFile" class="text-danger"></span>
-                </div>
+					<div class="form-group">
+						<label asp-for="Game!.Genre" class="control-label">Genre:</label>
+						<input asp-for="Game!.Genre" class="form-control" required />
+						<span asp-validation-for="Game!.Genre" class="text-danger"></span>
+					</div>
 
-                <div class="form-group">
-                    <label asp-for="Game!.Genre" class="control-label">Genre</label>
-                    <input asp-for="Game!.Genre" class="form-control" />
-                    <span asp-validation-for="Game!.Genre" class="text-danger"></span>
-                </div>
+					<div class="form-group">
+						<label asp-for="Game!.ReleaseDate" class="control-label">Release Date:</label>
+						<input asp-for="Game!.ReleaseDate" class="form-control" type="date" required />
+						<span asp-validation-for="Game!.ReleaseDate" class="text-danger"></span>
+					</div>
 
-                <div class="form-group">
-                    <label asp-for="Game!.ReleaseDate.Date" class="control-label">Release Date</label>
-                    <input asp-for="Game!.ReleaseDate.Date" class="form-control" />
-                    <span asp-validation-for="Game!.ReleaseDate.Date" class="text-danger"></span>
-                </div>
+					<div class="form-group">
+						<label asp-for="Game!.ReleaseDate" class="control-label">Release Date:</label>
+						<input asp-for="Game!.ReleaseDate" class="form-control" type="date" />
+						<span asp-validation-for="Game!.ReleaseDate" class="text-danger"></span>
+					</div>
 
-                <div class="form-group">
-                    <label asp-for="Game!.Description" class="control-label">Description</label>
-                    <textarea asp-for="Game!.Description" class="form-control"></textarea>
-                    <span asp-validation-for="Game!.Description" class="text-danger"></span>
-                </div>
+					<div class="form-group">
+						<label asp-for="Game!.Developer" class="control-label">Developer:</label>
+						<input asp-for="Game!.Developer" class="form-control" />
+						<span asp-validation-for="Game!.Developer" class="text-danger"></span>
+					</div>
 
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary" style="background-color: #420599; color: #FFD43B;" />
-                    <a asp-page="Index" class="btn" style="background-color: #420599; color: #FFD43B;">Back to List</a>
-                </div>
-            </form>
-        </div>
-        <div class="col-md-4">
-            <img id="imagePreview" src="#" class="img-thumbnail" style="display:none;" />
-        </div>
-    </div>
+					<div class="form-group">
+						<label asp-for="Game!.Publisher" class="control-label">Publisher:</label>
+						<input asp-for="Game!.Developer" class="form-control" />
+						<span asp-validation-for="Game!.Developer" class="text-danger"></span>
+					</div>
 
-    <script type="text/javascript">
-        function previewImage(event) {
-            var reader = new FileReader();
-            reader.onload = function(){
-                var output = document.getElementById('imagePreview');
-                output.src = reader.result;
-                output.style.display = 'block';
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        }
-    </script>
+					<div class="form-group">
+						<label asp-for="Game!.Platform" class="control-label">Platform:</label>
+						<input asp-for="Game!.Platform" class="form-control" />
+						<span asp-validation-for="Game!.Platform" class="text-danger"></span>
+					</div>
 
+					<div class="form-group">
+						<label asp-for="Game!.Price" class="control-label">Price:</label>
+						<input asp-for="Game!.Price" class="form-control" type="number" step="0.01" />
+						<span asp-validation-for="Game!.Price" class="text-danger"></span>
+					</div>
+
+					<div class="form-group d-flex flex-column">
+						<label asp-for="Game!.Description" class="control-label">Description:</label>
+						<textarea asp-for="Game!.Description" class="form-control flex-grow-1"></textarea>
+						<span asp-validation-for="Game!.Description" class="text-danger"></span>
+					</div>
+				</form>
+			</div>
+            <div class="col-lg-6 col-md-12 py-2 d-flex justify-content-center align-items-center">
+                <img id="imagePreview" src="#" class="" style="display:none; width: 400px; height: auto;" />
+            </div>
+		</div>
+		<div class="row mt-3">
+			<div class="col-md-12 text-center">
+				<form method="post">
+					<input type="submit" value="Create" class="btn btn-primary" style="background-color: #420599; color: #FFD43B;" />
+					<a asp-page="Index" class="btn" style="background-color: #420599; color: #FFD43B;">Back to List</a>
+				</form>
+			</div>
+		</div>
+	</div>
+    <script src="~/js/games/curd.js"></script>
 </body>

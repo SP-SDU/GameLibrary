@@ -78,7 +78,7 @@ public class EditModel : PageModel
         if (await TryUpdateModelAsync<Game>(
             gameToUpdate,
             "game",
-            g => g.Title, g => g.Genre, g => g.ReleaseDate, g => g.Description))
+            g => g.Title, g => g.Genre, g => g.ReleaseDate, g => g.Developer , g => g.Publisher , g => g.Platform , g => g.Price , g => g.Description))
         {
             if (ImageFile != null)
             {
