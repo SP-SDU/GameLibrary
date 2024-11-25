@@ -36,8 +36,7 @@ public class CreateModel : PageModel
         IdentityUser = new User
         {
             UserName = "",
-            Email = "",
-            CreatedAt = DateTime.UtcNow
+            Email = ""
         };
         return Page();
     }
@@ -59,7 +58,7 @@ public class CreateModel : PageModel
         {
             UserName = IdentityUser!.UserName,
             Email = IdentityUser.Email,
-            CreatedAt = DateTime.UtcNow
+            EmailConfirmed = true
         };
 
         var result = await _userManager.CreateAsync(user, Password!);
