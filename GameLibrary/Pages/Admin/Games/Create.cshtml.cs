@@ -37,7 +37,11 @@ public class CreateModel : PageModel
             Title = "",
             ImageUrl = "",
             Genre = "",
-            ReleaseDate = DateTime.Now.Date,
+            ReleaseDate = DateTime.Now,
+            Developer = "",
+            Publisher = "",
+            Platform = "",
+            Price = 0,
             Description = "",
             Reviews = []
         };
@@ -50,7 +54,8 @@ public class CreateModel : PageModel
     [BindProperty]
     public IFormFile? ImageFile { get; set; }
 
-    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    // To protect from overposting attacks, enable the specific properties you want to bind to, for
+    // more details, see https://aka.ms/RazorPagesCRUD.
     public async Task<IActionResult> OnPostAsync(Guid gameId)
     {
         if (!ModelState.IsValid)
