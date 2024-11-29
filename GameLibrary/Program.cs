@@ -50,9 +50,16 @@ public class Program
             options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Administrator"));
         });
 
+        builder.Services.AddResponseCompression(options =>
+        {
+            options.EnableForHttps = true;
+        });
+
         builder.Services.AddRazorPages();
 
         var app = builder.Build();
+
+        app.UseResponseCompression();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
