@@ -14,7 +14,9 @@
 
 using GameLibrary.Data;
 using GameLibrary.Models;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using System.IO.Compression;
 
 namespace GameLibrary;
 
@@ -53,6 +55,18 @@ public class Program
         builder.Services.AddResponseCompression(options =>
         {
             options.EnableForHttps = true;
+            options.Providers.Add<BrotliCompressionProvider>();
+            options.Providers.Add<GzipCompressionProvider>();
+        });
+
+        builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+        {
+            options.Level = CompressionLevel.Fastest;
+        });
+
+        builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+        {
+            options.Level = CompressionLevel.SmallestSize;
         });
 
         builder.Services.AddRazorPages();
