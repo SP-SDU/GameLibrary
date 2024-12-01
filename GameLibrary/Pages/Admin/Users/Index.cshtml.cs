@@ -14,24 +14,27 @@
 
 using GameLibrary.Data;
 using GameLibrary.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameLibrary.Pages.Admin.Users;
 
-public class IndexModel : PageModel
+public class IndexModel(ApplicationDbContext context, UserManager<User> userManager) : PageModel
 {
-    private readonly ApplicationDbContext _context;
-
-    public IndexModel(ApplicationDbContext context)
-    {
-        _context = context;
-    }
-
-    public IList<User>? IdentityUsers { get; set; }
+    public IList<User> IdentityUsers { get; set; } = [];
+    public Dictionary<Guid, string> UserRoles { get; set; } = [];
 
     public async Task OnGetAsync()
     {
-        IdentityUsers = await _context.Users.ToListAsync();
+        // Fetch all users
+        IdentityUsers = await context.Users.ToListAsync();
+
+        // Fetch roles for each user
+        foreach (var user in IdentityUsers)
+        {
+            var roles = await userManager.GetRolesAsync(user);
+            UserRoles[user.Id] = roles.FirstOrDefault() ?? "No Role";
+        }
     }
 }

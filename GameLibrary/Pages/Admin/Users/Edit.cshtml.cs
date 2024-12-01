@@ -17,26 +17,23 @@ using GameLibrary.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameLibrary.Pages.Admin.Users;
 
-public class EditModel : PageModel
+public class EditModel(ApplicationDbContext context, UserManager<User> userManager, RoleManager<Role> roleManager) : PageModel
 {
-    private readonly ApplicationDbContext _context;
-    private readonly UserManager<User> _userManager;
-
-    public EditModel(ApplicationDbContext context, UserManager<User> userManager)
-    {
-        _context = context;
-        _userManager = userManager;
-    }
-
     [BindProperty]
     public User? IdentityUser { get; set; }
 
     [BindProperty]
     public string? Password { get; set; }
+
+    [BindProperty]
+    public string SelectedRole { get; set; } = string.Empty;
+
+    public List<SelectListItem> Roles { get; set; } = [];
 
     public async Task<IActionResult> OnGetAsync(Guid? id)
     {
@@ -45,12 +42,17 @@ public class EditModel : PageModel
             return NotFound();
         }
 
-        IdentityUser = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+        IdentityUser = await userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
 
-        if (User == null)
+        if (IdentityUser == null)
         {
             return NotFound();
         }
+
+        Roles = [.. roleManager.Roles.Select(r => new SelectListItem { Value = r.Name, Text = r.Name })];
+
+        var userRoles = await userManager.GetRolesAsync(IdentityUser);
+        SelectedRole = userRoles.FirstOrDefault() ?? "User";
 
         return Page();
     }
@@ -59,6 +61,7 @@ public class EditModel : PageModel
     {
         if (!ModelState.IsValid)
         {
+            Roles = [.. roleManager.Roles.Select(r => new SelectListItem { Value = r.Name, Text = r.Name })];
             return Page();
         }
 
@@ -67,7 +70,7 @@ public class EditModel : PageModel
             return NotFound();
         }
 
-        var userToUpdate = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+        var userToUpdate = await userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
 
         if (userToUpdate == null)
         {
@@ -76,13 +79,13 @@ public class EditModel : PageModel
 
         if (await TryUpdateModelAsync<User>(
             userToUpdate,
-            "user",
+            "IdentityUser",
             u => u.UserName, u => u.Email))
         {
             if (!string.IsNullOrEmpty(Password))
             {
-                var token = await _userManager.GeneratePasswordResetTokenAsync(userToUpdate);
-                var result = await _userManager.ResetPasswordAsync(userToUpdate, token, Password);
+                var token = await userManager.GeneratePasswordResetTokenAsync(userToUpdate);
+                var result = await userManager.ResetPasswordAsync(userToUpdate, token, Password);
 
                 if (!result.Succeeded)
                 {
@@ -94,9 +97,16 @@ public class EditModel : PageModel
                 }
             }
 
-            await _context.SaveChangesAsync();
+            // Update user's role
+            var currentRoles = await userManager.GetRolesAsync(userToUpdate);
+            _ = await userManager.RemoveFromRolesAsync(userToUpdate, currentRoles);
+            _ = await userManager.AddToRoleAsync(userToUpdate, SelectedRole);
+
+            _ = await context.SaveChangesAsync();
             return RedirectToPage("./Index");
         }
+
+        Roles = [.. roleManager.Roles.Select(r => new SelectListItem { Value = r.Name, Text = r.Name })];
 
         return Page();
     }
