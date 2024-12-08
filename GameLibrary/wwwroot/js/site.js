@@ -36,7 +36,7 @@ const tween1 = new TimelineLite();
 
 // Add the first spaceship animation to the timeline
 tween.add(
-    TweenLite.to(".spaceship", 60, {
+    TweenLite.to(".RRspaceship", 60, {
         bezier: flightPath,
         ease: Power1.easeInOut
     })
@@ -44,7 +44,7 @@ tween.add(
 
 // Add the second spaceship animation to the timeline
 tween1.add(
-    TweenLite.to(".spaceship1", 60, {
+    TweenLite.to(".Uspaceship", 60, {
         bezier: flightPath1,
         ease: Power1.easeInOut
     })
