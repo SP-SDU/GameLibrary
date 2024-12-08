@@ -1,0 +1,65 @@
+@page
+@model GameLibrary.Pages.Moderator.Reviews.EditModel
+
+@{
+    ViewData["Title"] = "Edit Review";
+}
+
+<body style="color:#FFD43B;">
+
+    <header>
+        <h1>Edit Review</h1>
+    </header>
+
+    <div class="row container">
+        <div class="col-md-4">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <input type="hidden" asp-for="SelectedId" />
+
+                <div class="form-group">
+                    <label asp-for="SelectedGameId" class="control-label">Game</label>
+                    <select asp-for="SelectedGameId" class="form-control" asp-items="Model.Games">
+                        <option value="">Select a game</option>
+                    </select>
+                    <span asp-validation-for="SelectedGameId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="SelectedUserId" class="control-label">User</label>
+                    <select asp-for="SelectedUserId" class="form-control" asp-items="Model.Users">
+                        <option value="">Select a user</option>
+                    </select>
+                    <span asp-validation-for="SelectedUserId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="SelectedRating" class="control-label">Rating</label>
+                    <select asp-for="SelectedRating" class="form-select" required>
+                        <option value="">Select rating</option>
+                        <option value="5">5 - Excellent</option>
+                        <option value="4">4 - Very Good</option>
+                        <option value="3">3 - Good</option>
+                        <option value="2">2 - Fair</option>
+                        <option value="1">1 - Poor</option>
+                    </select>
+                    <span asp-validation-for="SelectedRating" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="SelectedContent" class="control-label">Content</label>
+                    <textarea asp-for="SelectedContent" class="form-control"></textarea>
+                    <span asp-validation-for="SelectedContent" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Approve" class="btn btn-primary" style="background-color: #420599; color: #FFD43B;" />
+                    <input type="submit" value="Deny" class="btn btn-danger" style="background-color: #420599; color: #FFD43B;" />
+                    <a asp-page="Index" class="btn" style="background-color: #420599; color: #FFD43B;">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>

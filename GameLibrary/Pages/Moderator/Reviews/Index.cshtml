@@ -1,0 +1,43 @@
+@page
+@model GameLibrary.Pages.Moderator.Reviews.IndexModel
+
+@{
+    ViewData["Title"] = "Moderator Reviews";
+    ViewData["ActivePage"] = ManageNavPages.Reviews;
+}
+
+<body style="color:#FFD43B;">
+
+    <header>
+        <h1>Reviews</h1>
+    </header>
+
+    <div class="container">
+        <table class="table" style="background-color: #000235;">
+            <thead>
+                <tr style="color:#FFD43B;">
+                    <th style="color:#FFD43B;">Game</th>
+                    <th style="color:#FFD43B;">User</th>
+                    <th style="color:#FFD43B;">Rating</th>
+                    <th style="color:#FFD43B;">Content</th>
+                    <th style="color:#FFD43B;">Actions</th>
+                </tr>
+            </thead>
+            <tbody style="color:#FFD43B;">
+                @foreach (var item in Model.Reviews!)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Game.Title)</td>
+                        <td>@Html.DisplayFor(modelItem => item.User.UserName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Rating)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Content)</td>
+                        <td>
+                            <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm" style="background-color: #420599; color: #FFD43B;">Approve/Deny</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</body>
