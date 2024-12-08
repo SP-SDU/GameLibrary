@@ -14,7 +14,9 @@
 
 using GameLibrary.Data;
 using GameLibrary.Models;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using System.IO.Compression;
 
 namespace GameLibrary;
 
@@ -44,15 +46,37 @@ public class Program
             .AddRazorPagesOptions(options =>
             {
                 options.Conventions.AuthorizeFolder("/Admin", "RequireAdministratorRole");
+                options.Conventions.AuthorizeFolder("/Moderator", "RequireModeratorRole");
             });
+
         builder.Services.AddAuthorization(options =>
         {
             options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Administrator"));
+            options.AddPolicy("RequireModeratorRole", policy => policy.RequireRole("Moderator"));
+        });
+
+        builder.Services.AddResponseCompression(options =>
+        {
+            options.EnableForHttps = true;
+            options.Providers.Add<BrotliCompressionProvider>();
+            options.Providers.Add<GzipCompressionProvider>();
+        });
+
+        builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+        {
+            options.Level = CompressionLevel.Fastest;
+        });
+
+        builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+        {
+            options.Level = CompressionLevel.SmallestSize;
         });
 
         builder.Services.AddRazorPages();
 
         var app = builder.Build();
+
+        app.UseResponseCompression();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())

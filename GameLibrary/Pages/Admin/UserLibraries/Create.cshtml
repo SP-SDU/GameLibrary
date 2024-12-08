@@ -1,0 +1,62 @@
+@page
+@model GameLibrary.Pages.Admin.UserLibraries.CreateModel
+
+@{
+    ViewData["Title"] = "Create User Library Entry";
+}
+
+<body style="color:#FFD43B;">
+
+    <header>
+        <h1>Create User Library Entry</h1>
+    </header>
+
+    <div class="row container">
+        <div class="col-md-4">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="SelectedUserId" class="control-label">User</label>
+                    <select asp-for="SelectedUserId" class="form-control" asp-items="Model.Users" required>
+                        <option value="">Select a user</option>
+                    </select>
+                    <span asp-validation-for="SelectedUserId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="SelectedGameId" class="control-label">Game</label>
+                    <select asp-for="SelectedGameId" class="form-control" asp-items="Model.Games" required>
+                        <option value="">Select a game</option>
+                    </select>
+                    <span asp-validation-for="SelectedGameId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="SelectedStatus" class="control-label">Status</label>
+                    <select asp-for="SelectedStatus" class="form-select" required>
+                        <option value="">Select Status...</option>
+                        <option value="Playing">Currently Playing</option>
+                        <option value="Completed">Completed</option>
+                        <option value="OnHold">On Hold</option>
+                        <option value="Dropped">Dropped</option>
+                        <option value="PlanToPlay">Plan to Play</option>
+                    </select>
+                    <span asp-validation-for="SelectedStatus" class="text-danger"></span>
+                </div>
+
+                <div class="form-group form-check">
+                    <input asp-for="SelectedIsUpcoming" class="form-check-input" type="checkbox" />
+                    <label asp-for="SelectedIsUpcoming" class="form-check-label">Is Upcoming</label>
+                    <span asp-validation-for="SelectedIsUpcoming" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mt-3">
+                    <input type="submit" value="Create" class="btn btn-primary" style="background-color: #420599; color: #FFD43B;" />
+                    <a asp-page="Index" class="btn" style="background-color: #420599; color: #FFD43B;">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>

@@ -1,0 +1,55 @@
+@page
+@model GameLibrary.Pages.Moderator.IndexModel
+
+@{
+    ViewData["Title"] = "Moderator Index";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+<h1>Moderator Dashboard</h1>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-header">Total Reviews</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.TotalReviews</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-header">Total Users</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.TotalUsers</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>Review Ratings</h2>
+        <canvas id="reviewRatingsChart"></canvas>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var reviewRatingsCtx = document.getElementById('reviewRatingsChart').getContext('2d');
+        var reviewRatingsChart = new Chart(reviewRatingsCtx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.ReviewRatings.Keys)),
+                datasets: [{
+                    label: 'Review Ratings',
+                    data: @Html.Raw(Json.Serialize(Model.ReviewRatings.Values)),
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            }
+        });
+    </script>
+}

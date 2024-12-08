@@ -30,9 +30,16 @@ public static class DbInitializer
         var roleManager = services.GetRequiredService<RoleManager<Role>>();
 
         // Apply any pending migrations
-        if (context.Database.GetPendingMigrations().Any())
+        try
         {
-            context.Database.Migrate();
+            if (context.Database.GetPendingMigrations().Any())
+            {
+                context.Database.Migrate();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Migration error: {ex.Message}");
         }
 
         // Check if we already have games
@@ -42,7 +49,7 @@ public static class DbInitializer
         }
 
         // Ensure roles are created
-        var roles = new[] { "Administrator", "User" };
+        var roles = new[] { "Administrator", "User", "Moderator" };
         foreach (var role in roles)
         {
             if (!roleManager.RoleExistsAsync(role).Result)
@@ -67,6 +74,24 @@ public static class DbInitializer
                 userManager.AddToRoleAsync(user, "Administrator").Wait();
             }
         }
+
+        var moderatorUser = new User
+        {
+            Id = Guid.Parse("71a23c2d-f82e-4b47-a843-cfcadbd65a77"),
+            UserName = "moderator@example.com",
+            Email = "moderator@example.com",
+            EmailConfirmed = true
+        };
+
+        if (userManager.FindByNameAsync(moderatorUser.UserName).Result == null)
+        {
+            var result = userManager.CreateAsync(moderatorUser, "Password123!").Result;
+            if (result.Succeeded)
+            {
+                userManager.AddToRoleAsync(moderatorUser, "Moderator").Wait();
+            }
+        }
+
 
         context.SaveChanges();
 

@@ -1,0 +1,47 @@
+@page
+@model GameLibrary.Pages.Admin.UserLibraries.IndexModel
+
+@{
+    ViewData["Title"] = "User Libraries";
+    ViewData["ActivePage"] = ManageNavPages.UserLibraries;
+}
+
+<body style="background-color: #000235; color: #FFD43B;">
+    <header>
+        <br />
+        <h1>User Libraries</h1><br />
+
+        <p class="text-lg-end">
+            <a asp-page="Create" class="btn" style="background-color: #420599; color: #FFD43B;">Create New</a>
+        </p>
+    </header>
+
+    <div class="container">
+        <table class="table" style="background-color: #000235;">
+            <thead>
+                <tr style="color:#FFD43B;">
+                    <th style="color:#FFD43B;">User Library Details</th>
+                    <th style="color:#FFD43B;">Actions</th>
+                </tr>
+            </thead>
+            <tbody style="color:#FFD43B;">
+                @foreach (var item in Model.UserLibraries!)
+                {
+                    <tr>
+                        <td>
+                            <strong style="color:#FFD43B;">User:</strong> @Html.DisplayFor(modelItem => item.User.UserName)<br />
+                            <strong style="color:#FFD43B;">Game:</strong> @Html.DisplayFor(modelItem => item.Game.Title)<br />
+                            <strong style="color:#FFD43B;">Status:</strong> @Html.DisplayFor(modelItem => item.Status)<br />
+                            <strong style="color:#FFD43B;">Is Upcoming:</strong> @Html.DisplayFor(modelItem => item.IsUpcoming)
+                        </td>
+                        <td>
+                            <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm" style="background-color: #420599; color: #FFD43B;">Edit</a><br /><br />
+                            <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" style="background-color: #420599; color: #FFD43B;">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <br />
+</body>
