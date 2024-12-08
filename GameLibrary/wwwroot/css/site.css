@@ -25,20 +25,20 @@ body {
     overflow: hidden;
 }
 
-.spaceship {
+.RRspaceship {
     height: 6.25rem;
     position: absolute;
     top: 50%;
     left: -5%;
-    z-index: 2;
+    z-index: 1;
 }
 
-.spaceship1 {
+.Uspaceship {
     height: 6.25rem;
     position: absolute;
     top: 50%;
     left: 97%;
-    z-index: 2;
+    z-index: 1;
 }
 
 /* Hero Section */
@@ -88,7 +88,6 @@ body {
 
 .hero-text {
     position: relative;
-    z-index: 2;
     text-align: center;
     color: white;
     padding-left: 1rem;
@@ -153,6 +152,7 @@ body {
     padding: 0.3rem 1rem;
     margin: 0.25rem;
     border-radius: 50rem !important;
+    z-index: 2;
 }
 
     .cta-button:hover, .login-button:hover {
