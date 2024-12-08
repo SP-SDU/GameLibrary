@@ -21,7 +21,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GameLibrary.Pages.Admin.Users;
 
-public class CreateModel(ApplicationDbContext context, UserManager<User> userManager, RoleManager<Role> roleManager) : PageModel
+public class CreateModel(UserManager<User> userManager, RoleManager<Role> roleManager) : PageModel
 {
     public IActionResult OnGet()
     {

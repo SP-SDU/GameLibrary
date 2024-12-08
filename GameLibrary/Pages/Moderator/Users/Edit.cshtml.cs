@@ -16,7 +16,7 @@ public class EditModel : PageModel
     }
 
     [BindProperty]
-    public User User { get; set; } = null!;
+    public User IdentityUser { get; set; } = null!;
 
     public async Task<IActionResult> OnGetAsync(Guid? id)
     {
@@ -25,12 +25,13 @@ public class EditModel : PageModel
             return NotFound();
         }
 
-        User = await _context.Users.FirstOrDefaultAsync(m => m.Id == id);
+        var identityUser = await _context.Users.FirstOrDefaultAsync(m => m.Id == id);
 
-        if (User == null)
+        if (identityUser == null)
         {
             return NotFound();
         }
+        IdentityUser = identityUser;
 
         return Page();
     }
@@ -42,7 +43,7 @@ public class EditModel : PageModel
             return Page();
         }
 
-        _context.Attach(User).State = EntityState.Modified;
+        _context.Attach(IdentityUser).State = EntityState.Modified;
 
         try
         {
@@ -50,7 +51,7 @@ public class EditModel : PageModel
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!UserExists(User.Id))
+            if (!UserExists(IdentityUser.Id))
             {
                 return NotFound();
             }

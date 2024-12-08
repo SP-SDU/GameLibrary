@@ -21,7 +21,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GameLibrary.Pages.Admin.Users;
 
-public class DeleteModel(ApplicationDbContext context, UserManager<User> userManager) : PageModel
+public class DeleteModel(UserManager<User> userManager) : PageModel
 {
     [BindProperty]
     public User? IdentityUser { get; set; }
