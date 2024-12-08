@@ -21,7 +21,7 @@ const flightPath = {
 // Flight path configuration for the second spaceship
 const flightPath1 = {
     curviness: 1.5,
-    autoRotate: true,
+    autoRotate: false,
     values: Array.from({ length: 15 }, (_, i) => ({
         x: window.innerWidth * (i + 1) * -0.1,
         y: window.innerHeight * getRandomInt1(-10, -1) * 0.1
