@@ -30,8 +30,8 @@
                 @foreach (var item in Model.Reviews!)
                 {
                     <tr>
-                        <td>@Html.DisplayFor(modelItem => item.GameId)</td>
-                        <td>@Html.DisplayFor(modelItem => item.UserId)</td>
+                        <td>@Html.DisplayFor(modelItem => item.User.UserName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Game.Title)</td>
                         <td>@Html.DisplayFor(modelItem => item.Rating)</td>
                         <td>@Html.DisplayFor(modelItem => item.Content)</td>
                         <td>

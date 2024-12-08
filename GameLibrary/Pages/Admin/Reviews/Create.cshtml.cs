@@ -32,6 +32,18 @@ public class CreateModel : PageModel
     public SelectList Games { get; set; } = null!;
     public SelectList Users { get; set; } = null!;
 
+    [BindProperty]
+    public Guid SelectedGameId { get; set; }
+
+    [BindProperty]
+    public Guid SelectedUserId { get; set; }
+
+    [BindProperty]
+    public int SelectedRating { get; set; }
+
+    [BindProperty]
+    public string? SelectedContent { get; set; }
+
     public IActionResult OnGet()
     {
         Games = new SelectList(_context.Games, "Id", "Title");
@@ -39,18 +51,26 @@ public class CreateModel : PageModel
         return Page();
     }
 
-    [BindProperty]
-    public Review? Review { get; set; }
-
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid)
         {
+            // Re-populate lists on validation failure
+            Games = new SelectList(_context.Games, "Id", "Title");
+            Users = new SelectList(_context.Users, "Id", "UserName");
             return Page();
         }
 
-        Review!.CreatedAt = DateTime.UtcNow;
-        _context.Reviews.Add(Review);
+        var review = new Review
+        {
+            GameId = SelectedGameId,
+            UserId = SelectedUserId,
+            Rating = SelectedRating,
+            Content = SelectedContent ?? string.Empty,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        _context.Reviews.Add(review);
         await _context.SaveChangesAsync();
 
         return RedirectToPage("./Index");
