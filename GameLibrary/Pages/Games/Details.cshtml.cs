@@ -172,7 +172,8 @@ public class DetailsModel : PageModel
             var userFavorite = new UserFavorite
             {
                 UserId = userGuid,
-                GameId = id
+                GameId = id,
+                AddedAt = DateTime.UtcNow
             };
 
             _context.UserFavorites.Add(userFavorite);

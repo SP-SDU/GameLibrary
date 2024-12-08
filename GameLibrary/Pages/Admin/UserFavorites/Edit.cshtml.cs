@@ -30,11 +30,17 @@ public class EditModel : PageModel
         _context = context;
     }
 
-    [BindProperty]
-    public UserFavorite? UserFavorite { get; set; }
-
     public SelectList? Games { get; set; }
     public SelectList? Users { get; set; }
+
+    [BindProperty]
+    public Guid SelectedId { get; set; }
+
+    [BindProperty]
+    public Guid SelectedUserId { get; set; }
+
+    [BindProperty]
+    public Guid SelectedGameId { get; set; }
 
     public async Task<IActionResult> OnGetAsync(Guid? id)
     {
@@ -43,15 +49,19 @@ public class EditModel : PageModel
             return NotFound();
         }
 
-        UserFavorite = await _context.UserFavorites
-            .Include(uf => uf.Game)
-            .Include(uf => uf.User)
+        var userFavorite = await _context.UserFavorites
+            .AsNoTracking() // No need to track here
             .FirstOrDefaultAsync(m => m.Id == id);
 
-        if (UserFavorite == null)
+        if (userFavorite == null)
         {
             return NotFound();
         }
+
+        // Set the properties for binding back to the form
+        SelectedId = userFavorite.Id;
+        SelectedUserId = userFavorite.UserId;
+        SelectedGameId = userFavorite.GameId;
 
         Games = new SelectList(_context.Games, "Id", "Title");
         Users = new SelectList(_context.Users, "Id", "UserName");
@@ -63,10 +73,26 @@ public class EditModel : PageModel
     {
         if (!ModelState.IsValid)
         {
+            // Re-populate select lists in case of validation failure
+            Games = new SelectList(_context.Games, "Id", "Title");
+            Users = new SelectList(_context.Users, "Id", "UserName");
             return Page();
         }
 
-        _context.Attach(UserFavorite!).State = EntityState.Modified;
+        // Retrieve the original entity from the database
+        var userFavorite = await _context.UserFavorites.FindAsync(SelectedId);
+
+        if (userFavorite == null)
+        {
+            return NotFound();
+        }
+
+        // Update only the properties that are needed
+        userFavorite.UserId = SelectedUserId;
+        userFavorite.GameId = SelectedGameId;
+
+        // Mark entity as modified
+        _context.Attach(userFavorite).State = EntityState.Modified;
 
         try
         {
@@ -74,7 +100,7 @@ public class EditModel : PageModel
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!UserFavoriteExists(UserFavorite!.Id))
+            if (!UserFavoriteExists(SelectedId))
             {
                 return NotFound();
             }

@@ -32,6 +32,12 @@ public class CreateModel : PageModel
     public SelectList Games { get; set; } = null!;
     public SelectList Users { get; set; } = null!;
 
+    [BindProperty]
+    public Guid SelectedUserId { get; set; }
+
+    [BindProperty]
+    public Guid SelectedGameId { get; set; }
+
     public IActionResult OnGet()
     {
         Games = new SelectList(_context.Games, "Id", "Title");
@@ -39,18 +45,23 @@ public class CreateModel : PageModel
         return Page();
     }
 
-    [BindProperty]
-    public UserFavorite? UserFavorite { get; set; }
-
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid)
         {
+            Games = new SelectList(_context.Games, "Id", "Title");
+            Users = new SelectList(_context.Users, "Id", "UserName");
             return Page();
         }
 
-        UserFavorite!.AddedAt = DateTime.UtcNow;
-        _context.UserFavorites.Add(UserFavorite);
+        var userFavorite = new UserFavorite
+        {
+            UserId = SelectedUserId,
+            GameId = SelectedGameId,
+            AddedAt = DateTime.UtcNow
+        };
+
+        _context.UserFavorites.Add(userFavorite);
         await _context.SaveChangesAsync();
 
         return RedirectToPage("./Index");
