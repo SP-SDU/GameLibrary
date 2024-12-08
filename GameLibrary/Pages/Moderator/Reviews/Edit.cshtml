@@ -13,6 +13,13 @@
 
     <div class="row container">
         <div class="col-md-4">
+            @if (ViewData["Status"] != null)
+            {
+                <div class="alert alert-info">
+                    Current Status: @ViewData["Status"]
+                </div>
+            }
+
             <form method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -54,9 +61,9 @@
                 </div>
 
                 <div class="form-group">
-                    <input type="submit" value="Approve" class="btn btn-primary" style="background-color: #420599; color: #FFD43B;" />
-                    <input type="submit" value="Deny" class="btn btn-danger" style="background-color: #420599; color: #FFD43B;" />
-                    <a asp-page="Index" class="btn" style="background-color: #420599; color: #FFD43B;">Back to List</a>
+                    <input type="submit" name="submitButton" value="Approve" class="btn btn-success" style="background-color: green; color: white;" />
+                    <input type="submit" name="submitButton" value="Deny" class="btn btn-danger" style="background-color: red; color: white;" />
+                    <a asp-page="Index" class="btn btn-secondary" style="background-color: gray; color: white;">Back to List</a>
                 </div>
             </form>
         </div>

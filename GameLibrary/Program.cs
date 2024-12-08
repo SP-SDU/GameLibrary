@@ -46,10 +46,13 @@ public class Program
             .AddRazorPagesOptions(options =>
             {
                 options.Conventions.AuthorizeFolder("/Admin", "RequireAdministratorRole");
+                options.Conventions.AuthorizeFolder("/Moderator", "RequireModeratorRole");
             });
+
         builder.Services.AddAuthorization(options =>
         {
             options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Administrator"));
+            options.AddPolicy("RequireModeratorRole", policy => policy.RequireRole("Moderator"));
         });
 
         builder.Services.AddResponseCompression(options =>

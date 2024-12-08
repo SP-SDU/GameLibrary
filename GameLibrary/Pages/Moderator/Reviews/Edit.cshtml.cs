@@ -11,6 +11,8 @@ public class EditModel : PageModel
 {
     private readonly ApplicationDbContext _context;
 
+    public static Dictionary<Guid, string> ReviewStatuses { get; set; } = [];
+
     public EditModel(ApplicationDbContext context)
     {
         _context = context;
@@ -47,7 +49,6 @@ public class EditModel : PageModel
             return NotFound();
         }
 
-        // Populate the bindable properties
         SelectedId = review.Id;
         SelectedGameId = review.GameId;
         SelectedUserId = review.UserId;
@@ -56,6 +57,16 @@ public class EditModel : PageModel
 
         Games = new SelectList(await _context.Games.ToListAsync(), "Id", "Title");
         Users = new SelectList(await _context.Users.ToListAsync(), "Id", "UserName");
+
+        // Retrieve status from the dictionary, if exists
+        if (ReviewStatuses.TryGetValue(SelectedId, out var status))
+        {
+            ViewData["Status"] = status;
+        }
+        else
+        {
+            ViewData["Status"] = "Pending"; // Default status
+        }
 
         return Page();
     }
@@ -75,37 +86,34 @@ public class EditModel : PageModel
             return NotFound();
         }
 
+        // Update the status in the dictionary
         if (submitButton == "Approve")
         {
-            reviewToUpdate.Status = "Approved";
+            ReviewStatuses[SelectedId] = "Approved";
+
+            // Update review details
+            reviewToUpdate.GameId = SelectedGameId;
+            reviewToUpdate.UserId = SelectedUserId;
+            reviewToUpdate.Rating = SelectedRating;
+            reviewToUpdate.Content = SelectedContent ?? string.Empty;
+            reviewToUpdate.UpdatedAt = DateTime.UtcNow;
+
+            _context.Attach(reviewToUpdate).State = EntityState.Modified;
         }
         else if (submitButton == "Deny")
         {
-            reviewToUpdate.Status = "Denied";
+            ReviewStatuses[SelectedId] = "Denied";
+
+            _context.Reviews.Remove(reviewToUpdate);
         }
-
-        reviewToUpdate.GameId = SelectedGameId;
-        reviewToUpdate.UserId = SelectedUserId;
-        reviewToUpdate.Rating = SelectedRating;
-        reviewToUpdate.Content = SelectedContent ?? string.Empty;
-        reviewToUpdate.UpdatedAt = DateTime.UtcNow;
-
-        _context.Attach(reviewToUpdate).State = EntityState.Modified;
 
         try
         {
             await _context.SaveChangesAsync();
         }
-        catch (DbUpdateConcurrencyException)
+        catch (DbUpdateConcurrencyException) when (!ReviewExists(SelectedId))
         {
-            if (!ReviewExists(SelectedId))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
+            return NotFound();
         }
 
         return RedirectToPage("./Index");
