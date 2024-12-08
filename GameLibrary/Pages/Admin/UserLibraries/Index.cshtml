@@ -29,8 +29,8 @@
                 {
                     <tr>
                         <td>
-                            <strong style="color:#FFD43B;">User:</strong> @Html.DisplayFor(modelItem => item.UserId)<br />
-                            <strong style="color:#FFD43B;">Game:</strong> @Html.DisplayFor(modelItem => item.GameId)<br />
+                            <strong style="color:#FFD43B;">User:</strong> @Html.DisplayFor(modelItem => item.User.UserName)<br />
+                            <strong style="color:#FFD43B;">Game:</strong> @Html.DisplayFor(modelItem => item.Game.Title)<br />
                             <strong style="color:#FFD43B;">Status:</strong> @Html.DisplayFor(modelItem => item.Status)<br />
                             <strong style="color:#FFD43B;">Is Upcoming:</strong> @Html.DisplayFor(modelItem => item.IsUpcoming)
                         </td>

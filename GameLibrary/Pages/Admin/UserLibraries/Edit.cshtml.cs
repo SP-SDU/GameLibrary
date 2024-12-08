@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using GameLibrary.Data;
-using GameLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -30,11 +29,23 @@ public class EditModel : PageModel
         _context = context;
     }
 
-    [BindProperty]
-    public UserLibrary? UserLibrary { get; set; }
-
     public SelectList? Games { get; set; }
     public SelectList? Users { get; set; }
+
+    [BindProperty]
+    public Guid SelectedId { get; set; }
+
+    [BindProperty]
+    public Guid SelectedUserId { get; set; }
+
+    [BindProperty]
+    public Guid SelectedGameId { get; set; }
+
+    [BindProperty]
+    public string SelectedStatus { get; set; } = string.Empty;
+
+    [BindProperty]
+    public bool SelectedIsUpcoming { get; set; }
 
     public async Task<IActionResult> OnGetAsync(Guid? id)
     {
@@ -43,18 +54,21 @@ public class EditModel : PageModel
             return NotFound();
         }
 
-        UserLibrary = await _context.UserLibraries
-            .Include(ul => ul.Game)
-            .Include(ul => ul.User)
-            .FirstOrDefaultAsync(m => m.Id == id);
-
-        if (UserLibrary == null)
+        var userLibrary = await _context.UserLibraries.AsNoTracking().FirstOrDefaultAsync(ul => ul.Id == id);
+        if (userLibrary == null)
         {
             return NotFound();
         }
 
-        Games = new SelectList(_context.Games, "Id", "Title");
-        Users = new SelectList(_context.Users, "Id", "UserName");
+        // Populate the bound properties
+        SelectedId = userLibrary.Id;
+        SelectedUserId = userLibrary.UserId;
+        SelectedGameId = userLibrary.GameId;
+        SelectedStatus = userLibrary.Status;
+        SelectedIsUpcoming = userLibrary.IsUpcoming;
+
+        Games = new SelectList(await _context.Games.ToListAsync(), "Id", "Title");
+        Users = new SelectList(await _context.Users.ToListAsync(), "Id", "UserName");
 
         return Page();
     }
@@ -63,10 +77,24 @@ public class EditModel : PageModel
     {
         if (!ModelState.IsValid)
         {
+            Games = new SelectList(await _context.Games.ToListAsync(), "Id", "Title");
+            Users = new SelectList(await _context.Users.ToListAsync(), "Id", "UserName");
             return Page();
         }
 
-        _context.Attach(UserLibrary!).State = EntityState.Modified;
+        var userLibrary = await _context.UserLibraries.FindAsync(SelectedId);
+        if (userLibrary == null)
+        {
+            return NotFound();
+        }
+
+        // Update the entity with the new values
+        userLibrary.UserId = SelectedUserId;
+        userLibrary.GameId = SelectedGameId;
+        userLibrary.Status = SelectedStatus;
+        userLibrary.IsUpcoming = SelectedIsUpcoming;
+
+        _context.Attach(userLibrary).State = EntityState.Modified;
 
         try
         {
@@ -74,7 +102,7 @@ public class EditModel : PageModel
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!UserLibraryExists(UserLibrary!.Id))
+            if (!UserLibraryExists(SelectedId))
             {
                 return NotFound();
             }

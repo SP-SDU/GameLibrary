@@ -32,6 +32,18 @@ public class CreateModel : PageModel
     public SelectList Games { get; set; } = null!;
     public SelectList Users { get; set; } = null!;
 
+    [BindProperty]
+    public Guid SelectedUserId { get; set; }
+
+    [BindProperty]
+    public Guid SelectedGameId { get; set; }
+
+    [BindProperty]
+    public string SelectedStatus { get; set; } = string.Empty;
+
+    [BindProperty]
+    public bool SelectedIsUpcoming { get; set; }
+
     public IActionResult OnGet()
     {
         Games = new SelectList(_context.Games, "Id", "Title");
@@ -39,18 +51,26 @@ public class CreateModel : PageModel
         return Page();
     }
 
-    [BindProperty]
-    public UserLibrary? UserLibrary { get; set; }
-
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid)
         {
+            // Re-populate lists if there's a validation error
+            Games = new SelectList(_context.Games, "Id", "Title");
+            Users = new SelectList(_context.Users, "Id", "UserName");
             return Page();
         }
 
-        UserLibrary!.AddedDate = DateTime.UtcNow;
-        _context.UserLibraries.Add(UserLibrary);
+        var userLibrary = new UserLibrary
+        {
+            UserId = SelectedUserId,
+            GameId = SelectedGameId,
+            Status = SelectedStatus,
+            IsUpcoming = SelectedIsUpcoming,
+            AddedDate = DateTime.UtcNow
+        };
+
+        _context.UserLibraries.Add(userLibrary);
         await _context.SaveChangesAsync();
 
         return RedirectToPage("./Index");

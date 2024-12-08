@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using GameLibrary.Data;
-using GameLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;

@@ -15,37 +15,46 @@
         <div class="col-md-4">
             <form method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="UserLibrary!.Id" />
+
+                <!-- Hidden field for the primary key (Id) -->
+                <input type="hidden" asp-for="SelectedId" />
 
                 <div class="form-group">
-                    <label asp-for="UserLibrary!.UserId" class="control-label">User</label>
-                    <select asp-for="UserLibrary!.UserId" class="form-control" asp-items="Model.Users">
+                    <label asp-for="SelectedUserId" class="control-label">User</label>
+                    <select asp-for="SelectedUserId" class="form-control" asp-items="Model.Users" required>
                         <option value="">Select a user</option>
                     </select>
-                    <span asp-validation-for="UserLibrary!.UserId" class="text-danger"></span>
+                    <span asp-validation-for="SelectedUserId" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="UserLibrary!.GameId" class="control-label">Game</label>
-                    <select asp-for="UserLibrary!.GameId" class="form-control" asp-items="Model.Games">
+                    <label asp-for="SelectedGameId" class="control-label">Game</label>
+                    <select asp-for="SelectedGameId" class="form-control" asp-items="Model.Games" required>
                         <option value="">Select a game</option>
                     </select>
-                    <span asp-validation-for="UserLibrary!.GameId" class="text-danger"></span>
+                    <span asp-validation-for="SelectedGameId" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="UserLibrary!.Status" class="control-label">Status</label>
-                    <input asp-for="UserLibrary!.Status" class="form-control" />
-                    <span asp-validation-for="UserLibrary!.Status" class="text-danger"></span>
+                    <label asp-for="SelectedStatus" class="control-label">Status</label>
+                    <select asp-for="SelectedStatus" class="form-select" required>
+                        <option value="">Select Status...</option>
+                        <option value="Playing">Currently Playing</option>
+                        <option value="Completed">Completed</option>
+                        <option value="OnHold">On Hold</option>
+                        <option value="Dropped">Dropped</option>
+                        <option value="PlanToPlay">Plan to Play</option>
+                    </select>
+                    <span asp-validation-for="SelectedStatus" class="text-danger"></span>
                 </div>
 
-                <div class="form-group">
-                    <label asp-for="UserLibrary!.IsUpcoming" class="control-label">Is Upcoming</label>
-                    <input asp-for="UserLibrary!.IsUpcoming" class="form-control" />
-                    <span asp-validation-for="UserLibrary!.IsUpcoming" class="text-danger"></span>
+                <div class="form-group form-check">
+                    <input asp-for="SelectedIsUpcoming" class="form-check-input" type="checkbox" />
+                    <label asp-for="SelectedIsUpcoming" class="form-check-label">Is Upcoming</label>
+                    <span asp-validation-for="SelectedIsUpcoming" class="text-danger"></span>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group mt-3">
                     <input type="submit" value="Save" class="btn btn-primary" style="background-color: #420599; color: #FFD43B;" />
                     <a asp-page="Index" class="btn" style="background-color: #420599; color: #FFD43B;">Back to List</a>
                 </div>
