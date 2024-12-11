@@ -17,87 +17,114 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameLibrary.Data;
-
 public static class DbInitializer
 {
-    /// <summary> Seeding the database. </summary>
+    /// <summary> Applies pending migrations and seeds the database with initial data. </summary>
     public static void Initialize(this IApplicationBuilder app)
     {
-        using IServiceScope scope = app.ApplicationServices.CreateScope();
+        using var scope = app.ApplicationServices.CreateScope();
         var services = scope.ServiceProvider;
-        using ApplicationDbContext context = services.GetRequiredService<ApplicationDbContext>();
-        var userManager = services.GetRequiredService<UserManager<User>>();
-        var roleManager = services.GetRequiredService<RoleManager<Role>>();
+        var logger = services.GetRequiredService<ILogger<Program>>();
 
-        // Apply any pending migrations
         try
         {
+            var context = services.GetRequiredService<ApplicationDbContext>();
+            var userManager = services.GetRequiredService<UserManager<User>>();
+            var roleManager = services.GetRequiredService<RoleManager<Role>>();
+
+            // Apply pending migrations
             if (context.Database.GetPendingMigrations().Any())
             {
+                logger.LogInformation("Applying pending migrations...");
                 context.Database.Migrate();
+                logger.LogInformation("Migrations applied successfully.");
             }
+
+            // Seed roles and users
+            SeedRoles(roleManager, logger);
+            SeedUser(userManager, "admin@example.com", "Administrator", logger);
+            SeedUser(userManager, "moderator@example.com", "Moderator", logger);
+
+            // Seed games
+            if (context.Games.Any())
+            {
+                logger.LogInformation("Games already exist, skipping seeding.");
+                return;
+            }
+            var games = GetInitialGames();
+            context.Games.AddRange(games);
+            _ = context.SaveChanges();
+
+            // Seed reviews
+            var reviews = GetInitialReviews(games, userManager);
+            context.Reviews.AddRange(reviews);
+            _ = context.SaveChanges();
+            logger.LogInformation("Seeding completed successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Migration error: {ex.Message}");
+            logger.LogError(ex, "An error occurred during migration or seeding.");
         }
+    }
 
-        // Check if we already have games
-        if (context.Games.Any())
-        {
-            return; // DB has been seeded
-        }
-
-        // Ensure roles are created
+    private static void SeedRoles(RoleManager<Role> roleManager, ILogger logger)
+    {
         var roles = new[] { "Administrator", "User", "Moderator" };
         foreach (var role in roles)
         {
             if (!roleManager.RoleExistsAsync(role).Result)
             {
-                roleManager.CreateAsync(new Role { Name = role }).Wait();
+                var result = roleManager.CreateAsync(new Role { Name = role }).Result;
+                if (result.Succeeded)
+                {
+                    logger.LogInformation("Role '{Role}' created successfully.", role);
+                }
+                else
+                {
+                    logger.LogWarning("Failed to create role '{Role}'. Errors: {Errors}", role, string.Join(", ", result.Errors.Select(e => e.Description)));
+                }
+            }
+            else
+            {
+                logger.LogInformation("Role '{Role}' already exists, skipping creation.", role);
             }
         }
+    }
 
+    private static void SeedUser(UserManager<User> userManager, string email, string role, ILogger logger)
+    {
         var user = new User
         {
-            Id = Guid.Parse("611bc41d-1065-483c-9689-1c59a77f196f"),
-            UserName = "admin@example.com",
-            Email = "admin@example.com",
+            Id = Guid.NewGuid(),
+            UserName = email,
+            Email = email,
             EmailConfirmed = true
         };
 
-        if (userManager.FindByNameAsync(user.UserName).Result == null)
+        var existingUser = userManager.FindByNameAsync(email).Result;
+        if (existingUser == null)
         {
             var result = userManager.CreateAsync(user, "Password123!").Result;
             if (result.Succeeded)
             {
-                userManager.AddToRoleAsync(user, "Administrator").Wait();
+                userManager.AddToRoleAsync(user, role).Wait();
+                logger.LogInformation("User '{Email}' created and assigned to role '{Role}'.", email, role);
             }
-        }
-
-        var moderatorUser = new User
-        {
-            Id = Guid.Parse("71a23c2d-f82e-4b47-a843-cfcadbd65a77"),
-            UserName = "moderator@example.com",
-            Email = "moderator@example.com",
-            EmailConfirmed = true
-        };
-
-        if (userManager.FindByNameAsync(moderatorUser.UserName).Result == null)
-        {
-            var result = userManager.CreateAsync(moderatorUser, "Password123!").Result;
-            if (result.Succeeded)
+            else
             {
-                userManager.AddToRoleAsync(moderatorUser, "Moderator").Wait();
+                logger.LogWarning("Failed to create user '{Email}'. Errors: {Errors}", email, string.Join(", ", result.Errors.Select(e => e.Description)));
             }
         }
-
-
-        context.SaveChanges();
-
-        // Add test games
-        var games = new Game[]
+        else
         {
+            logger.LogInformation("User '{Email}' already exists, skipping creation.", email);
+        }
+    }
+
+    private static Game[] GetInitialGames()
+    {
+        return
+        [
             new()
             {
                 Title = "Echoes of Ardentia",
@@ -208,38 +235,40 @@ public static class DbInitializer
                 Publisher = "Arcade Blast Studios",
                 ImageUrl = "/images/Pixel.webp"
             }
-        };
+        ];
+    }
 
-        context.Games.AddRange(games);
-        context.SaveChanges();
+    private static Review[] GetInitialReviews(Game[] games, UserManager<User> userManager)
+    {
+        var adminUser = userManager.FindByNameAsync("admin@example.com").Result;
+        if (adminUser == null) return [];
 
-        // Add test reviews with validation
-        var reviews = new Review[]
-        {
-            new() {
+        return
+        [
+            new()
+            {
                 GameId = games[0].Id,
-                UserId = user.Id, // Use the inherited Id property from IdentityUser<Guid>
+                UserId = adminUser.Id,
                 Rating = 5,
                 Content = "One of the best games I've ever played! The open world is breathtaking and there's so much to discover.",
                 CreatedAt = DateTime.UtcNow.AddDays(-5)
             },
-            new() {
+            new()
+            {
                 GameId = games[0].Id,
-                UserId = user.Id, // Use the inherited Id property from IdentityUser<Guid>
+                UserId = adminUser.Id,
                 Rating = 5,
                 Content = "An absolute masterpiece. The attention to detail and storytelling are unmatched.",
                 CreatedAt = DateTime.UtcNow.AddDays(-3)
             },
-            new() {
+            new()
+            {
                 GameId = games[0].Id,
-                UserId = user.Id, // Use the inherited Id property from IdentityUser<Guid>
+                UserId = adminUser.Id,
                 Rating = 4,
                 Content = "A visually stunning game with a deep story, though it had some bugs at launch.",
                 CreatedAt = DateTime.UtcNow.AddDays(-1)
             }
-        };
-
-        context.Reviews.AddRange(reviews);
-        context.SaveChanges();
+        ];
     }
 }

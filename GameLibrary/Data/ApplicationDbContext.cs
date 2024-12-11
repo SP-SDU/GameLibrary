@@ -18,13 +18,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GameLibrary.Data;
 
-public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<User, Role, Guid>(options)
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
-    {
-    }
-
     public DbSet<Game> Games => Set<Game>();
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<UserLibrary> UserLibraries => Set<UserLibrary>();

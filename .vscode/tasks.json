@@ -24,6 +24,29 @@
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "type": "dotnet",
+            "task": "clean",
+            "group": "clean",
+            "problemMatcher": [],
+            "label": "dotnet: clean"
+        },
+        {
+            "label": "dotnet: format",
+            "type": "shell",
+            "command": "dotnet",
+            "args": [
+                "format",
+                "GameLibrary.sln",
+                "--verbosity",
+                "diagnostic"
+            ],
+            "group": "none",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always"
+            }
         }
     ]
 }
