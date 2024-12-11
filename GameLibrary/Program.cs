@@ -26,11 +26,13 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+        // Database Configuration
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlite(connectionString));
 
+        // Identity Configuration
         builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddRoles<Role>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -42,12 +44,11 @@ public class Program
             options.AccessDeniedPath = "/Account/AccessDenied";
         });
 
-        builder.Services.AddRazorPages()
-            .AddRazorPagesOptions(options =>
-            {
-                options.Conventions.AuthorizeFolder("/Admin", "RequireAdministratorRole");
-                options.Conventions.AuthorizeFolder("/Moderator", "RequireModeratorRole");
-            });
+        builder.Services.AddRazorPages(options =>
+        {
+            options.Conventions.AuthorizeFolder("/Admin", "RequireAdministratorRole");
+            options.Conventions.AuthorizeFolder("/Moderator", "RequireModeratorRole");
+        });
 
         builder.Services.AddAuthorization(options =>
         {
@@ -55,6 +56,7 @@ public class Program
             options.AddPolicy("RequireModeratorRole", policy => policy.RequireRole("Moderator"));
         });
 
+        // Response Compression
         builder.Services.AddResponseCompression(options =>
         {
             options.EnableForHttps = true;
@@ -71,8 +73,6 @@ public class Program
         {
             options.Level = CompressionLevel.SmallestSize;
         });
-
-        builder.Services.AddRazorPages();
 
         var app = builder.Build();
 
