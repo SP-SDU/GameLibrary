@@ -62,48 +62,16 @@
 </div>
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        var gameGenresCtx = document.getElementById('gameGenresChart').getContext('2d');
-        var gameGenresChart = new Chart(gameGenresCtx, {
-            type: 'pie',
-            data: {
-                labels: @Html.Raw(Json.Serialize(Model.GameGenres.Keys)),
-                datasets: [{
-                    data: @Html.Raw(Json.Serialize(Model.GameGenres.Values)),
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
-                }]
-            }
-        });
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.min.js"></script>
+    <script src="~/js/charts.min.js" asp-append-version="true"></script>
 
-        var userActivityCtx = document.getElementById('userActivityChart').getContext('2d');
-        var userActivityChart = new Chart(userActivityCtx, {
-            type: 'line',
-            data: {
-                labels: @Html.Raw(Json.Serialize(Model.UserActivity.Keys)),
-                datasets: [{
-                    label: 'User Activity',
-                    data: @Html.Raw(Json.Serialize(Model.UserActivity.Values)),
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            }
-        });
-
-        var reviewRatingsCtx = document.getElementById('reviewRatingsChart').getContext('2d');
-        var reviewRatingsChart = new Chart(reviewRatingsCtx, {
-            type: 'bar',
-            data: {
-                labels: @Html.Raw(Json.Serialize(Model.ReviewRatings.Keys)),
-                datasets: [{
-                    label: 'Review Ratings',
-                    data: @Html.Raw(Json.Serialize(Model.ReviewRatings.Values)),
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                }]
-            }
-        });
-    </script>
+    <div id="gameGenresLabels" style="display: none;">@Html.Raw(Json.Serialize(Model.GameGenres.Keys))</div>
+    <div id="gameGenresData" style="display: none;">@Html.Raw(Json.Serialize(Model.GameGenres.Values))</div>
+    
+    <div id="userActivityLabels" style="display: none;">@Html.Raw(Json.Serialize(Model.UserActivity.Keys))</div>
+    <div id="userActivityData" style="display: none;">@Html.Raw(Json.Serialize(Model.UserActivity.Values))</div>
+    
+    <div id="reviewRatingsLabels" style="display: none;">@Html.Raw(Json.Serialize(Model.ReviewRatings.Keys))</div>
+    <div id="reviewRatingsData" style="display: none;">@Html.Raw(Json.Serialize(Model.ReviewRatings.Values))</div>
 }
+

@@ -1,0 +1,47 @@
+﻿.placeholder-image {
+    background-color: #2b3035;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.375rem;
+}
+
+.game-details {
+    background-color: #2b3035;
+}
+
+    .game-details p {
+        margin-bottom: 0.5rem;
+    }
+
+.game-rating {
+    font-size: 1.25rem;
+}
+
+.review-stats {
+    border-bottom: 1px solid #495057;
+    padding-bottom: 1rem;
+}
+
+.average-rating {
+    text-align: center;
+}
+
+.rating-stars {
+    font-size: 1.5rem;
+    color: #ffc107;
+}
+
+.add-review {
+    margin-top: 2rem;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.card-body {
+    padding: 2rem;
+}

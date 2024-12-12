@@ -35,21 +35,9 @@
 </div>
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        var reviewRatingsCtx = document.getElementById('reviewRatingsChart').getContext('2d');
-        var reviewRatingsChart = new Chart(reviewRatingsCtx, {
-            type: 'bar',
-            data: {
-                labels: @Html.Raw(Json.Serialize(Model.ReviewRatings.Keys)),
-                datasets: [{
-                    label: 'Review Ratings',
-                    data: @Html.Raw(Json.Serialize(Model.ReviewRatings.Values)),
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                }]
-            }
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.min.js"></script>
+    <script src="~/js/charts.min.js" asp-append-version="true"></script>
+
+    <div id="reviewRatingsLabels" style="display: none;">@Html.Raw(Json.Serialize(Model.ReviewRatings.Keys))</div>
+    <div id="reviewRatingsData" style="display: none;">@Html.Raw(Json.Serialize(Model.ReviewRatings.Values))</div>
 }
