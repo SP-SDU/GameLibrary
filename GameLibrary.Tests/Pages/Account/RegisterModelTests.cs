@@ -27,6 +27,7 @@ namespace GameLibrary.Tests.Pages.Account;
 public class RegisterModelTests
 {
     private readonly Mock<UserManager<User>> _mockUserManager;
+    private readonly Mock<RoleManager<Role>> _mockRoleManager;
     private readonly Mock<SignInManager<User>> _mockSignInManager;
     private readonly Mock<IUserEmailStore<User>> _mockEmailStore;
     private readonly Mock<ILogger<RegisterModel>> _mockLogger;
@@ -38,15 +39,16 @@ public class RegisterModelTests
         _mockEmailStore = new Mock<IUserEmailStore<User>>();
         _mockUserManager = new Mock<UserManager<User>>(
             _mockEmailStore.Object, null!, null!, null!, null!, null!, null!, null!, null!);
-
+        _mockRoleManager = new Mock<RoleManager<Role>>(
+            Mock.Of<IRoleStore<Role>>(), null!, null!, null!, null!);
         _mockUserManager.Setup(u => u.SupportsUserEmail).Returns(true);
-
         _mockSignInManager = MockSignInManager();
         _mockLogger = new Mock<ILogger<RegisterModel>>();
         _mockEmailSender = new Mock<IEmailSender>();
 
         _registerModel = new RegisterModel(
             _mockUserManager.Object,
+            _mockRoleManager.Object,
             _mockEmailStore.Object,
             _mockSignInManager.Object,
             _mockLogger.Object,

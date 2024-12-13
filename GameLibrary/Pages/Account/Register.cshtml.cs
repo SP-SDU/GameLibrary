@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Text;
 using System.Text.Encodings.Web;
 
@@ -31,6 +32,7 @@ public class RegisterModel : PageModel
 {
     private readonly SignInManager<User> _signInManager;
     private readonly UserManager<User> _userManager;
+    private readonly RoleManager<Role> _roleManager;
     private readonly IUserStore<User> _userStore;
     private readonly IUserEmailStore<User> _emailStore;
     private readonly ILogger<RegisterModel> _logger;
@@ -38,12 +40,14 @@ public class RegisterModel : PageModel
 
     public RegisterModel(
         UserManager<User> userManager,
+        RoleManager<Role> roleManager,
         IUserStore<User> userStore,
         SignInManager<User> signInManager,
         ILogger<RegisterModel> logger,
         IEmailSender emailSender)
     {
         _userManager = userManager;
+        _roleManager = roleManager;
         _userStore = userStore;
         _emailStore = GetEmailStore();
         _signInManager = signInManager;
@@ -128,6 +132,8 @@ public class RegisterModel : PageModel
             {
                 _logger.LogInformation("User created a new account with password.");
 
+                await AssignRoleToUser(user, "User");
+
                 var userId = await _userManager.GetUserIdAsync(user);
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -181,5 +187,32 @@ public class RegisterModel : PageModel
             throw new NotSupportedException("The default UI requires a user store with email support.");
         }
         return (IUserEmailStore<User>) _userStore;
+    }
+
+    private async Task AssignRoleToUser(User user, string roleName)
+    {
+        // Check if the role exists
+        if (!await _roleManager.RoleExistsAsync(roleName))
+        {
+            // Create the role if it doesn't exist
+            var roleResult = await _roleManager.CreateAsync(new Role { Name = roleName });
+            if (!roleResult.Succeeded)
+            {
+                var errorMessages = string.Join(", ", roleResult.Errors.Select(e => e.Description));
+                _logger.LogError("Failed to create role '{RoleName}': {Errors}", roleName, errorMessages);
+                throw new InvalidOperationException($"Failed to create role '{roleName}': {errorMessages}");
+            }
+        }
+
+        // Assign the role to the user
+        var addToRoleResult = await _userManager.AddToRoleAsync(user, roleName);
+        if (!addToRoleResult.Succeeded)
+        {
+            var errorMessages = string.Join(", ", addToRoleResult.Errors.Select(e => e.Description));
+            _logger.LogError("Failed to assign role '{RoleName}' to user '{UserId}': {Errors}", roleName, user.Id, errorMessages);
+            throw new InvalidOperationException($"Failed to assign role '{roleName}' to user '{user.Id}': {errorMessages}");
+        }
+
+        _logger.LogInformation("Successfully assigned role '{RoleName}' to user '{UserId}'", roleName, user.Id);
     }
 }
