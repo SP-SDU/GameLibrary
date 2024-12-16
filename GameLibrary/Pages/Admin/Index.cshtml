@@ -46,32 +46,36 @@
 <div class="row">
     <div class="col-md-6">
         <h2>Game Genres</h2>
-        <canvas id="gameGenresChart"></canvas>
+        <canvas id="gameGenresChart"
+                data-chart-type="pie"
+                data-chart-labels='@Html.Raw(Json.Serialize(Model.GameGenres.Keys))'
+                data-chart-data='@Html.Raw(Json.Serialize(Model.GameGenres.Values))'>
+        </canvas>
     </div>
     <div class="col-md-6">
         <h2>User Activity</h2>
-        <canvas id="userActivityChart"></canvas>
+        <canvas id="userActivityChart"
+                data-chart-type="line"
+                data-chart-label-text="User Activity"
+                data-chart-labels='@Html.Raw(Json.Serialize(Model.UserActivity.Keys))'
+                data-chart-data='@Html.Raw(Json.Serialize(Model.UserActivity.Values))'>
+        </canvas>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
         <h2>Review Ratings</h2>
-        <canvas id="reviewRatingsChart"></canvas>
+        <canvas id="reviewRatingsChart"
+                data-chart-type="bar"
+                data-chart-label-text="Review Ratings"
+                data-chart-labels='@Html.Raw(Json.Serialize(Model.ReviewRatings.Keys))'
+                data-chart-data='@Html.Raw(Json.Serialize(Model.ReviewRatings.Values))'>
+        </canvas>
     </div>
 </div>
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.min.js"></script>
-    <script src="~/js/charts.min.js" asp-append-version="true"></script>
-
-    <div id="gameGenresLabels" style="display: none;">@Html.Raw(Json.Serialize(Model.GameGenres.Keys))</div>
-    <div id="gameGenresData" style="display: none;">@Html.Raw(Json.Serialize(Model.GameGenres.Values))</div>
-    
-    <div id="userActivityLabels" style="display: none;">@Html.Raw(Json.Serialize(Model.UserActivity.Keys))</div>
-    <div id="userActivityData" style="display: none;">@Html.Raw(Json.Serialize(Model.UserActivity.Values))</div>
-    
-    <div id="reviewRatingsLabels" style="display: none;">@Html.Raw(Json.Serialize(Model.ReviewRatings.Keys))</div>
-    <div id="reviewRatingsData" style="display: none;">@Html.Raw(Json.Serialize(Model.ReviewRatings.Values))</div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script src="~/js/graphs.min.js"></script>
 }
-
