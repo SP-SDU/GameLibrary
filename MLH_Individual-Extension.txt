@@ -1,0 +1,270 @@
+GameLibrary: Authentication & Authentication 2.0
+
+
+A. Background
+
+I. INTRODUCTION
+
+B. Resource Management
+
+For resource management we kept it simple with EF Core
+using centralized database logic ‘ApplicationDbContext.cs’ and
+
+
+Our project is a Game Library developed with ASP.NET
+Razor pages (C#) using EF Core, Microsoft Identity, Bootstrap,
+and SQLite as its dependencies. Originally it was a dichotomy¹
+
+—Administrators and Users— but lacked a specialized role for
+moderating user-generated content.
+
+B. Motivation
+
+Without a Moderator, everything would be managed by the
+administrator role, meaning the platform could not properly
+manage inappropriate content. Introducing the role fills in a gap
+by shifting the responsibility off of the shoulders of the admin
+and creates a proper separation of responsibilities.
+
+C. Project
+
+This extension introduces a new role moderator to mange
+reviews and user behaviour. It does this through the use of the
+Microsoft Identity Platform.
+
+D. Contributions
+
+This is the main takeaway of this work:
+
+1. Insights into implementing roles and policies with
+Microsoft Identity.
+
+2. Role-based authorization strategies.
+
+3. Practical examples of reusing components.
+
+II. REFLECTIONS
+
+A. Front-End
+
+The focus of our frontend implementation was visual appeal
+and keeping it functional. It does implement these points as the
+style we gave it a gamer aesthetic. The main functionality is the
+games page where you can search for them and add them to your
+library. When staying within the confinements of Bootstrap
+worked and was effective, but when we needed to integrate
+custom styles, which caused issues at times.
+
+Good Implementations:
+
+-  Reusable Razor components like ‘_Layout’ for
+navigation.
+
+-  Consistent design by use of Bootstrap as the base.
+Could be Improved:
+
+-  Reduce the use of inline styles as we weren’t using
+Tailwind.
+
+-  Better coordination on UI/UX, perhaps having
+someone refactor it for consistency.
+
+-  Testing more screen sizes.
+
+data annotations in the models which lacks future flexibility and
+extensibility.
+
+Good Implementations:
+
+-  Simple database schema and migration.
+
+-  Gzip and Brotli compression, JavaScript and CSS
+minification.
+
+Could be Improved:
+
+-  Use the repository patterns.
+
+-  Scalability of the database with the addition of
+caching.
+
+C. Authentication and Authorization
+
+By using Microsoft Identity, we got a robust system to build
+on top of. We followed Microsoft’s recommended solution of
+defining policies and restrictions in code within ‘program.cs’.
+
+Good Implementations:
+
+-  Clear separation of roles and access levels. Access
+levels are static and defined in code, while roles are
+dynamic and CRUD-able.
+
+-  User information is securely stored using Microsoft
+Identity’s built-in features.
+
+Could be Improved:
+
+-  Better feedback for errors such as access denial
+rather than only showing the ‘RequestId’.
+
+III. INDIVIDUAL EXTENSION
+
+A. Motivation
+
+Our game library initially supported only two user
+roles: Administrator and User. This limited the system's
+ability to moderate content effectively, the role Moderator
+addresses this need for content oversight. My reasoning for
+this choice is I had implemented authentication and
+authorization for the group part, thus this extension builds
+upon  my expertise. It allowed me to expand the functionality
+while ensuring the system remains consistent and secure.
+
+B. Technical Description
+
+The Moderator role was implemented by reusing
+components from the Administrator role, both of which
+extend Microsoft Identity.
+
+-  Policies  in  ‘program.cs’  restrict  access  to
+‘/Moderator’ pages to those with the Moderator
+role.
+
+¹ A contrast between two things.
+
+Group 17 — Mathias Lund - Hansen — mlund23@student.sdu.dk
+
+
+-  ‘_Layout’, the dashboard and the read and update
+parts of reviews and users were adapted from the
+Administrator implementation.
+
+-  Moderators have read and update permissions but
+cannot delete or manage roles.
+
+-  The moderator folder includes pages for managing
+reviews and users.
+
+While functional, the implementation does not include
+unique features due to time constraints. Tools like content
+flagging or audit logs could have made sense to implement.
+
+C. Reflections
+
+The Moderator role addresses its purpose but relies heavily
+on reused functionality from the Administrator role. Microsoft
+Identity made it secure and scalable, but time constraints limited
+its potential. This underlines the importance of proper time
+management and the value of reusing components.
+
+IV. SECURITY REFLECTIONS
+
+A. Sensible Data
+
+-  Microsoft Identity handles role-based access and
+password security using hashing algorithms and
+salt.
+
+-  Folders like ‘/Admin’ and ‘/Moderator’ are
+protected by role-based authorization policies.
+
+B. Database Access
+
+-  Database Access: EF Core parameterized queries
+prevents SQL injection, tested SQL injection in the
+game search bar.
+
+C. Attack Surface
+
+-  Razor pages have Built-in Cross-Site Request
+Forgery (CSRF) protection using anti-forgery
+tokens in forms.
+
+Some intentional design decisions allow controlled actions
+that may seem risky:
+
+-  We have Role-based CRUD Operations which
+means  Administrators  can  CRUD  roles
+dynamically. This is a built-in feature of Microsoft
+Identity, however it is also only allowed to be used
+by authorized users.
+
+D. Individual Extension
+
+The Moderator role inherits the aforementioned security
+features from Microsoft Identity such as role-specific policies
+that restrict access to sensitive pages.
+
+V. PERFORMANCE AND SCALABILITY REFLECTIONS
+
+A. Performance
+
+Initially the project faced some performance issues, which
+we identified using Lighthouse from the dev-tools. Including
+oversized assets, uncompressed files, and redundant inline
+styles. They were fixed with:
+
+-  Gzip  and  Brotli  Compression  enabled  in
+
+‘program.cs’.
+
+-  Images were converted to WebP and resized while
+JavaScript/CSS  were  minified.  (AVIF  was
+considered but not supported by ASP.NET.)
+
+-  Inline styles were moved to CSS files.
+
+B. Scalability
+
+Our choice of database, SQLite, simple and suitable for small
+projects, limits scalability. Ideally migrating to MSSQL, which
+is in the same ecosystem as the program, would improve the
+scalability prospects.
+
+Distributed caching (like Redis) could also optimize the
+session management and repeated queries.
+
+VI. CONCLUSIONS
+
+A. Summary
+
+This work extended our group project, GameLibrary, by
+adding an additional role, Moderator, for content management.
+Moderators were designed to manage reviews, monitor
+inappropriate content, and enforce the platform’s Terms of
+Service (TOS). The implementation used Microsoft Identity as
+its base for role-based authorization and reused existing
+components maintaining consistency.
+
+B. Reflections
+
+From a security perspective, the project does demonstrate a solid
+handling of data, suing hashed passwords and role-based access
+control for protected pages like ‘/moderator’ by using Microsoft
+Identity. On top of that there is built-in measures against
+common vulnerabilities like CSRF and SQL injection.
+
+The performance optimizations applied to the project include
+moving inline CSS to dedicated stylesheets, enabling Gzip and
+Brotli compression and resizing images. We made sure backend
+filtering were correct used instead of client-side for the game
+search.
+
+C. Future work
+
+Improvements for the future would be to include more
+unique Moderator tools such as flagging and reporting. Security-
+wise it might make sense to add rate-limiting to protect against
+Denial of Service (DoS) attacks. To improve scalability we
+could adopt MSSQL, distributed caching (like Redis), and
+explore database partitioning. And instead of relying on seeding,
+an initial setup page would be ideal for distribution. Adding
+these things would prepare the game library for a theoretical
+growing userbase.
+
+Extension branch: https://github.com/SP-
+SDU/GameLibrary/tree/Auth-2.0-Extension
+
+Group 17 — Mathias Lund - Hansen — mlund23@student.sdu.dk
+
