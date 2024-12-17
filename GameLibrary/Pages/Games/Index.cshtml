@@ -3,18 +3,22 @@
 @{
     ViewData["Title"] = "Games";
 }
-<div class="container py-5">
+<div class="container py-5" style="padding-top: 80px;">
     <!-- Search and Filters Section -->
     <div class="row mb-4">
         <div class="col-md-8">
-            <form method="get" action="/Games/Index" class="d-flex">
-                <input type="text" name="search" value="@Model.SearchQuery" class="form-control me-2" placeholder="Search for a game..." />
-                <button type="submit" class="btn btn-primary">Search</button>
-            </form>
+            <div class="fixed-top" style="top: 70px;">
+                <form method="get" action="/Games/Index" class="d-flex">
+                    <input type="text" name="search" value="@Model.SearchQuery" class="form-control me-2"
+                        placeholder="Search for a game..." />
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </div>
         </div>
         <div class="col-md-4">
             <form method="get" action="/Games/Index">
-                <select name="genre" class="form-select" aria-label="Filter games by genre" onchange="this.form.submit()">
+                <select name="genre" class="form-select" aria-label="Filter games by genre"
+                    onchange="this.form.submit()">
                     <option value="">All Genres</option>
                     @foreach (var genre in Model.Genres)
                     {
@@ -33,7 +37,7 @@
             <div class="col-md-4">
                 <div class="card feature-card bg-primary-subtle" style="margin-bottom: 20px;">
                     <img src="@game.ImageUrl" class="card-img-top rounded" alt="@game.Title"
-                         style="height: 200px; object-fit: cover;" />
+                        style="height: 200px; object-fit: cover;" />
                     <div class="card-body">
                         <h5 class="card-title">@game.Title</h5>
                         <p class="card-text">
@@ -43,7 +47,8 @@
                     <div class="card-footer">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
-                                <a asp-page="/Games/Details" asp-route-id="@game.Id" class="btn btn-primary">View Details</a>
+                                <a asp-page="/Games/Details" asp-route-id="@game.Id" class="btn btn-primary">View
+                                    Details</a>
                             </div>
                         </div>
                     </div>

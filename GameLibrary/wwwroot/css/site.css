@@ -1,10 +1,16 @@
 /* Site-wide styles */
 body {
-    background-color: #000235;
+    background-color: #0008ff;
     color: white;
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+}
+
+/* Dark Mode */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
 }
 
 h1 {
@@ -42,113 +48,93 @@ h1 {
 
 /* Hero Section */
 .hero-section {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: url('/images/Gamer.webp') no-repeat center center/cover;
     position: relative;
-    height: 100vh;
-    background: url('/images/Gamer.webp') no-repeat center center;
-    background-size: cover;
-    overflow: hidden;
 }
 
 .hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.9) 100%);
-}
-
-.hero-text {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    color: white;
-    animation: fadeIn 1.5s ease-in-out;
+    background: rgba(0, 0, 0, 0.7);
 }
 
 .hero-text h1 {
     font-size: 4em;
     font-weight: bold;
-    text-transform: uppercase;
+    animation: crazyFadeIn 2s infinite alternate ease-in-out;
 }
 
 .hero-text h2 {
-    margin-top: 0.5em;
-    font-size: 1.8em;
+    font-size: 2.5em;
 }
 
-.cta-button,
-.login-button {
-    margin-top: 20px;
-    font-size: 1.2em;
-    display: inline-block;
-    padding: 15px 30px;
-    text-transform: uppercase;
-    color: #FBFF00;
-    border: 2px solid #FBFF00;
-    text-shadow: 0 0 0.125em #FBFF00, 0 0 0.45em currentColor;
-    border-radius: 35px;
-    transition: background-color 0.3s, border-color 0.3s;
+.cta-button, .login-button {
+    transition: background-color 0.3s, transform 0.3s;
 }
 
-.cta-button:hover,
-.login-button:hover {
-    background-color: #FF8C00;
-    color: white;
-    border-color: #FF8C00;
+.cta-button:hover, .login-button:hover {
+    background-color: #FF4500;
+    transform: scale(1.2) rotate(10deg);
+    box-shadow: 0 0 20px #FFD700, 0 0 30px #FF8C00;
+    animation: pulse 0.5s infinite alternate;
 }
 
-.scroll-indicator {
-    position: absolute;
-    bottom: 10%;
-    animation: bounce 2s infinite;
+@keyframes crazyFadeIn {
+    0% {
+        opacity: 0;
+        transform: rotate(0deg) scale(1);
+        text-shadow: 0 0 10px #FFD43B;
+    }
+    50% {
+        opacity: 1;
+        transform: rotate(15deg) scale(1.1);
+        text-shadow: 0 0 20px #FF8C00, 0 0 30px #420599;
+    }
+    100% {
+        opacity: 0.8;
+        transform: rotate(-15deg) scale(1.2);
+        text-shadow: 0 0 30px #FFD43B, 0 0 40px #5935c4;
+    }
 }
 
-.scroll-arrow i {
-    font-size: 2em;
-    color: white;
+@keyframes pulse {
+    0% {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 0 15px #FFD700;
+    }
+    100% {
+        transform: scale(1.2) rotate(-5deg);
+        box-shadow: 0 0 25px #FF4500;
+    }
 }
 
-/* About Section */
 .about-section {
-    margin-top: 50px;
-    padding: 50px 20px;
     background: #202c42;
     color: white;
+    padding: 50px 20px;
     border-radius: 10px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-.about-section h2 {
-    font-size: 2.5em;
-    color: #FFD700;
-    margin-bottom: 20px;
+    box-shadow: 0px -2px 15px #FFA500;
 }
 
 .feature-card {
     background: #000235;
-    padding: 20px;
-    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 0.625rem;
     text-align: center;
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .feature-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+    animation: hoverTilt 0.5s infinite alternate ease-in-out;
+    box-shadow: 0 0 25px #FFD700, 0 0 30px #FF8C00;
 }
 
-.feature-card i {
-    font-size: 2.5em;
-    color: #FFD700;
-    margin-bottom: 10px;
-}
-
-.feature-card h5 {
-    color: white;
+@keyframes hoverTilt {
+    0% {
+        transform: rotate(2deg) translateY(-5px);
+    }
+    100% {
+        transform: rotate(-2deg) translateY(-10px);
+    }
 }
 
 /* Footer */
@@ -168,28 +154,157 @@ h1 {
 .footer a:hover {
     color: #FFA500;
 }
-
-/* Keyframes for animations */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* Light Mode Styles */
+body.light-mode {
+    background-color: white;
+    color: black;
 }
 
-@keyframes bounce {
+body.light-mode h1 {
+    color: #333;
+}
 
-    0%,
-    100% {
-        transform: translateY(0);
-    }
+body.light-mode .navbar {
+    background-color: #f8f9fa;
+}
 
-    50% {
-        transform: translateY(-10px);
-    }
+body.light-mode .nav-link {
+    color: #000;
+}
+
+body.light-mode .nav-link:hover {
+    color: #0056b3;
+}
+
+body.light-mode .btn {
+    background-color: #007bff;
+    color: white;
+}
+
+body.light-mode .btn:hover {
+    background-color: #0056b3;
+}
+
+body.light-mode .container {
+    background-color: #f9f9f9;
+    color: black;
+}
+
+body.light-mode .hero-section {
+    background: url('/images/Gamer-light.webp') no-repeat center center/cover;
+}
+
+body.light-mode .hero-overlay {
+    background: rgba(255, 255, 255, 0.7);
+}
+
+body.light-mode .hero-text h1,
+body.light-mode .hero-text h2 {
+    color: black;
+}
+
+body.light-mode .cta-button,
+body.light-mode .login-button {
+    background-color: #007bff;
+    color: white;
+}
+
+body.light-mode .cta-button:hover,
+body.light-mode .login-button:hover {
+    background-color: #0056b3;
+}
+
+body.light-mode .about-section {
+    background: #f1f1f1;
+    color: black;
+}
+
+body.light-mode .feature-card {
+    background-color: white;
+    color: black;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .footer {
+    background-color: #f8f9fa;
+    color: black;
+}
+
+body.light-mode .footer a {
+    color: #007bff;
+}
+
+body.light-mode .footer a:hover {
+    color: #0056b3;
+}
+
+body.light-mode .sticky-search {
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Default button styles */
+#myBtn {
+    background-color: #007bff;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    width: 60px;  /* Square button */
+    height: 60px; /* Square button */
+    border-radius: 10px;
+    border: none;
+    text-align: center;
+    line-height: 60px;  /* Center text vertically */
+    cursor: pointer;
+    position: fixed;
+    bottom: 20px;  /* Positioned at the bottom */
+    left: 20px;    /* Positioned at the left */
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3), 0 6px 20px rgba(0, 123, 255, 0.2);
+    transition: all 0.3s ease-in-out;
+    z-index: 1000;
+}
+
+#myBtn::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background-color: #ff6347;
+    transition: all 0.5s ease-in-out;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    z-index: -1;
+}
+
+#myBtn:hover {
+    background-color: #0056b3;
+    box-shadow: 0 12px 30px rgba(0, 86, 179, 0.4), 0 16px 35px rgba(0, 86, 179, 0.3);
+    transform: scale(1.05);
+}
+
+#myBtn:hover::before {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+#myBtn:active {
+    transform: scale(0.98);
+    box-shadow: 0 6px 15px rgba(0, 86, 179, 0.5);
+}
+
+/* Light mode button styles */
+body.light-mode #myBtn {
+    background-color: #28a745;
+    color: white;
+}
+
+body.light-mode #myBtn:hover {
+    background-color: #218838;
+    box-shadow: 0 12px 30px rgba(40, 167, 69, 0.4), 0 16px 35px rgba(40, 167, 69, 0.3);
+}
+
+body.light-mode #myBtn:active {
+    transform: scale(0.98);
+    box-shadow: 0 6px 15px rgba(40, 167, 69, 0.5);
 }
