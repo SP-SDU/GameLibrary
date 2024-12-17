@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="~/css/Games/details.min.css" asp-append-version="true" />
 }
 
+<div class="alert alert-danger d-none" id="errorAlert"></div>
+<div class="alert alert-success d-none" id="successAlert"></div>
+
 <div class="container">
     <div class="row">
         <div class="col-md-4">
@@ -23,7 +26,7 @@
             }
         </div>
         <div class="col-md-8">
-            <h1>@Model.Game.Title</h1>
+            <h1 id="gameTitle">@Model.Game.Title</h1>
             <div class="mb-3">
                 <div class="game-rating">
                     @for (var i = 1; i <= 5; i++)
@@ -40,13 +43,13 @@
                     <span class="ms-2">(@Model.Game.Rating.ToString("F1"))</span>
                 </div>
             </div>
-            <p class="lead">@Model.Game.Description</p>
+            <p class="lead" id="gameDescription">@Model.Game.Description</p>
             <div class="game-details bg-dark p-3 rounded">
                 <div class="row">
                     <div class="col-md-6">
-                        <p><strong>Developer:</strong> @Model.Game.Developer</p>
-                        <p><strong>Publisher:</strong> @Model.Game.Publisher</p>
-                        <p><strong>Release Date:</strong> @Model.Game.ReleaseDate.ToString("MMMM dd, yyyy")</p>
+                        <p><strong>Developer:</strong> <span id="gameDeveloper">@Model.Game.Developer</span></p>
+                        <p><strong>Publisher:</strong> <span id="gamePublisher">@Model.Game.Publisher</span></p>
+                        <p><strong>Release Date:</strong> <span id="gameReleaseDate">@Model.Game.ReleaseDate.ToString("MMMM dd, yyyy")</span></p>
                     </div>
                     <div class="col-md-6">
                         <p><strong>Genre:</strong> @Model.Game.Genre</p>
@@ -108,59 +111,62 @@
             <div class="card bg-dark">
                 <div class="card-body">
                     <h2>Reviews</h2>
-                    <div class="review-stats mb-4">
-                        <div class="average-rating">
-                            <h3>Average Rating: @Model.AverageRating.ToString("F1")</h3>
-                            <div class="rating-stars">
-                                @for (var i = 1; i <= 5; i++)
-                                {
-                                    if (Model.AverageRating >= i)
-                                    {
-                                        <i class="fas fa-star text-warning"></i>
-                                    }
-                                    else
-                                    {
-                                        <i class="far fa-star text-warning"></i>
-                                    }
-                                }
-                            </div>
+                    <form id="reviewForm" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="mb-3">
+                            <label for="Rating" class="form-label">Rating</label>
+                            <select class="form-control" id="Rating" name="Rating" required>
+                                <option value="">Select Rating...</option>
+                                <option value="1">1 Star</option>
+                                <option value="2">2 Stars</option>
+                                <option value="3">3 Stars</option>
+                                <option value="4">4 Stars</option>
+                                <option value="5">5 Stars</option>
+                            </select>
                         </div>
-                    </div>
-
-                    @if (!Model.Reviews.Any(r => r.UserId.ToString() == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value))
-                    {
-                        <div class="add-review mb-4">
-                            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#reviewForm">
-                                Write a Review
-                            </button>
-                            <div class="collapse mt-3" id="reviewForm">
-                                <div class="card card-body bg-dark">
-                                    <form method="post" asp-page-handler="AddReview" asp-route-id="@Model.Game.Id">
-                                        <div class="mb-3">
-                                            <label for="rating" class="form-label">Rating</label>
-                                            <select class="form-select" id="rating" name="rating" required>
-                                                <option value="">Select rating</option>
-                                                <option value="5">5 - Excellent</option>
-                                                <option value="4">4 - Very Good</option>
-                                                <option value="3">3 - Good</option>
-                                                <option value="2">2 - Fair</option>
-                                                <option value="1">1 - Poor</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="content" class="form-label">Review</label>
-                                            <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Submit Review</button>
-                                    </form>
+                        <div class="mb-3">
+                            <label for="Comment" class="form-label">Comment</label>
+                            <textarea class="form-control" id="Comment" name="Comment" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                    </form>
+                    
+                    <div id="reviewsList" class="mt-4">
+                        @foreach (var review in Model.Reviews)
+                        {
+                            <div class="review mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <h5>@review.User.UserName</h5>
+                                    <div class="text-warning">
+                                        @for (var i = 1; i <= 5; i++)
+                                        {
+                                            if (review.Rating >= i)
+                                            {
+                                                <i class="fas fa-star"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="far fa-star"></i>
+                                            }
+                                        }
+                                    </div>
                                 </div>
+                                <p class="review-text">@review.Content</p>
+                                <small class="text-muted">@review.CreatedAt.ToString("MMMM dd, yyyy")</small>
                             </div>
-                        </div>
-                    }
-
-                    <partial name="_ReviewsList" model="@Model.Reviews" />
+                        }
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/gameDetails.js" asp-append-version="true"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            gameDetails.init('@Model.Game.Id');
+        });
+    </script>
+}

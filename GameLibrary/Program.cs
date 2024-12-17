@@ -74,6 +74,8 @@ public class Program
             options.Level = CompressionLevel.SmallestSize;
         });
 
+        builder.Services.AddControllers();
+
         var app = builder.Build();
 
         app.UseResponseCompression();
@@ -100,6 +102,7 @@ public class Program
         app.UseAuthorization();
 
         app.MapRazorPages();
+        app.MapControllers();
 
         app.Run();
     }
